@@ -1,0 +1,67 @@
+.cat-row {
+    padding-top: 20rpx;
+    background: #fff;
+}
+
+.cat-item {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.cat-item .item {
+    text-align: center;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    align-items: center;
+    margin-bottom: 40rpx;
+}
+
+.cat-item .item image {
+    width: 100rpx;
+    height: 100rpx;
+}
+
+.cat-item .item text {
+    margin-top: 10rpx;
+    font-size: 22rpx;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: #000000;
+}
+
+.tag-view {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #fff;
+    padding: 20rpx;
+    .value {
+        font-size: 24rpx;
+        color: #333;
+        padding: 10rpx 15rpx;
+        background: #f1f1f1;
+        border-radius: 15rpx;
+        margin-right: 20rpx;
+    }
+}
+
+/deep/ .homeBox .tabBox {
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+/deep/ .homeBox .tabBox .tab-item {
+    color: #000000!important;
+    line-height: 42rpx!important;
+    font-size: 34rpx!important;
+}
+
+/deep/ .homeBox .tabBox .tab-choice::before {
+    background: #fd5e01!important;
+    top: 47rpx!important;
+    width: 100%!important;
+    left: 0!important;
+}

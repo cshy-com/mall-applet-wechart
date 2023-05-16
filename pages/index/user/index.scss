@@ -1,0 +1,128 @@
+/* pages/user/user.wxss */
+
+page {
+    background-color: #f7f7f7;
+    padding-bottom: 60rpx;
+}
+
+
+/* 用户信息 */
+
+.userinfo {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    text-align: center;
+    padding: 30rpx 0;
+}
+
+.userinfo .userinfo-con {
+    width: 240rpx;
+    margin: auto;
+}
+
+.userinfo .userinfo-con .userinfo-avatar {
+    overflow: hidden;
+    display: block;
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 50%;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    margin: auto;
+}
+
+.userinfo .userinfo-con .userinfo-avatar image {
+    width: 160rpx;
+    height: 160rpx;
+}
+
+.userinfo .userinfo-con .userinfo-name {
+    font-size: 30rpx;
+    font-weight: bold;
+    margin-top: 20rpx;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+
+
+/** 未登录信息 */
+
+.userinfo-none {
+    display: flex;
+    padding: 30rpx;
+    background: #fff;
+    align-items: center;
+}
+
+.userinfo-none .default-pic {
+    padding-right: 30rpx;
+}
+
+.userinfo-none .default-pic image {
+    width: 160rpx;
+    height: 160rpx;
+}
+
+.none-login button {
+    background: #fff;
+}
+
+.none-login button::after {
+    border: 0;
+}
+
+.none-login .unlogin {
+    font-size: 30rpx;
+}
+
+.none-login .click-login {
+    font-size: 26rpx;
+    color: #777;
+}
+
+.none-login .unlogin,
+.none-login .click-login {
+    text-align: left;
+    padding: 0;
+}
+
+.binding-phone {
+    position: relative;
+    background: #fff;
+    height: 80rpx;
+    line-height: 80rpx;
+    padding: 0 30rpx;
+    border-top: 2rpx solid #f7f7f7;
+    border-bottom: 2rpx solid #f7f7f7;
+}
+
+.binding-phone .show-tip {
+    font-size: 26rpx;
+}
+
+.binding-phone .gotobinding {
+    border-radius: 8rpx;
+    font-size: 28rpx;
+    color: #e24b4b;
+    font-weight: bold;
+}
+
+.user-block-1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200rpx;
+    .user-block-img {
+        width: 90%;
+    }
+}
+
+.user-block-2,
+.user-block-3 {
+    height: 360rpx;
+    // margin: 20rpx 0;
+}

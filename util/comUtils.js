@@ -2,6 +2,6 @@ export default {
 
 
 
-	baseUrl: 'http://121.4.138.212:51000'
+    baseUrl: 'http://39.104.53.172:8080'
 
 }

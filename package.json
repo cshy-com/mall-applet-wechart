@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@better-scroll/core": "^2.5.1",
+    "better-scroll": "^2.5.1",
+    "uview-ui": "^2.0.31"
+  }
+}

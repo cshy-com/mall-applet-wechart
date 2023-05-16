@@ -49,7 +49,7 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 小程序特有相关 */
-        "appid" : "wx762a5911862bf8a6",
+        "appid" : "wx21f02720f598ba24",
         "cloudfunctionRoot" : "./cloud/", // 标记云函数目录的字段
         "setting" : {
             "urlCheck" : false,
@@ -58,16 +58,14 @@
             "minified" : true
         },
         "usingComponents" : true,
-        // ,"plugins":{
-        // 	"ocr-plugin":{
-        // 		"version": "3.0.6",
-        // 		"provider": "wx75734d0de04d0e71"
-        // 	}
-        // }
         "permission" : {
             "scope.userLocation" : {
                 "desc" : "你的位置信息将用于小程序位置接口的效果展示"
             }
+        },
+        "lazyCodeLoading" : "requiredComponents",
+        "optimization" : {
+            "subPackages" : true
         }
     }
 }
