@@ -1,7 +1,14 @@
 <template>
   <view class="comment-box">
     <view class="comment" v-for="(res, index) in commentList" :key="res.id">
-      <view class="left"><image :src="res.url" mode="aspectFill"></image></view>
+      <view class="left"
+        ><image
+          :lazy-load="true"
+          :lazy-load-margin="0"
+          :src="res.url"
+          mode="aspectFill"
+        ></image
+      ></view>
       <view class="right">
         <view class="top">
           <view class="name">{{ res.name }}</view>

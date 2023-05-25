@@ -3,7 +3,11 @@
     <view class="userinfo" v-if="user">
       <view class="userinfo-con">
         <view class="userinfo-avatar">
-          <image :src="user.pic ? user.pic : '/static/img/test5.png'"></image>
+          <image
+            :lazy-load="true"
+            :lazy-load-margin="0"
+            :src="user.pic ? user.pic : '/static/img/test5.png'"
+          ></image>
         </view>
         <view class="userinfo-name">
           <view>{{ user.username ? user.username : '用户昵称' }}</view>
@@ -13,7 +17,11 @@
 
     <view class="userinfo-none" v-if="!user">
       <view class="default-pic" @tap="toLogin">
-        <image src="/static/img/test5.png"></image>
+        <image
+          :lazy-load="true"
+          :lazy-load-margin="0"
+          src="/static/img/test5.png"
+        ></image>
       </view>
       <view class="none-login" @tap="toLogin">
         <button class="unlogin">未登录</button>
@@ -22,6 +30,8 @@
     </view>
     <view class="user-block-1">
       <image
+        :lazy-load="true"
+        :lazy-load-margin="0"
         class="user-block-img"
         mode="aspectFit"
         src="/static/img/user1.png"
@@ -29,6 +39,8 @@
     </view>
     <view class="user-block-1 user-block-2">
       <image
+        :lazy-load="true"
+        :lazy-load-margin="0"
         class="user-block-img"
         mode="aspectFit"
         src="/static/img/user2.png"
@@ -36,6 +48,8 @@
     </view>
     <view class="user-block-1 user-block-3">
       <image
+        :lazy-load="true"
+        :lazy-load-margin="0"
         class="user-block-img"
         mode="aspectFit"
         src="/static/img/user3.png"

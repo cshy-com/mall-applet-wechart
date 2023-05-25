@@ -18,9 +18,20 @@ export function pageHome(data) {
 export function sendCode(data) {
     return getString('/mallCode/sendCode/' + data)
 }
+// 注册
 export function register(data) {
     return postPayload('/mallUser/register', data)
 }
+// 登陆
 export function login(data) {
     return postPayload('/mallUser/login', data)
+}
+// 获取手机号登陆
+export function wxLogin(data) {
+    return getString('/mallUser/wxLogin/' + data)
+}
+
+export function listByParentId(data) {
+
+    return postPayload('/mallShopType/listByParentId/' + data)
 }

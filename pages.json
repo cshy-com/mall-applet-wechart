@@ -16,7 +16,10 @@
             "style": {
                 "navigationBarTitleText": "首页",
                 "navigationBarBackgroundColor": "#FFFFFF",
-                "navigationStyle": "custom"
+                "navigationStyle": "custom",
+                "onReachBottomDistance": 150,
+                "backgroundColor": "#FFFFFF",
+                "enablePullDownRefresh": true
             }
         },
 
@@ -45,7 +48,12 @@
                     "path": "merchant/index",
                     "style": {
                         "navigationBarTitleText": "",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        // #ifdef MP-WEIXIN
+                        "navigationStyle": "custom",
+                        // #endif
+                        "enablePullDownRefresh": true
+
                     }
                 },
                 {
@@ -95,7 +103,8 @@
                     "path": "merchant/storeList",
                     "style": {
                         "navigationBarTitleText": "店铺列表",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 }, {
                     "path": "merchant/commodityDetail",

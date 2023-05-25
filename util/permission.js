@@ -44,7 +44,7 @@ export default async function() {
                         icon: 'none'
                     })
                     uni.navigateTo({
-                        url: "/pages/login/login"
+                        url: "/pages/public/login"
                     })
                     return false
                 }

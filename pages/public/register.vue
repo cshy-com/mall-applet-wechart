@@ -25,7 +25,13 @@
             type="password"
             placeholder="请输入您的登录密码"
           />
+          <view>
+            <text class="tip">
+              * 密码6-21字母和数字组成，不能是纯数字或纯英文</text
+            >
+          </view>
         </u-form-item>
+
         <u-form-item class="form-item" prop="confirmPass">
           <u-input
             prefixIconStyle="font-size: 22px;color:#abacad"
@@ -80,11 +86,10 @@ export default {
   components: {},
   data() {
     return {
-      cityShow: false,
       seconds: 60,
-      active: '0',
+
       tips: '获取验证码',
-      areaName: null,
+
       form: {
         tel: '',
         password: '',
@@ -150,20 +155,8 @@ export default {
         ],
       },
       errorType: ['toast'],
-      value: '',
       type: 'text',
       border: true,
-      show: false,
-      open: false,
-      areaStr: '',
-      selected: true,
-      agreement: null,
-      dialogBtn: null,
-      allcity: [],
-      cityIndex: [0, 0, 0],
-      cityId: [],
-      cityList: [],
-      index: 0,
       tips: '',
       value: '',
     }
@@ -179,56 +172,50 @@ export default {
     },
     getCode() {
       if (!this.form.tel) {
-        this.$u.toast('手机号不能为空')
+        this.$tip.toast('手机号不能为空')
 
         return false
       } else {
         if (!util.regular().mobile.test(this.form.tel)) {
-          this.$u.toast('请输入正确的手机号')
+          this.$tip.toast('请输入正确的手机号')
 
           return false
         }
       }
       if (this.$refs.uCode.canGetCode) {
-        uni.showLoading({
-          title: '正在获取验证码',
-        })
-        setTimeout(() => {
-          uni.hideLoading()
+        this.$tip.tipLoading('正在获取验证码').then(() => {
           this.getCodeHttp()
-        }, 2000)
+        })
       } else {
-        uni.$u.toast('倒计时结束后再发送')
+        this.$tip.toast('倒计时结束后再发送')
       }
     },
-    change(e) {
-      console.log('change', e)
-    },
+
     login() {
       uni.navigateBack()
     },
-    tab(number) {
-      this.active = number
-    },
+
     submit() {
       this.$refs.uForm.validate().then(() => {
         if (this.form.confirmPass !== this.form.password) {
-          uni.$u.toast('两次输入的密码不一致，请重新输入')
+          this.$tip.toast('两次输入的密码不一致，请重新输入')
           return
         }
-        register({
-          code: this.form.code,
-          password: this.form.password,
-          phoneNumber: this.form.tel,
-        }).then((res) => {
-          if (res && res.code == 0) {
-            this.$u.toast('注册成功，将自动跳转登录页...', 2500)
-            setTimeout(() => {
-              this.login()
-            }, 3000)
-          } else {
-            this.$u.toast(res.msg, 2500)
-          }
+        this.$tip.showLoading().then(() => {
+          register({
+            code: this.form.code,
+            password: this.form.password,
+            phoneNumber: this.form.tel,
+          }).then((res) => {
+            if (res && res.code == 0) {
+              this.$tip.toast('注册成功，将自动跳转登录页...')
+              setTimeout(() => {
+                this.login()
+              }, 3000)
+            } else {
+              this.$u.toast(msg)
+            }
+          })
         })
       })
     },
@@ -240,18 +227,18 @@ export default {
       // 短信验证码
       sendCode(this.form.tel).then((res) => {
         if (res.code == 0) {
-          this.$u.toast('验证码已发送')
+          this.$tip.toast('验证码已发送')
           this.$refs.uCode.start()
         } else {
-          this.$u.toast(res.msg)
+          this.$tip.toast(res.msg)
         }
       })
     },
     end() {
-      this.$u.toast('倒计时结束')
+      this.$tip.toast('倒计时结束')
     },
     start() {
-      this.$u.toast('倒计时开始')
+      this.$tip.toast('倒计时开始')
     },
   },
 }
@@ -272,6 +259,10 @@ export default {
   .form-item {
     padding: 20rpx 60rpx;
     border-bottom: 1px solid #f7f7f7;
+  }
+  .tip {
+    font-size: 24rpx;
+    color: #da2d2d;
   }
   .code-item {
     display: flex;

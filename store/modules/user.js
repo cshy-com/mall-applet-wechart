@@ -1,4 +1,5 @@
 import * as api from '@/util/api.js'
+
 const state = {
     userInfo: null, //个人信息
 

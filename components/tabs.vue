@@ -15,12 +15,13 @@
             v-for="(item, index) in list"
             @click="changeIndex(index)"
           >
-            <view :class="tabIndex == index ? 'tab-choice' : ''">{{ item.title }}</view>
+            <view :class="tabIndex == index ? 'tab-choice' : ''">{{
+              item.title
+            }}</view>
           </view>
         </view>
       </scroll-view>
     </view>
-
   </view>
 </template>
 
@@ -30,23 +31,23 @@ export default {
   props: {
     list: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     selectIndex: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   watch: {
     selectIndex(e) {
       this.tabIndex = e
-    }
+    },
   },
   data() {
     return {
       tabIndex: 0,
       tabList: [], //tab dom节点集合
-      scrollLeft: 0 //scrollview需要滚动的距离
+      scrollLeft: 0, //scrollview需要滚动的距离
     }
   },
   mounted() {
@@ -55,12 +56,14 @@ export default {
   methods: {
     init() {
       const query = uni.createSelectorQuery().in(this)
-      query.selectAll('.tab-item').fields({ rect: true, size: true }, (data) => {
-        // TODO 第一步 获取当前所以子元素 并插入到 tabList 列表中
-        data.forEach((item) => {
-          this.tabList.push({ width: item.width, left: item.left })
+      query
+        .selectAll('.tab-item')
+        .fields({ rect: true, size: true }, (data) => {
+          // TODO 第一步 获取当前所以子元素 并插入到 tabList 列表中
+          data.forEach((item) => {
+            this.tabList.push({ width: item.width, left: item.left })
+          })
         })
-      })
       query.exec()
     },
     changeIndex(index) {
@@ -70,9 +73,10 @@ export default {
       //this.tabList[index].left 会使当前选中的距离左边为0
       //然后 用屏幕宽度减去当前元素的宽度 / 2  则会让他处于中间位置
 
-      this.scrollLeft = this.tabList[index].left - (345 - this.tabList[index].width) / 2
-    }
-  }
+      this.scrollLeft =
+        this.tabList[index].left - (345 - this.tabList[index].width) / 2
+    },
+  },
 }
 </script>
 

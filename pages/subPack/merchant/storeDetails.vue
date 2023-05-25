@@ -19,9 +19,17 @@
       <view class="store-content-box">
         <!-- 第一行 -->
         <view class="title">
-          <text class="name">店铺名称名称</text>
+          <text class="name">{{ shopInfo.shopName }}</text>
           <view class="tag">
-            <image src="/static/img/cate/tag.png"></image>
+            <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              src="/static/img/cate/tag.png"
+            ></image>
+          </view>
+          <view class="star">
+            <u-icon name="star" color="#333" size="28"></u-icon>
+            <text class="star-text">收藏</text>
           </view>
         </view>
         <view class="score">
@@ -30,29 +38,40 @@
               activeColor="#FA6B31"
               disabled
               :count="count"
-              v-model="value"
+              v-model="shopInfo.rate"
             ></u-rate
-            ><text class="rate">4.6</text>
+            ><text class="rate">{{ shopInfo.rate }}</text>
           </view>
-          <text class="value">790条</text>
-          <text class="value">¥83/人</text>
+          <text class="value">{{ shopInfo.totalComent }}条</text>
+          <text class="value">¥{{ shopInfo.averagePrice }}/人</text>
         </view>
         <view class="type">
-          <text class="type-value">口味4.7 环境4.8 服务4.8</text>
-          <text class="type-name">川菜管</text>
+          <text class="type-value"
+            >口味{{ shopInfo.score1 }} 环境{{ shopInfo.score2 }} 服务{{
+              shopInfo.score3
+            }}</text
+          >
+          <text class="type-name">{{ shopInfo.characteristic }}</text>
+          <text class="type-name">{{ shopInfo.address }}</text>
         </view>
 
         <view class="comment">
           <view class="icon">
-            <image src="/static/img/cate/comment.png"></image>
+            <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              src="/static/img/cate/comment.png"
+            ></image>
           </view>
-          <text class="number"> 武昌区川菜环境榜第一名 </text>
-          <text class="identifying"> 可用消费券 </text>
+          <text class="number"> {{ shopInfo.ranking }} </text>
+          <text class="identifying" v-if="shopInfo.canCoupon">
+            可用消费券
+          </text>
         </view>
         <view class="shop-time">
           <view class="status-time">
             <text class="lable">营业中</text>
-            <text class="value">11:00-20:30</text>
+            <text class="value">{{ shopInfo.st }}-{{ shopInfo.et }}</text>
           </view>
           <view class="tag">
             <text class="tag-value" v-for="item in tags" :key="item.id">{{
@@ -61,7 +80,10 @@
           </view>
         </view>
         <view class="address">
-          <text class="text">湖北省武汉市武昌区世贸商城F区3楼</text>
+          <text class="text">{{ shopInfo.addressDetail }}</text>
+        </view>
+        <view class="platform-tip">
+          <text> * 增加折扣率不高于其他平台</text>
         </view>
       </view>
     </view>
@@ -95,7 +117,7 @@
         <articleGrid :prods="prods2"> </articleGrid
       ></view>
       <!-- 底部操作按钮 -->
-      <commFootBtn :tel="'027-15152142'"></commFootBtn>
+      <commFootBtn :tel="shopInfo.tel"></commFootBtn>
     </view>
   </view>
 </template>
@@ -160,10 +182,12 @@ export default {
       value: 4.6,
     }
   },
+  computed: {
+    ...mapGetters(['shopInfo']),
+  },
+  onShow() {},
   methods: {
-    ...mapGetters(['getShopInfo']),
     toProdPage() {
-      debugger
       uni.navigateTo({ url: '/pages/subPack/merchant/commodityDetail' })
     },
     tab(index) {
@@ -358,5 +382,24 @@ export default {
   margin: 20rpx 20rpx 20rpx 20rpx;
   line-height: 30rpx;
   font-weight: 600;
+}
+.star {
+  margin-left: auto;
+  font-size: 24rpx;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .star-text {
+    font-size: 20rpx;
+  }
+}
+.platform-tip {
+  font-size: 24rpx;
+  color: #000;
+  border-top: 1px solid #e6e6e6;
+  padding-top: 10rpx;
+  margin-top: 10rpx;
 }
 </style>
