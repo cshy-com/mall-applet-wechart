@@ -1,14 +1,10 @@
 <template>
   <view>
     <view class="cat-row">
-      <u-empty
-        v-if="!cateList || cateList.length == 0"
-        mode="data"
-        marginTop="120"
-        iconSize="140"
-        textSize="32"
-      >
-      </u-empty>
+      <view v-if="!cateList || cateList.length == 0" class="empty">
+        <u-empty mode="data" iconSize="140" textSize="32" :text="'暂无数据'">
+        </u-empty>
+      </view>
       <view class="cat-item" v-else>
         <view
           class="item"
@@ -112,5 +108,9 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 94rpx;
+}
+.empty {
+  margin-top: 120rpx;
+  padding-bottom: 120rpx;
 }
 </style>

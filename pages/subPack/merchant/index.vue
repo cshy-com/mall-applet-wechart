@@ -122,8 +122,6 @@ export default {
     },
     goShopDetail(item) {
       this.setShopInfo(item)
-      console.log('shopInfo' + JSON.stringify(item))
-      console.log('this.shopInfo' + JSON.stringify(this.shopInfo))
       uni.navigateTo({
         url: '/pages/subPack/merchant/storeDetails',
       })

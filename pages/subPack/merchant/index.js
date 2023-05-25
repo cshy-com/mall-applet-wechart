@@ -573,22 +573,43 @@ const shopProds = [{
 }]
 
 const mockJson = [{
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: 'BIOBLE至爱法麦面包（西北湖店）',
+        shopAvater: 'http://39.104.53.172:8888/upload/2023/05/shop111.jpg',
+        shopList: [{
+                url: 'https://cdn.uviewui.com/uview/resources/video.mp4',
+                poster: 'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+                type: 'video'
+            },
+            {
+
+                url: 'http://39.104.53.172:8888/upload/2023/05/shop111-1.jpg',
+                type: 'image',
+
+            }, {
+                url: 'http://39.104.53.172:8888/upload/2023/05/shop111-2.jpg',
+                type: 'image',
+
+            }, {
+
+                url: 'http://39.104.53.172:8888/upload/2023/05/shop111-1.jpg',
+                type: 'image',
+
+            },
+        ],
+        shopName: '喜舍(江滩店)',
         type: 0,
         pid: 26,
         cateId: 23,
-        rate: 4.6,
-        totalComent: 780,
-        averagePrice: 83,
+        rate: 4.9,
+        totalComent: 551,
+        averagePrice: 317,
         characteristic: '小吃甜点',
         address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
+        addressDetail: '沿江大道111号（武汉世茂凡象酒店2层）',
+        tel: '18802717177',
+        st: '11:30',
+        et: '21:00',
+        score1: 4.9,
+        score2: 4.9,
         score3: 4.9,
         ranking: '武昌区小吃环境榜第一名',
         canCoupon: true,
@@ -601,452 +622,46 @@ const mockJson = [{
         }]
 
     }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '仟吉',
+        shopAvater: 'http://39.104.53.172:8888/upload/2023/05/shop222.jpg',
+        shopList: [{
+                url: 'https://cdn.uviewui.com/uview/resources/video.mp4',
+                poster: 'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+                type: 'video'
+            },
+            {
+
+                url: 'http://39.104.53.172:8888/upload/2023/05/shop222-1.jpg',
+                type: 'image',
+
+            }, {
+                url: 'http://39.104.53.172:8888/upload/2023/05/shop222-2.jpg',
+                type: 'image',
+
+            },
+            {
+
+                url: 'http://39.104.53.172:8888/upload/2023/05/shop222-1.jpg',
+                type: 'image',
+
+            }
+        ],
+        shopName: '观湖别院',
         type: 0,
         rate: 4.6,
-        pid: 26,
-        cateId: 25,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '皇冠蛋糕',
-        type: 0,
-        rate: 4.6,
-        pid: 26,
-        cateId: 25,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '星巴克甄选',
-        type: 0,
-        rate: 4.6,
-        pid: 26,
-        cateId: 29,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '椰不二',
-        type: 0,
-        rate: 4.6,
-        pid: 26,
-        cateId: 29,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: 'CoCo都可',
-        type: 0,
-        rate: 4.6,
-        pid: 26,
-        cateId: 29,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '茶百道',
-        type: 0,
-        rate: 4.6,
-        pid: 26,
-        cateId: 29,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: 'Tims',
-        pid: 26,
-        cateId: 29,
-        type: 0,
-        rate: 4.6,
-        totalComent: 780,
-        averagePrice: 83,
-        characteristic: '小吃甜点',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区小吃环境榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    }, {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '伊莉维尔',
-        rate: 4.2,
-        type: 0,
         pid: 26,
         cateId: 23,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '高端定制',
-        address: '武昌/小东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区服务体验好评第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 88,
-            total: 100,
-        }, {
-            price: 179,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '达美乐披萨',
-        rate: 4.2,
-        type: 1,
-        pid: 26,
-        cateId: 25,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '西餐',
-        address: '洪山区/鲁巷',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区西餐榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 40,
-            total: 50,
-        }, {
-            price: 88,
-            total: 100,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '小川洋风料理',
-        rate: 4.2,
-        type: 1,
-        pid: 26,
-        cateId: 25,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '日料',
-        address: '武昌/武昌火车站',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区销量第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 99,
-            total: 100,
-        }, {
-            price: 198,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '探鱼',
-        rate: 4.2,
-        type: 2,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '川菜馆',
-        address: '洪山/街道口',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区川菜环境榜第三名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '粗茶淡饭',
-        rate: 4.2,
-        type: 2,
-        pid: 26,
-        cateId: 23,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '精致生活',
-        address: '洪山/街道口',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区湘菜榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 66,
-            total: 80,
-        }, {
-            price: 88,
-            total: 120,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '至尊私房菜',
-        rate: 4.2,
-        type: 3,
-        pid: 26,
-        cateId: 25,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '东北菜',
-        address: '武昌/梅苑小区',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区东北菜口味榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '言记湛江鸡',
-        rate: 4.2,
-        type: 3,
-        pid: 26,
-        cateId: 25,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '京菜',
-        address: '洪山/光谷',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区京菜榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '荷花亭',
-        rate: 4.2,
-        type: 4,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '湖北菜',
-        address: '洪山/关山大道',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区湖北菜热门榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 168,
-            total: 200,
-        }, {
-            price: 288,
-            total: 350,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '楚河宴',
-        rate: 4.2,
-        type: 5,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '湖北菜',
+        totalComent: 399,
+        averagePrice: 343,
+        characteristic: '小吃甜点',
         address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
+        addressDetail: '楚河汉街万达尊对面烟霞路一号',
+        tel: '027-87898008',
         st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区湖北菜热门榜第二名',
+        et: '21:00',
+        score1: 4.8,
+        score2: 4.9,
+        score3: 4.8,
+        ranking: '武昌区小吃环境榜第一名',
         canCoupon: true,
         couponList: [{
             price: 98,
@@ -1059,122 +674,7 @@ const mockJson = [{
     },
     {
         shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '靓靓蒸虾',
-        rate: 4.2,
-        type: 6,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '小龙虾',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '必吃榜2023入围餐厅',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '胡锦酒楼',
-        rate: 4.2,
-        type: 7,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '湖北菜',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区湖北菜服务榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '嘉禾小鲜食',
-        rate: 4.2,
-        type: 8,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '私房菜',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区私房菜热门榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
-        shopName: '曼谷五巷',
-        rate: 4.2,
-        type: 9,
-        pid: 26,
-        cateId: 29,
-        totalComent: 200,
-        averagePrice: 40,
-        characteristic: '湖北菜',
-        address: '武昌/大东门',
-        addressDetail: '湖北省武汉市武昌区世贸商城F区3楼',
-        tel: '027-123468',
-        st: '11:00',
-        et: '20:30',
-        score1: 4.7,
-        score2: 4.8,
-        score3: 4.9,
-        ranking: '武昌区美食好评榜第一名',
-        canCoupon: true,
-        couponList: [{
-            price: 98,
-            total: 100,
-        }, {
-            price: 188,
-            total: 200,
-        }]
-
-    },
-    {
-        shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '竹馨庄园',
         type: 0,
         rate: 4.6,
@@ -1203,6 +703,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '木兰花谷',
         type: 1,
         rate: 4.2,
@@ -1231,6 +732,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '房车营地泾河公园',
         rate: 4.2,
         type: 2,
@@ -1259,6 +761,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '石榴红村',
         rate: 4.2,
         type: 3,
@@ -1287,11 +790,12 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '永辉草莓采摘基地',
         rate: 4.2,
         type: 4,
         pid: 2,
-        cateId: 30,
+        cateId: 33,
         totalComent: 200,
         averagePrice: 40,
         characteristic: '川菜馆',
@@ -1315,11 +819,12 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '永辉草莓采摘基地',
         rate: 4.2,
         type: 5,
-        pid: 26,
-        cateId: 31,
+        pid: 2,
+        cateId: 33,
         totalComent: 200,
         averagePrice: 40,
         characteristic: '川菜馆',
@@ -1343,6 +848,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '古德寺',
         rate: 4.2,
         type: 6,
@@ -1371,6 +877,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '昙华林',
         rate: 4.2,
         type: 7,
@@ -1399,6 +906,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '花博会',
         rate: 4.2,
         type: 8,
@@ -1427,6 +935,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '武汉大学-樱园',
         rate: 4.2,
         type: 9,
@@ -1456,6 +965,7 @@ const mockJson = [{
     },
     {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '享一收纳',
         type: 0,
         rate: 4.6,
@@ -1484,6 +994,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '素帕缇生活馆',
         rate: 4.2,
         type: 1,
@@ -1512,6 +1023,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '上上弓射箭馆',
         rate: 4.2,
         type: 2,
@@ -1540,6 +1052,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '全明星擂台',
         rate: 4.2,
         type: 3,
@@ -1568,6 +1081,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '屋有岛沉浸游戏体验馆',
         rate: 4.2,
         type: 4,
@@ -1596,6 +1110,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '喵庄园',
         rate: 4.2,
         type: 5,
@@ -1624,6 +1139,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '肆意时光',
         rate: 4.2,
         type: 6,
@@ -1652,6 +1168,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '悠米私人影院',
         rate: 4.2,
         type: 7,
@@ -1680,6 +1197,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '乾潭',
         rate: 4.2,
         type: 8,
@@ -1708,6 +1226,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '吾泰',
         rate: 4.2,
         type: 9,
@@ -1737,6 +1256,7 @@ const mockJson = [{
     },
     {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '永康堂',
         rate: 4.6,
         type: 0,
@@ -1765,6 +1285,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '爱康体检',
         rate: 4.2,
         type: 1,
@@ -1793,6 +1314,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '萌芽齿科',
         rate: 4.2,
         type: 2,
@@ -1822,6 +1344,7 @@ const mockJson = [{
     },
     {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '思妍丽',
         rate: 4.6,
         type: 3,
@@ -1850,6 +1373,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '佐登妮丝SPA生活馆',
         rate: 4.2,
         type: 4,
@@ -1878,6 +1402,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: 'mia美妆',
         rate: 4.2,
         type: 5,
@@ -1908,6 +1433,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '仁爱口腔',
         rate: 4.2,
         type: 6,
@@ -1938,6 +1464,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '牙达人口腔',
         rate: 4.2,
         type: 7,
@@ -1968,6 +1495,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '好大夫口腔',
         rate: 4.2,
         type: 8,
@@ -1998,6 +1526,7 @@ const mockJson = [{
 
     }, {
         shopAvater: './../../../static/img/cate/shop-avater.png',
+        shopList: [],
         shopName: '新华健康',
         rate: 4.2,
         type: 9,

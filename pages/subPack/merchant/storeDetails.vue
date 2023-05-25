@@ -185,7 +185,9 @@ export default {
   computed: {
     ...mapGetters(['shopInfo']),
   },
-  onShow() {},
+  onShow() {
+    this.list4 = this.shopInfo?.shopList || this.list4
+  },
   methods: {
     ...mapMutations(['setCommodityInfo']),
     toProdPage(item) {

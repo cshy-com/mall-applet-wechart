@@ -1,13 +1,15 @@
 <template>
   <view>
-    <u-empty
-      v-if="!list || list.length == 0"
-      mode="data"
-      marginTop="120"
-      iconSize="140"
-      textSize="32"
-    >
-    </u-empty>
+    <view class="empty" v-if="!list || list.length == 0">
+      <u-empty
+        mode="data"
+        marginTop="120"
+        iconSize="140"
+        textSize="32"
+        :text="'暂无数据'"
+      >
+      </u-empty>
+    </view>
     <view v-else>
       <view
         class="store-list"
@@ -37,7 +39,7 @@
           <!-- 第一行 -->
           <view class="title">
             <text class="name">{{ item.shopName }}</text>
-            <view class="tag"> 可用消费券 </view>
+            <view class="tag"> 可用积分 </view>
           </view>
           <view class="score">
             <view class="rate-left"
@@ -59,9 +61,9 @@
             v-for="coupon in item.couponList"
             :key="coupon.id"
           >
-            <view class="left-icon"> 券 </view>
+            <!-- <view class="left-icon"> 券 </view> -->
             <text class="price"> ¥{{ coupon.price }} </text>
-            <text class="value"> {{ coupon.total }}代金券 </text>
+            <text class="value"> {{ coupon.total }}积分 </text>
           </view>
         </view>
       </view>
@@ -256,5 +258,9 @@ export default {
       }
     }
   }
+}
+.empty {
+  margin-top: 120rpx;
+  padding-bottom: 120rpx;
 }
 </style>
