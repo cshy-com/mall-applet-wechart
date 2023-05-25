@@ -187,7 +187,10 @@ export default {
   },
   onShow() {},
   methods: {
-    toProdPage() {
+    ...mapMutations(['setCommodityInfo']),
+    toProdPage(item) {
+      this.setCommodityInfo(item)
+
       uni.navigateTo({ url: '/pages/subPack/merchant/commodityDetail' })
     },
     tab(index) {

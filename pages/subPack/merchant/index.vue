@@ -22,8 +22,8 @@
       </view>
 
       <shopRow :list="mockJson" @eventParent="goShopDetail"> </shopRow>
-      <photoWall v-if="cateIndex == -1"></photoWall>
-      <commNav v-if="cateIndex == -2"></commNav>
+      <photoWall v-if="cateId == -1"></photoWall>
+      <commNav v-if="cateId == -2"></commNav>
     </view>
   </view>
 </template>
@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       cateList: [],
-      cateIndex: 0,
+      cateId: 0,
       parentCate: dataArr.parentCate,
       selectClassIndex: 0,
 
@@ -61,23 +61,24 @@ export default {
       tagList: dataArr.tagList[0],
       list: dataArr.selectData[0],
       prods: dataArr.prods,
-      mockJson: dataArr.mockJson[0],
+      mockJson: dataArr.mockJson,
       title: '',
     }
   },
   computed: {},
   created() {},
   onLoad(option) {
-    this.cateIndex = option.cateId
+    console.log('option.cateId' + option.cateId)
+    this.cateId = option.cateId
     this.getCateList(option.cateId)
-    ;(this.statusList = dataArr.statusList[this.cateIndex]),
-      (this.tagList = dataArr.tagList[this.cateIndex]),
-      (this.list = dataArr.selectData[this.cateIndex])
-    this.mockJson = dataArr.mockJson[this.cateIndex]
+    ;(this.statusList = dataArr.statusList[this.cateId]),
+      (this.tagList = dataArr.tagList[this.cateId]),
+      (this.list = dataArr.selectData[this.cateId])
+    this.mockJson = dataArr.mockJson.filter((val) => val.pid == option.cateId)
     console.log(this.mockJson)
     console.log(this.list)
 
-    this.title = this.parentCate[this.cateIndex]
+    this.title = option.title
   },
 
   computed: { ...mapGetters(['shopInfo', 'cateAll']) },
@@ -88,7 +89,7 @@ export default {
     this.$refs.navs.scroll(e)
   },
   onPullDownRefresh() {
-    this.getCateList(this.cateIndex)
+    this.getCateList(this.cateId)
     setTimeout(function () {
       uni.stopPullDownRefresh()
     }, 1000)
@@ -116,7 +117,7 @@ export default {
     },
     toCouponCenter(item, index = 0) {
       uni.navigateTo({
-        url: `/pages/subPack/merchant/storeList?pid=${item.id}&cateId=${index}`,
+        url: `/pages/subPack/merchant/storeList?pid=${item.id}&title=${item.name}`,
       })
     },
     goShopDetail(item) {
@@ -135,7 +136,11 @@ export default {
   },
 }
 </script>
-
+<style>
+page {
+  background: #3b6dbb;
+}
+</style>
 <style lang="scss" scoped>
 @import './index.scss';
 </style>

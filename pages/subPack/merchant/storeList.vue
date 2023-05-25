@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:31:56
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-22 16:55:40
+ * @LastEditTime: 2023-05-25 14:50:03
  * @FilePath: \mall-applet\pages\subPack\merchant\storeList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -18,7 +18,8 @@
 
 <script>
 import dataArr from './index.js'
-
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import shopRow from '@/pages/subPack/components/shopRow.vue'
 import commSearch from '@/components/commSearch'
 import commNav from './../components/commNav.vue'
@@ -62,18 +63,18 @@ export default {
     console.log(option)
     this.cateIndex = option.cateId
     this.pid = option.pid
-
-    this.title = this.cateList[this.pid][this.cateIndex].title
+    console.log('pid', this.pid)
+    this.title = option.title
 
     this.placeholder = `在${this.title}频道内搜索`
-    this.shopList = dataArr.mockJson[this.pid].filter(
-      (val) => val.type == this.cateIndex
-    )
+    this.shopList = dataArr.mockJson.filter((val) => val.cateId == option.pid)
   },
 
   computed: {},
   methods: {
-    goShopDetail() {
+    ...mapMutations(['setShopInfo']),
+    goShopDetail(item) {
+      this.setShopInfo(item)
       uni.navigateTo({
         url: '/pages/subPack/merchant/storeDetails',
       })

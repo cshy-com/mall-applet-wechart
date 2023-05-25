@@ -1,46 +1,48 @@
 <template>
   <view>
     <view class="hot-sale" v-if="prods && prods.length">
-      <view class="hotsale-item-cont">
-        <block v-for="(prod, index2) in prods" :key="index2">
-          <view
-            class="prod-items"
-            @tap="toProdPage(prod.prodid)"
-            :data-prodid="prod.prodId"
-          >
-            <view class="hot-imagecont">
-              <image
-                :lazy-load="true"
-                :lazy-load-margin="0"
-                :src="require('@/static/img/test5.png')"
-                class="hotsaleimg"
-              ></image>
-
-              <view class="cover-box">
+      <view class="hotsale-item-cont"
+        ><scroll-view>
+          <block v-for="(prod, index2) in prods" :key="index2">
+            <view
+              class="prod-items"
+              @tap="toProdPage(prod)"
+              :data-prodid="prod.prodId"
+            >
+              <view class="hot-imagecont">
                 <image
                   :lazy-load="true"
                   :lazy-load-margin="0"
-                  :src="fileUrl + '/sysFile/bg3.png'"
-                  class="cover"
+                  :src="prod.pic"
+                  class="hotsaleimg"
                 ></image>
-              </view>
-            </view>
-            <view class="hot-text">
-              <view class="hotprod-text">{{ prod.prodName }}</view>
 
-              <view class="prod-text-info">
-                <view class="price">
-                  <text class="symbol">￥</text>
-                  <text class="big-num">{{ prod.price[0] | parsePrice }}</text>
+                <view class="cover-box">
+                  <image
+                    :lazy-load="true"
+                    :lazy-load-margin="0"
+                    :src="fileUrl + '/sysFile/bg3.png'"
+                    class="cover"
+                  ></image>
                 </view>
-                <view class="basket-img">
-                  <text class="iconfont icon-dianzan-weijujiao"></text>
-                  <text class="zan-num">123</text>
+              </view>
+              <view class="hot-text">
+                <view class="hotprod-text">{{ prod.prodName }}</view>
+
+                <view class="prod-text-info">
+                  <view class="price">
+                    <text class="symbol">￥</text>
+                    <text class="big-num">{{ prod.price }}</text>
+                  </view>
+                  <view class="basket-img">
+                    <text class="iconfont icon-dianzan-weijujiao"></text>
+                    <text class="zan-num">123</text>
+                  </view>
                 </view>
               </view>
             </view>
-          </view>
-        </block>
+          </block>
+        </scroll-view>
       </view>
     </view>
   </view>
@@ -59,6 +61,11 @@ export default {
     prods: {
       type: Array,
       default: () => [],
+    },
+  },
+  methods: {
+    toProdPage(e) {
+      this.$emit('eventParent', e)
     },
   },
 }

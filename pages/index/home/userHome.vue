@@ -15,7 +15,7 @@
           <block v-for="(item, index) in taglist" :key="index">
             <!-- 商城热卖 -->
             <view v-if="item.style == 1">
-              <list :prods="item.prods"></list>
+              <list :prods="item.prods" @eventParent="toProdPage"></list>
             </view>
           </block>
         </view>
@@ -31,7 +31,7 @@ const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import commSearch from '@/components/commSearch.vue'
 import list from './../components/list.vue'
 import { mallShopTypeListByParentId } from '@/api/shop.js'
-import cateGroup from "@/components/cateGroup"
+import cateGroup from '@/components/cateGroup'
 export default {
   data() {
     return {
@@ -76,111 +76,51 @@ export default {
           title: '上新',
           prods: [
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [102],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/111.png',
+              prodName: '番茄脆菇沙拉',
+              price: 98,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/222.png',
+              prodName: '海鲜',
+              price: 198,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/333.png',
+              prodName: '古都',
+              price: 899,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [102],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/444.png',
+              prodName: '水产采摘',
+              price: 368,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/555.png',
+              prodName: '高级美甲',
+              price: 88,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/666.png',
+              prodName: '美甲DIY',
+              price: 128,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [102],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/777.png',
+              prodName: '户外运动',
+              price: 299,
               prodid: 33,
             },
             {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [102],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [102],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [102],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
-              prodid: 33,
-            },
-            {
-              pic: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-              prodName: '商品名称',
-              price: [10, 2],
+              pic: 'http://39.104.53.172:8888/upload/2023/05/888.png',
+              prodName: '艺术品鉴',
+              price: 1099,
               prodid: 33,
             },
           ],
@@ -193,7 +133,7 @@ export default {
     }
   },
 
-  components: { tabs, commSearch, list,cateGroup },
+  components: { tabs, commSearch, list, cateGroup },
   props: {},
   computed: {
     ...mapGetters(['cateAll']),
@@ -212,7 +152,7 @@ export default {
     styleIsolation: 'shared',
   },
   methods: {
-    ...mapMutations(['setCateAll']),
+    ...mapMutations(['setCateAll', 'setCommodityInfo']),
     //获取所有一级分类
     async getAllCate() {
       try {
@@ -233,18 +173,17 @@ export default {
       //   scrollTop: e.scrollTop
       // });
     },
-    toProdPage(id) {
-      var prodid = id
-      if (prodid) {
-        uni.navigateTo({
-          url: '/pages/subPack/merchant/commodityDetail?prodid=' + prodid,
-        })
-      }
+    toProdPage(item) {
+      this.setCommodityInfo(item)
+
+      uni.navigateTo({
+        url: '/pages/subPack/merchant/commodityDetail',
+      })
     },
 
     toCouponCenter(item) {
       uni.navigateTo({
-        url: '/pages/subPack/merchant/index?cateId=' + item.id,
+        url: `/pages/subPack/merchant/index?cateId=${item.id}&title=${item.name}`,
       })
     },
   },

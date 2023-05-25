@@ -1,58 +1,68 @@
 <template>
   <view>
-    <view
-      class="store-list"
-      v-for="item in list"
-      :key="item.id"
-      @tap="($event) => goEvent(item)"
+    <u-empty
+      v-if="!list || list.length == 0"
+      mode="data"
+      marginTop="120"
+      iconSize="140"
+      textSize="32"
     >
-      <!-- 左边图片 -->
-      <view class="store-list-left">
-        <image
-          :lazy-load="true"
-          :lazy-load-margin="0"
-          class="avater"
-          :src="item.shopAvater"
-        ></image>
-        <view class="cover-box">
+    </u-empty>
+    <view v-else>
+      <view
+        class="store-list"
+        v-for="item in list"
+        :key="item.id"
+        @tap="($event) => goEvent(item)"
+      >
+        <!-- 左边图片 -->
+        <view class="store-list-left">
           <image
             :lazy-load="true"
             :lazy-load-margin="0"
-            :src="fileUrl + '/sysFile/bg3.png'"
-            class="cover"
+            class="avater"
+            :src="item.shopAvater"
           ></image>
-        </view>
-      </view>
-      <!-- 右边介绍 -->
-      <view class="store-list-right">
-        <!-- 第一行 -->
-        <view class="title">
-          <text class="name">{{ item.shopName }}</text>
-          <view class="tag"> 可用消费券 </view>
-        </view>
-        <view class="score">
-          <view class="rate-left"
-            ><u-rate
-              activeColor="#FA6B31"
-              disabled
-              :count="count"
-              v-model="item.rate"
-              size="30"
-            ></u-rate>
+          <view class="cover-box">
+            <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :src="fileUrl + '/sysFile/bg3.png'"
+              class="cover"
+            ></image>
           </view>
         </view>
-        <view class="type">
-          <text class="text">{{ shopInfo.characteristic || '川菜馆' }}</text>
-          <text class="text">{{ item.address }}</text>
-        </view>
-        <view
-          class="certificate-row"
-          v-for="coupon in item.couponList"
-          :key="coupon.id"
-        >
-          <view class="left-icon"> 券 </view>
-          <text class="price"> ¥{{ coupon.price }} </text>
-          <text class="value"> {{ coupon.total }}代金券 </text>
+        <!-- 右边介绍 -->
+        <view class="store-list-right">
+          <!-- 第一行 -->
+          <view class="title">
+            <text class="name">{{ item.shopName }}</text>
+            <view class="tag"> 可用消费券 </view>
+          </view>
+          <view class="score">
+            <view class="rate-left"
+              ><u-rate
+                activeColor="#FA6B31"
+                disabled
+                :count="count"
+                v-model="item.rate"
+                size="30"
+              ></u-rate>
+            </view>
+          </view>
+          <view class="type">
+            <text class="text">{{ shopInfo.characteristic || '川菜馆' }}</text>
+            <text class="text">{{ item.address }}</text>
+          </view>
+          <view
+            class="certificate-row"
+            v-for="coupon in item.couponList"
+            :key="coupon.id"
+          >
+            <view class="left-icon"> 券 </view>
+            <text class="price"> ¥{{ coupon.price }} </text>
+            <text class="value"> {{ coupon.total }}代金券 </text>
+          </view>
         </view>
       </view>
     </view></view

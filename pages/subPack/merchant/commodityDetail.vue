@@ -20,13 +20,13 @@
       <view class="store-content-box">
         <!-- 第一行 -->
         <view class="title">
-          <text class="name">寻味巴蜀2-3人餐</text>
+          <text class="name">{{ commodityInfo.prodName }}</text>
           <text class="tag"> 新品 </text>
         </view>
         <view class="hot-text">
           <view class="prod-text-info">
             <view class="price">
-              <text class="price-value">¥ 168</text>
+              <text class="price-value">¥ {{ commodityInfo.price }}</text>
               <text class="discount-text">8.1折</text>
               <text class="price-org">¥ 200</text>
               <text class="discount-sale">半年售 800 +</text>
@@ -117,6 +117,8 @@ import articleGrid from './../components/articleGrid.vue'
 import commodity from './../components/commodity.vue'
 import dataArr from './index.js'
 import commFootBtn from './commFootBtn.vue'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 export default {
   components: {
     articleGrid,
@@ -171,6 +173,9 @@ export default {
       count: 5,
       value: 4.6,
     }
+  },
+  computed: {
+    ...mapGetters(['commodityInfo']),
   },
   methods: {
     tab(index) {
