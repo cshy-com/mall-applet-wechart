@@ -141,4 +141,7 @@ page {
 </style>
 <style lang="scss" scoped>
 @import './index.scss';
+/deep/ .center {
+  color: #d28534 !important;
+}
 </style>
