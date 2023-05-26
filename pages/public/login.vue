@@ -242,7 +242,7 @@ export default {
       })
         .then((res) => {
           if (res && res.code == 0) {
-            setAuthorization(res.data.phoneNumber)
+            setAuthorization(res.data.token)
             this.setUserInfo(res.data)
             uni.setStorageSync('user', res.data)
             uni.switchTab({
