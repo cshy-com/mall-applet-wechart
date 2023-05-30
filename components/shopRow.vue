@@ -23,7 +23,7 @@
             :lazy-load="true"
             :lazy-load-margin="0"
             class="avater"
-            :src="item.shopAvater"
+            :src="item.mainImage"
           ></image>
           <view class="cover-box">
             <image
@@ -38,23 +38,23 @@
         <view class="store-list-right">
           <!-- 第一行 -->
           <view class="title">
-            <text class="name">{{ item.shopName }}</text>
+            <text class="name">{{ item.name }}</text>
             <view class="tag"> 可用积分 </view>
           </view>
           <view class="score">
             <view class="rate-left"
               ><u-rate
-                activeColor="#FA6B31"
-                disabled
+                activeColor="#FFC64F"
                 :count="count"
-                v-model="item.rate"
-                size="30"
+                readonly
+                :value="item.score"
+                size="32"
               ></u-rate>
             </view>
           </view>
           <view class="type">
-            <text class="text">{{ shopInfo.characteristic || '川菜馆' }}</text>
-            <text class="text">{{ item.address }}</text>
+            <text class="text">{{ item.secondTypeName }}</text>
+            <text class="text">{{ item.areaName }}</text>
           </view>
           <view
             class="certificate-row"
@@ -72,6 +72,9 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+
 export default {
   props: {
     list: {
@@ -92,8 +95,15 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['setShopInfo']),
     goEvent(item) {
-      this.$emit('eventParent', item)
+      this.setShopInfo(item)
+      uni.navigateTo({
+        url: '/pages/subPack/merchant/storeDetails?id=' + item.id,
+      })
+    },
+    scrolltolower(e) {
+      this.$emit('scrolltolower', e)
     },
   },
 }
@@ -163,7 +173,7 @@ export default {
         font-size: 22rpx;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
-        color: #3a6cba;
+        color: $base-bg-blue;
         line-height: 22px;
         width: 136rpx;
         height: 40rpx;

@@ -3,7 +3,7 @@
     <view class="store-block">
       <!-- #ifndef APP-NVUE || MP-TOUTIAO -->
       <u-swiper
-        :list="list4"
+        :list="swiperList"
         previousMargin="5"
         nextMargin="5"
         circular
@@ -12,14 +12,14 @@
         bgColor="#ffffff"
         keyName="url"
         height="220"
-        displayMultipleItems="2.5"
+        :displayMultipleItems="swiperList.length > 3 ? 2.5 : 1"
       ></u-swiper>
       <!-- #endif -->
       <!-- 店铺文字信息部分 -->
       <view class="store-content-box">
         <!-- 第一行 -->
         <view class="title">
-          <text class="name">{{ shopInfo.shopName }}</text>
+          <text class="name">{{ shopInfo.name }}</text>
           <view class="tag">
             <image
               :lazy-load="true"
@@ -35,52 +35,59 @@
         <view class="score">
           <view class="rate-left"
             ><u-rate
-              activeColor="#FA6B31"
-              disabled
+              activeColor="#FFC64F"
+              readonly
               :count="count"
-              v-model="shopInfo.rate"
+              :value="shopInfo.score"
+              size="32"
             ></u-rate
-            ><text class="rate">{{ shopInfo.rate }}</text>
+            ><text class="rate">{{ shopInfo.score | toRate }}</text>
           </view>
-          <text class="value">{{ shopInfo.totalComent }}条</text>
-          <text class="value">¥{{ shopInfo.averagePrice }}/人</text>
+          <text class="value">{{ shopInfo.totalComent || 123 }}条</text>
+          <text class="value">¥{{ shopInfo.perCapitaConsumption }}/人</text>
         </view>
         <view class="type">
           <text class="type-value"
-            >口味{{ shopInfo.score1 }} 环境{{ shopInfo.score2 }} 服务{{
-              shopInfo.score3
-            }}</text
+            >口味{{ shopInfo.tasteRating | toRate }}
+          </text>
+          <text class="type-value"
+            >环境{{ shopInfo.environmentalRating | toRate }}</text
+          >
+          <text class="type-value"
+            >服务{{ shopInfo.serviceRating | toRate }}</text
           >
           <text class="type-name">{{ shopInfo.characteristic }}</text>
-          <text class="type-name">{{ shopInfo.address }}</text>
+          <text class="type-name">{{ shopInfo.areaName }}</text>
         </view>
 
         <view class="comment">
-          <view class="icon">
+          <!-- <view class="icon">
             <image
               :lazy-load="true"
               :lazy-load-margin="0"
               src="/static/img/cate/comment.png"
             ></image>
           </view>
-          <text class="number"> {{ shopInfo.ranking }} </text>
-          <text class="identifying" v-if="shopInfo.canCoupon">
-            可用消费券
-          </text>
+          <text class="number"> {{ shopInfo.ranking }} </text> -->
+          <text class="identifying"> 可用积分 </text>
         </view>
         <view class="shop-time">
           <view class="status-time">
             <text class="lable">营业中</text>
-            <text class="value">{{ shopInfo.st }}-{{ shopInfo.et }}</text>
+            <text class="value"
+              >{{ shopInfo.businessHoursStart }}-{{
+                shopInfo.businessHoursEnd
+              }}</text
+            >
           </view>
-          <view class="tag">
+          <!-- <view class="tag">
             <text class="tag-value" v-for="item in tags" :key="item.id">{{
               item
             }}</text>
-          </view>
+          </view> -->
         </view>
         <view class="address">
-          <text class="text">{{ shopInfo.addressDetail }}</text>
+          <text class="text">{{ shopInfo.address }}</text>
         </view>
         <view class="platform-tip">
           <text> * 增加折扣率不高于其他平台</text>
@@ -129,7 +136,9 @@ import commodity from './../components/commodity.vue'
 import dataArr from './index.js'
 import commFootBtn from './commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
+import { mallShopById } from '@/api/shop.js'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+
 export default {
   components: {
     articleGrid,
@@ -141,32 +150,7 @@ export default {
     return {
       prods: dataArr.shopProds,
       prods2: dataArr.prods,
-      list4: [
-        {
-          url: 'https://cdn.uviewui.com/uview/resources/video.mp4',
-          title: '昨夜星辰昨夜风，画楼西畔桂堂东',
-          poster: 'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-          type: 'video',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-          title: '身无彩凤双飞翼，心有灵犀一点通',
-          type: 'image',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-          title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-          title: '身无彩凤双飞翼，心有灵犀一点通',
-          type: 'image',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-          title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-        },
-      ],
+      swiperList: [],
       tags: [
         '有包厢',
         '有空调',
@@ -180,16 +164,37 @@ export default {
       ],
       count: 5,
       value: 4.6,
+      shopId: '',
     }
   },
   computed: {
     ...mapGetters(['shopInfo']),
   },
+  onLoad(option) {
+    this.shopId = option.id
+    this.getShopDetail()
+  },
   onShow() {
-    this.list4 = this.shopInfo?.shopList || this.list4
+    // this.swiperList = this.shopInfo?.shopList || this.swiperList
   },
   methods: {
-    ...mapMutations(['setCommodityInfo']),
+    ...mapMutations(['setCommodityInfo', 'setShopInfo']),
+    async getShopDetail() {
+      try {
+        let res = await mallShopById(this.shopId)
+        this.setShopInfo(res.data)
+        if (this.shopInfo.images && this.shopInfo.images.length > 0) {
+          this.shopInfo.images.forEach((e) => {
+            this.swiperList.push({
+              url: e,
+              type: 'image',
+            })
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
     toProdPage(item) {
       this.setCommodityInfo(item)
 
@@ -247,7 +252,7 @@ export default {
     align-items: center;
     margin: 20rpx 0;
     .name {
-      width: 356rpx;
+      max-width: 356rpx;
       font-size: 36rpx;
       font-weight: 600;
       white-space: nowrap;
@@ -274,8 +279,9 @@ export default {
       display: flex;
     }
     .rate {
-      color: rgb(181, 149, 125);
-      font-size: 20rpx;
+      color: #ffc64f;
+      font-size: 30rpx;
+      margin-left: 10rpx;
     }
     .value {
       margin-left: 20rpx;
@@ -289,6 +295,9 @@ export default {
     align-content: center;
     justify-content: flex-start;
     margin-bottom: 10rpx;
+    .type-value {
+      margin-right: 20rpx;
+    }
     .type-name {
       margin-left: 50rpx;
     }
@@ -313,7 +322,6 @@ export default {
       color: rgb(181, 149, 125);
     }
     .identifying {
-      margin-left: 10rpx;
       font-size: 20rpx;
       background: rgb(245, 245, 245);
       padding: 4rpx;

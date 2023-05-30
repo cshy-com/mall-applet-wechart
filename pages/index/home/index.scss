@@ -7,7 +7,7 @@ page {
     padding-top: 120rpx;
     font-size: 36rpx;
     font-weight: 600;
-    color: #003C5F;
+    color: $base-bg-blue;
     line-height: 52rpx;
     text-align: center;
     text {
@@ -33,7 +33,7 @@ page {
 }
 
 .container-center {
-    background: rgb(59, 109, 187);
+    background: $base-bg-blue;
     /deep/ .wrap {
         background: none;
     }

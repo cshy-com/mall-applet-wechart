@@ -21,7 +21,8 @@
         }}</text>
       </view>
 
-      <shopRow :list="mockJson" @eventParent="goShopDetail"> </shopRow>
+      <shopRow :list="shopList"> </shopRow>
+      <!-- <uni-load-more :status="more"></uni-load-more> -->
       <photoWall v-if="cateId == -1"></photoWall>
       <commNav v-if="cateId == -2"></commNav>
     </view>
@@ -31,15 +32,16 @@
 <script>
 import dataArr from './index.js'
 import tabs from '@/components/tabs.vue'
-import shopRow from '@/pages/subPack/components/shopRow.vue'
+import shopRow from '@/components/shopRow.vue'
 import articleGrid from '@/pages/subPack/components/articleGrid.vue'
 
 import photoWall from './../components/photoWall.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import commNav from './../components/commNav.vue'
-import { mallShopTypeListByParentId } from '@/api/shop.js'
+import { mallShopTypeListByParentId, mallShopPage } from '@/api/shop.js'
 import cateGroup from '@/components/cateGroup.vue'
+import { getTotalPage } from '@/util/util'
 export default {
   components: {
     tabs,
@@ -63,6 +65,11 @@ export default {
       prods: dataArr.prods,
       mockJson: dataArr.mockJson,
       title: '',
+      size: 10,
+      current: 1,
+      total: 0,
+      shopList: [],
+      more: 'noMore',
     }
   },
   computed: {},
@@ -71,12 +78,11 @@ export default {
     console.log('option.cateId' + option.cateId)
     this.cateId = option.cateId
     this.getCateList(option.cateId)
+    this.getPageList(option.cateId)
     ;(this.statusList = dataArr.statusList[this.cateId]),
       (this.tagList = dataArr.tagList[this.cateId]),
       (this.list = dataArr.selectData[this.cateId])
     this.mockJson = dataArr.mockJson.filter((val) => val.pid == option.cateId)
-    console.log(this.mockJson)
-    console.log(this.list)
 
     this.title = option.title
   },
@@ -90,9 +96,16 @@ export default {
   },
   onPullDownRefresh() {
     this.getCateList(this.cateId)
+    this.current = 1
+    this.getPageList()
     setTimeout(function () {
       uni.stopPullDownRefresh()
     }, 1000)
+  },
+  // 上拉触底事件
+  onReachBottom: function () {
+    this.current++
+    this.getPageList()
   },
   methods: {
     ...mapMutations(['setShopInfo']),
@@ -103,6 +116,27 @@ export default {
         this.cateList = res.data
       } catch (e) {
         console.log('异常：', e)
+      }
+    },
+    async getPageList() {
+      try {
+        this.more = 'loading'
+        let res = await mallShopPage({
+          current: this.current,
+          size: this.size,
+          firstType: this.cateId,
+        })
+
+        this.total = res.total
+        let totalPage = getTotalPage(this.total, this.size)
+        this.shopList = [...this.shopList, ...res.data]
+        if (totalPage > this.current) {
+          this.more = 'more'
+        } else {
+          this.more = 'noMore'
+        }
+      } catch (e) {
+        console.log(e)
       }
     },
     navBack() {
@@ -120,11 +154,9 @@ export default {
         url: `/pages/subPack/merchant/storeList?pid=${item.id}&title=${item.name}`,
       })
     },
-    goShopDetail(item) {
-      this.setShopInfo(item)
-      uni.navigateTo({
-        url: '/pages/subPack/merchant/storeDetails',
-      })
+    scrolltolower(item) {
+      this.current++
+      this.getPageList()
     },
     goArticleDetail() {
       uni.navigateTo({
@@ -134,9 +166,9 @@ export default {
   },
 }
 </script>
-<style>
+<style lang="scss">
 page {
-  background: #3b6dbb;
+  background: $base-bg-blue;
 }
 </style>
 <style lang="scss" scoped>

@@ -1,3 +1,11 @@
+/*
+ * @Author: zxs 774004514@qq.com
+ * @Date: 2023-05-08 17:00:41
+ * @LastEditors: zxs 774004514@qq.com
+ * @LastEditTime: 2023-05-30 15:42:58
+ * @FilePath: \mall-applet\pages.json
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 {
 
     "easycom": {
@@ -35,7 +43,8 @@
             "path": "pages/index/collection/index",
             "style": {
                 "navigationBarTitleText": "收藏",
-                "navigationBarBackgroundColor": "#FFFFFF"
+                "navigationBarBackgroundColor": "#FFFFFF",
+                "enablePullDownRefresh": true
             }
         }
 
@@ -104,7 +113,8 @@
                     "style": {
                         "navigationBarTitleText": "店铺列表",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "navigationStyle": "custom"
+                        "navigationStyle": "custom",
+                        "enablePullDownRefresh": true
                     }
                 }, {
                     "path": "merchant/commodityDetail",

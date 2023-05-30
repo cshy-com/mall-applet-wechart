@@ -11,20 +11,20 @@ export default {
     }
   },
   onLaunch: function () {
-  //   uni.loadFontFace({
-  //   global: true, // 是否全局生效
-  //   family: 'font-name', // 定义的字体名称
-  //   source: 'url("https://xxx.com/font/font-name.ttf")', // 字体资源的地址。建议格式为 TTF 和 WOFF，WOFF2 在低版本的iOS上会不兼容。
-  //   success() {
-  //     console.log('成功的回调函数')
-  //   },
-  //   fail(){
-  //     console.log('失败的回调函数')
-  //   },
-  //   complete(){
-  //     console.log('接口调用结束的回调函数（调用成功、失败都会执行）')
-  //   }
-  // })
+    //   uni.loadFontFace({
+    //   global: true, // 是否全局生效
+    //   family: 'font-name', // 定义的字体名称
+    //   source: 'url("https://xxx.com/font/font-name.ttf")', // 字体资源的地址。建议格式为 TTF 和 WOFF，WOFF2 在低版本的iOS上会不兼容。
+    //   success() {
+    //     console.log('成功的回调函数')
+    //   },
+    //   fail(){
+    //     console.log('失败的回调函数')
+    //   },
+    //   complete(){
+    //     console.log('接口调用结束的回调函数（调用成功、失败都会执行）')
+    //   }
+    // })
 
     console.log('App Launch')
     // 对路由进行统一拦截，实现路由导航守卫 router.beforeEach 功能
@@ -39,6 +39,8 @@ export default {
 </script>
 <style lang="scss">
 @import 'uview-ui/index.scss';
+@import 'theme.scss';
+@import 'uni.scss';
 </style>
 <style>
 @import './common/uni.css';

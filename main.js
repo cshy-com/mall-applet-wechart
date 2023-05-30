@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:41
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-19 16:17:37
+ * @LastEditTime: 2023-05-29 17:02:57
  * @FilePath: \mall-applet\main.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,6 +18,8 @@ Vue.prototype.$serverApiUrl = serverApiUrl
 import comUtils from './util/comUtils.js'
 Vue.prototype.$fileUrl = comUtils.fileUrl
 console.log('comUtils.fileUrl' + comUtils.fileUrl, comUtils)
+import nodata from './components/nodata.vue';
+Vue.component('nodata', nodata);
 import store from './store/index.js'
 
 Vue.config.productionTip = false
