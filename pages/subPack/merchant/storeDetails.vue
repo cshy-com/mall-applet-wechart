@@ -27,9 +27,13 @@
               src="/static/img/cate/tag.png"
             ></image>
           </view>
-          <view class="star">
-            <u-icon name="star" color="#333" size="28"></u-icon>
-            <text class="star-text">收藏</text>
+          <view class="star" @click="getCollect">
+            <u-icon
+              :name="isCollect ? 'star-fill' : 'star'"
+              :color="isCollect ? '#ff6a13' : '#333'"
+              size="28"
+            ></u-icon>
+            <text class="star-text">{{ isCollect ? '取消收藏' : '收藏' }}</text>
           </view>
         </view>
         <view class="score">
@@ -165,6 +169,7 @@ export default {
       count: 5,
       value: 4.6,
       shopId: '',
+      isCollect: false, //是否已收藏
     }
   },
   computed: {
@@ -179,6 +184,9 @@ export default {
   },
   methods: {
     ...mapMutations(['setCommodityInfo', 'setShopInfo']),
+    getCollect() {
+      this.isCollect = !this.isCollect
+    },
     async getShopDetail() {
       try {
         let res = await mallShopById(this.shopId)
@@ -267,6 +275,7 @@ export default {
       image {
         width: 100%;
         height: 100%;
+        will-change: transform;
       }
     }
   }
@@ -313,6 +322,7 @@ export default {
       image {
         width: 100%;
         height: 100%;
+        will-change: transform;
       }
     }
     .number {
@@ -404,6 +414,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 90rpx;
   .star-text {
     font-size: 20rpx;
   }

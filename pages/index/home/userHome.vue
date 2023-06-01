@@ -9,15 +9,23 @@
       </view>
     </view>
     <view class="container-center">
-      <tabs :list="statusList" :selectIndex="selectClassIndex"></tabs>
+      <tabs
+        :list="statusList"
+        :selectIndex="selectClassIndex"
+        @changeIndex="changeIndex"
+      ></tabs>
       <view class="home-content">
-        <view class="updata" v-if="updata">
+        <!-- 推荐 -->
+        <view class="updata" v-if="selectClassIndex == 1">
           <block v-for="(item, index) in taglist" :key="index">
             <!-- 商城热卖 -->
             <view v-if="item.style == 1">
               <list :prods="item.prods" @eventParent="toProdPage"></list>
             </view>
           </block>
+        </view>
+        <view v-if="selectClassIndex == 2">
+          <forum :list="list"></forum>
         </view>
       </view>
     </view>
@@ -32,6 +40,8 @@ import commSearch from '@/components/commSearch.vue'
 import list from './../components/list.vue'
 import { mallShopTypeListByParentId } from '@/api/shop.js'
 import cateGroup from '@/components/cateGroup'
+import forum from './../components/forum'
+import forumData from '@/mock/index.js'
 export default {
   data() {
     return {
@@ -68,7 +78,7 @@ export default {
           title: '项目发布',
         },
       ],
-      selectClassIndex: 0,
+      selectClassIndex: 1,
       taglist: [
         {
           style: 1,
@@ -130,10 +140,11 @@ export default {
       scrollTop: '',
       current: 0,
       updata: true,
+      list: forumData.forumList,
     }
   },
 
-  components: { tabs, commSearch, list, cateGroup },
+  components: { tabs, commSearch, list, cateGroup, forum },
   props: {},
   computed: {
     ...mapGetters(['cateAll']),
@@ -142,17 +153,29 @@ export default {
     },
   },
   created() {
+    console.log('1111')
+    console.log(forumData.forumList)
+    debugger
     this.getAllCate()
   },
-  onLoad() {},
+  onLoad() {
+    console.log('222')
+    debugger
+  },
   onReady() {},
-  onShow() {},
+  onShow() {
+    console.log('333')
+    debugger
+  },
 
   options: {
     styleIsolation: 'shared',
   },
   methods: {
     ...mapMutations(['setCateAll', 'setCommodityInfo']),
+    changeIndex(e) {
+      this.selectClassIndex = e
+    },
     //获取所有一级分类
     async getAllCate() {
       try {

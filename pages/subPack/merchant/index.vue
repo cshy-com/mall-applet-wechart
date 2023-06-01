@@ -3,7 +3,7 @@
     <view class="contant-top">
       <commNav :title="title" ref="navs"></commNav>
 
-      <cateGroup :cateList="cateList" @CateEvent="toCouponCenter"></cateGroup>
+      <cateGroup :cateList="cateList" @CateEvent="toCateCenter"></cateGroup>
     </view>
     <view class="contant-center">
       <!-- tab切换 -->
@@ -97,6 +97,7 @@ export default {
   onPullDownRefresh() {
     this.getCateList(this.cateId)
     this.current = 1
+    this.shopList = []
     this.getPageList()
     setTimeout(function () {
       uni.stopPullDownRefresh()
@@ -149,7 +150,7 @@ export default {
       // 返回值为一个数组
       console.log('eeee', e)
     },
-    toCouponCenter(item, index = 0) {
+    toCateCenter(item, index = 0) {
       uni.navigateTo({
         url: `/pages/subPack/merchant/storeList?pid=${item.id}&title=${item.name}`,
       })

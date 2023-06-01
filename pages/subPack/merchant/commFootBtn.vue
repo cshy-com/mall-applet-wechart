@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:16:21
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-16 09:27:58
+ * @LastEditTime: 2023-05-30 17:19:37
  * @FilePath: \mall-applet\pages\subPack\merchant\commFootBtn.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,6 +10,15 @@
   <view>
     <!-- 底部操作按钮 -->
     <view class="footer-btn">
+      <view @click="customerService" class="left-icon">
+        <u-icon
+          :name="'server-man'"
+          size="40"
+          label="客服"
+          labelPos="bottom"
+          labelSize="24"
+        ></u-icon>
+      </view>
       <view class="foot-btn-def">
         <u-button
           class="foot-btn-value"
@@ -69,6 +78,9 @@ export default {
     }
   },
   methods: {
+    customerService() {
+      this.$u.toast('正在开发中，敬请期待')
+    },
     feedback() {
       this.$u.toast('正在开发中，敬请期待')
     },
@@ -120,6 +132,9 @@ export default {
       color: #fff;
       height: 70rpx !important;
     }
+  }
+  .left-icon {
+    width: 100rpx;
   }
 }
 </style>

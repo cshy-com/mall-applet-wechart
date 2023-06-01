@@ -97,6 +97,7 @@ export default {
         border-radius: 20rpx 20rpx 0 0;
 
         z-index: 1;
+        will-change: transform;
       }
       .cover-box {
         width: 100%;

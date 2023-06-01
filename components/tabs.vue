@@ -35,7 +35,7 @@ export default {
     },
     selectIndex: {
       type: Number,
-      default: 0,
+      default: 1,
     },
   },
   watch: {
@@ -69,6 +69,7 @@ export default {
     changeIndex(index) {
       //改变index 即手动点击切换 我在此时将当前元素赋值给左边距 实现自动滚动
       this.tabIndex = index
+      this.$emit('changeIndex', index)
       //当前滚动的位置
       //this.tabList[index].left 会使当前选中的距离左边为0
       //然后 用屏幕宽度减去当前元素的宽度 / 2  则会让他处于中间位置

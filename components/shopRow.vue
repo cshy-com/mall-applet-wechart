@@ -23,7 +23,8 @@
             :lazy-load="true"
             :lazy-load-margin="0"
             class="avater"
-            :src="item.mainImage"
+            :src="item.mainImage || defaultImg"
+            :mode="'aspectFill'"
           ></image>
           <view class="cover-box">
             <image
@@ -86,6 +87,7 @@ export default {
     return {
       value: 4.6,
       count: 5,
+      defaultImg: require('@/static/img/default.png'),
     }
   },
   created() {},
@@ -126,6 +128,7 @@ export default {
       width: 100%;
       height: 100%;
       border-radius: 20rpx 0 0 20rpx;
+      will-change: transform;
     }
     .cover-box {
       width: 100%;

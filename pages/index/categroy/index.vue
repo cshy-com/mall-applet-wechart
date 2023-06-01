@@ -1,11 +1,12 @@
 <template>
   <view class="u-wrap">
-    <view class="u-search-box">
+    <!-- <view class="u-search-box">
       <view class="u-search-inner">
         <u-icon name="search" color="#909399" :size="28"></u-icon>
         <text class="u-search-text">搜索uView</text>
       </view>
-    </view>
+    </view> -->
+    <commSearch :placeholder="'输入关键字搜索'"></commSearch>
     <view class="u-menu-wrap">
       <scroll-view
         scroll-y
@@ -24,24 +25,28 @@
           <text class="u-line-1">{{ item.name }}</text>
         </view>
       </scroll-view>
-      <block v-for="(item, index) in tabbar" :key="index">
-        <scroll-view scroll-y class="right-box" v-if="current == index">
+      <block>
+        <!-- v-if="current == index" -->
+        <scroll-view scroll-y class="right-box">
           <view class="page-view">
             <view class="class-item">
               <view class="item-title">
-                <text>{{ item.name }}</text>
+                <text>{{ tabbar[current].name }}</text>
               </view>
               <view class="item-container">
                 <view
                   class="thumb-box"
-                  v-for="(item1, index1) in item.foods"
+                  v-for="(item1, index1) in childTabbar"
                   :key="index1"
+                  @tap="goDetail(item1)"
                 >
-                  <image
-                    class="item-menu-image"
-                    :src="item1.icon"
-                    mode=""
-                  ></image>
+                  <view class="item-menu-border">
+                    <image
+                      class="item-menu-image"
+                      :src="item1.ico"
+                      mode=""
+                    ></image>
+                  </view>
                   <view class="item-menu-name">{{ item1.name }}</view>
                 </view>
               </view>
@@ -54,26 +59,59 @@
 </template>
 
 <script>
-import classifyData from '../classify.data.js'
+import commSearch from '@/components/commSearch.vue'
+import { mallShopTypeListByParentId } from '@/api/shop.js'
 export default {
   data() {
     return {
-      tabbar: classifyData,
+      tabbar: [],
       scrollTop: 0, //tab标题的滚动条位置
       current: 0, // 预设当前项的值
       menuHeight: 0, // 左边菜单的高度
       menuItemHeight: 0, // 左边菜单item的高度
+      childTabbar: [],
     }
   },
+  components: { commSearch },
   computed: {},
+  async onShow() {
+    this.tabbar = await this.getCates(0)
+    this.childTabbar = await this.getCates(this.tabbar[0].id)
+  },
+  async onPullDownRefresh() {
+    this.scrollTop = 0
+    
+this.menuHeight=0
+this.menuItemHeight=0
+    this.current = 0
+    this.$nextTick(async ()=>{
+      this.tabbar = await this.getCates(0)
+      this.childTabbar = await this.getCates(this.tabbar[0].id)
+    })
+   
+  },
   methods: {
+    async getCates(pid) {
+      try {
+        let res = await mallShopTypeListByParentId(pid)
+        return res.data
+      } catch (e) {
+        console.log(e)
+      }
+    },
     getImg() {
       return Math.floor(Math.random() * 35)
+    },
+    goDetail(item) {
+      uni.navigateTo({
+        url: `/pages/subPack/merchant/storeList?pid=${item.id}&title=${item.name}`,
+      })
     },
     // 点击左边的栏目切换
     async swichMenu(index) {
       if (index == this.current) return
       this.current = index
+      this.childTabbar = await this.getCates(this.tabbar[index].id)
       // 如果为0，意味着尚未初始化
       if (this.menuHeight == 0 || this.menuItemHeight == 0) {
         await this.getElRect('menu-scroll-view', 'menuHeight')
@@ -126,6 +164,7 @@ export default {
   flex: 1;
   display: flex;
   overflow: hidden;
+  margin-top: 20rpx;
 }
 
 .u-search-inner {
@@ -222,8 +261,14 @@ export default {
   margin-top: 20rpx;
 }
 
+.item-menu-border {
+  width: 100rpx;
+  height: 100rpx;
+  border: 2rpx solid #a67139;
+  border-radius: 50%;
+}
 .item-menu-image {
-  width: 120rpx;
-  height: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
 }
 </style>
