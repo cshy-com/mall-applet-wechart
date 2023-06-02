@@ -38,7 +38,7 @@ export default {
       item.content ? (this.content = item.content) : ''
     }
     wx.enableAlertBeforeUnload({
-      message: '确认离开码',
+      message: '离开页面前请确认内容是否已保存',
     })
   },
   methods: {

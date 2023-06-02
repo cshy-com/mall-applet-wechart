@@ -23,8 +23,9 @@
             :lazy-load="true"
             :lazy-load-margin="0"
             class="avater"
-            :src="item.mainImage || defaultImg"
+            :src="item.mainImage"
             :mode="'aspectFill'"
+            @error="imageError($event, index, i)"
           ></image>
           <view class="cover-box">
             <image
@@ -54,7 +55,10 @@
             </view>
           </view>
           <view class="type">
-            <text class="text">{{ item.secondTypeName }}</text>
+            <text class="text"
+              ><text v-if="isShowPid">{{ item.firstTypeName }}/</text
+              >{{ item.secondTypeName }}</text
+            >
             <text class="text">{{ item.areaName }}</text>
           </view>
           <view
@@ -82,6 +86,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    isShowPid: {
+      type: Boolean, //是否展示一级分类
+      default: false,
+    },
   },
   data() {
     return {
@@ -103,6 +111,9 @@ export default {
       uni.navigateTo({
         url: '/pages/subPack/merchant/storeDetails?id=' + item.id,
       })
+    },
+    imageError(e, index, i) {
+      this.list[index]['mainImage'] = defaultImg
     },
     scrolltolower(e) {
       this.$emit('scrolltolower', e)

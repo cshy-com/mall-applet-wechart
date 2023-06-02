@@ -28,7 +28,25 @@
         <button class="click-login">点击登录账号</button>
       </view>
     </view>
-
+    <view class="u-m-t-20">
+      <u-cell-group>
+        <!-- <u-cell
+          title="发布文章"
+          isLink
+          url="/pages/subPack/forum/addForum"
+        ></u-cell> -->
+        <u-cell
+          title="我的论坛"
+          isLink
+          url="/pages/subPack/forum/index"
+        ></u-cell>
+        <u-cell
+          title="历史建议"
+          isLink
+          url="/pages/subPack/recommendation/index"
+        ></u-cell>
+      </u-cell-group>
+    </view>
     <view class="user-block-1">
       <image
         :lazy-load="true"
@@ -56,16 +74,6 @@
         src="/static/img/user3.png"
       ></image>
     </view>
-
-    <!-- <view class="u-m-t-20">
-      <u-cell-group>
-        <u-cell
-          title="发布文章"
-          isLink
-          url="/pages/subPack/forum/addForum"
-        ></u-cell>
-      </u-cell-group>
-    </view> -->
   </view>
 </template>
 
@@ -145,4 +153,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import './index.scss';
+.u-m-t-20 {
+  background: #fff;
+}
 </style>

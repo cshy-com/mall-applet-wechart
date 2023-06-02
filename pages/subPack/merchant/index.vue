@@ -97,7 +97,6 @@ export default {
   onPullDownRefresh() {
     this.getCateList(this.cateId)
     this.current = 1
-    this.shopList = []
     this.getPageList()
     setTimeout(function () {
       uni.stopPullDownRefresh()
@@ -130,7 +129,12 @@ export default {
 
         this.total = res.total
         let totalPage = getTotalPage(this.total, this.size)
-        this.shopList = [...this.shopList, ...res.data]
+        if (this.current == 1) {
+          this.shopList = res.data
+        } else {
+          this.shopList = [...this.shopList, ...res.data]
+        }
+
         if (totalPage > this.current) {
           this.more = 'more'
         } else {

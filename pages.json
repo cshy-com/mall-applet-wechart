@@ -131,7 +131,34 @@
 
                     }
 
+                }, {
+                    "path": "forum/index",
+                    "style": {
+                        "navigationBarTitleText": "我的论坛",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+
+                    }
+
+                },
+                {
+                    "path": "recommendation/index",
+                    "style": {
+                        "navigationBarTitleText": "我的历史建议",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+
+                    }
+
+                },
+                {
+                    "path": "recommendation/recommendationDetail",
+                    "style": {
+                        "navigationBarTitleText": "建议详情",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+
+                    }
+
                 }
+
             ]
         },
         {

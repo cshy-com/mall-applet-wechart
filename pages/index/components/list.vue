@@ -15,6 +15,8 @@
                   :lazy-load-margin="0"
                   :src="prod.pic"
                   class="hotsaleimg"
+                  :showLoading="true"
+                  :mode="'aspectFill'"
                 ></image>
 
                 <view class="cover-box">

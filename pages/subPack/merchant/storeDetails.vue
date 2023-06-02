@@ -140,7 +140,11 @@ import commodity from './../components/commodity.vue'
 import dataArr from './index.js'
 import commFootBtn from './commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
-import { mallShopById } from '@/api/shop.js'
+import {
+  mallShopById,
+  mallShopCollectAdd,
+  mallShopCollectDel,
+} from '@/api/shop.js'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 
 export default {
@@ -184,13 +188,21 @@ export default {
   },
   methods: {
     ...mapMutations(['setCommodityInfo', 'setShopInfo']),
-    getCollect() {
-      this.isCollect = !this.isCollect
+    async getCollect() {
+      let http = this.isCollect ? mallShopCollectDel : mallShopCollectAdd
+      try {
+        await http(this.shopId)
+        this.isCollect = !this.isCollect
+        this.$tip.toast(this.isCollect ? '收藏成功' : '已取消收藏')
+      } catch (e) {
+        console.log(e)
+      }
     },
     async getShopDetail() {
       try {
         let res = await mallShopById(this.shopId)
         this.setShopInfo(res.data)
+        this.isCollect = res.data.ifCollect
         if (this.shopInfo.images && this.shopInfo.images.length > 0) {
           this.shopInfo.images.forEach((e) => {
             this.swiperList.push({

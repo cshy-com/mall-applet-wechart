@@ -27,6 +27,9 @@
         <view v-if="selectClassIndex == 2">
           <forum :list="list"></forum>
         </view>
+        <view v-if="selectClassIndex == 3">
+          <recommendation ></recommendation>
+        </view>
       </view>
     </view>
   </view>
@@ -40,8 +43,10 @@ import commSearch from '@/components/commSearch.vue'
 import list from './../components/list.vue'
 import { mallShopTypeListByParentId } from '@/api/shop.js'
 import cateGroup from '@/components/cateGroup'
-import forum from './../components/forum'
+import forum from '@/components/forum'
+import recommendation from './../components/recommendation'
 import forumData from '@/mock/index.js'
+
 export default {
   data() {
     return {
@@ -144,7 +149,7 @@ export default {
     }
   },
 
-  components: { tabs, commSearch, list, cateGroup, forum },
+  components: { tabs, commSearch, list, cateGroup, forum, recommendation },
   props: {},
   computed: {
     ...mapGetters(['cateAll']),
@@ -153,20 +158,11 @@ export default {
     },
   },
   created() {
-    console.log('1111')
-    console.log(forumData.forumList)
-    debugger
     this.getAllCate()
   },
-  onLoad() {
-    console.log('222')
-    debugger
-  },
+  onLoad() {},
   onReady() {},
-  onShow() {
-    console.log('333')
-    debugger
-  },
+  onShow() {},
 
   options: {
     styleIsolation: 'shared',

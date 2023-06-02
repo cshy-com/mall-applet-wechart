@@ -12,9 +12,23 @@ import { postPayload, postFormdata, putFormdata, deleteFormdata, getString } fro
 export function mallShopTypeListByParentId(data) {
     return getString('/mallShopType/mallListByParentId/' + data)
 }
+// 获取店铺详情
 export function mallShopById(data) {
     return getString('/mallShop/obj/' + data)
 }
+// 获取店铺列表
 export function mallShopPage(data) {
     return postPayload('/mallShop/page', data)
+}
+// 获取用户店铺收藏列表
+export function mallShopCollectList(data) {
+    return postPayload('/mallShopCollect/mallPage', data)
+}
+// 用户收藏店铺
+export function mallShopCollectAdd(data) {
+    return postPayload('/mallShopCollect/mallAdd/' + data)
+}
+// 取消收藏
+export function mallShopCollectDel(data) {
+    return postPayload('/mallShopCollect/mallDel/' + data)
 }
