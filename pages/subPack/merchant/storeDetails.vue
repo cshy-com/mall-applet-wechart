@@ -109,9 +109,9 @@
       <!-- 店铺商品 -->
       <view class="commodity-box">
         <view class="tab-header">
-          <text> 推荐菜(5)</text>
+          <text> 推荐菜({{ prods.length }})</text>
         </view>
-        <commodity :prods="prods" @eventParent="toProdPage"> </commodity>
+        <commodity :prods="prods"> </commodity>
       </view>
       <!--评价  -->
       <view class="comment-box">
@@ -123,10 +123,12 @@
       <!-- 推荐 -->
       <view class="article-grid-box">
         <view class="tab-header">
-          <text> 推荐(6)</text>
+          <text> 推荐({{ prods2.length }})</text>
         </view>
-        <articleGrid :prods="prods2"> </articleGrid
-      ></view>
+        <commodity :prods="prods2"> </commodity>
+        <!-- <articleGrid :prods="prods2"> </articleGrid -->
+        ></view
+      >
       <!-- 底部操作按钮 -->
       <commFootBtn :tel="shopInfo.tel"></commFootBtn>
     </view>
@@ -144,6 +146,8 @@ import {
   mallShopById,
   mallShopCollectAdd,
   mallShopCollectDel,
+  getCommodityList,
+  getCommodityPage,
 } from '@/api/shop.js'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 
@@ -156,8 +160,8 @@ export default {
   },
   data() {
     return {
-      prods: dataArr.shopProds,
-      prods2: dataArr.prods,
+      prods: [],
+      prods2: [],
       swiperList: [],
       tags: [
         '有包厢',
@@ -174,6 +178,8 @@ export default {
       value: 4.6,
       shopId: '',
       isCollect: false, //是否已收藏
+      current: 1,
+      size: 10,
     }
   },
   computed: {
@@ -182,12 +188,19 @@ export default {
   onLoad(option) {
     this.shopId = option.id
     this.getShopDetail()
+    this.getCommodityList()
+    this.getCommodityRecommend()
   },
   onShow() {
     // this.swiperList = this.shopInfo?.shopList || this.swiperList
   },
+  onReachBottom() {
+    this.current++
+    this.getCommodityRecommend()
+  },
   methods: {
     ...mapMutations(['setCommodityInfo', 'setShopInfo']),
+
     async getCollect() {
       let http = this.isCollect ? mallShopCollectDel : mallShopCollectAdd
       try {
@@ -215,11 +228,34 @@ export default {
         console.log(e)
       }
     },
-    toProdPage(item) {
-      this.setCommodityInfo(item)
-
-      uni.navigateTo({ url: '/pages/subPack/merchant/commodityDetail' })
+    // 查看商家下面商品信息
+    async getCommodityList() {
+      try {
+        let res = await getCommodityList({
+          shopId: this.shopId,
+        })
+        this.prods = res.data
+      } catch (e) {
+        console.log(e)
+      }
     },
+    // 查看推荐商品
+    async getCommodityRecommend() {
+      try {
+        let res = await getCommodityPage({
+          current: this.current,
+          size: this.size,
+        })
+        if (this.current == 1) {
+          this.prods2 = res.data
+        } else {
+          this.prods2 = [...this.prods2, ...res.data]
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
     tab(index) {
       switch (index) {
         case 0:

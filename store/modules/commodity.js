@@ -70,6 +70,7 @@ const mutations = {
         state.shopInfo = val
     },
     setCommodityInfo: (state, val) => {
+        debugger
         state.commodityInfo = val
     },
     setCateAll: (state, val) => {

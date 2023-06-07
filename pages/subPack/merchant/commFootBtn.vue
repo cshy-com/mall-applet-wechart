@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:16:21
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-30 17:19:37
+ * @LastEditTime: 2023-06-05 11:02:35
  * @FilePath: \mall-applet\pages\subPack\merchant\commFootBtn.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,14 +10,26 @@
   <view>
     <!-- 底部操作按钮 -->
     <view class="footer-btn">
-      <view @click="customerService" class="left-icon">
-        <u-icon
-          :name="'server-man'"
-          size="40"
-          label="客服"
-          labelPos="bottom"
-          labelSize="24"
-        ></u-icon>
+      <view class="left-icon">
+        <!-- <button  class="btn"
+          open-type="contact"
+          @contact="handleContact"
+          show-message-card
+          :send-message-title="shopInfo.name"
+          :send-message-path="
+            '/pages/subPack/merchant/storeDetails?id=' + shopInfo.id
+          "
+          :sendMessageImg="shopInfo.mainImage"
+        > -->
+          <u-icon
+            :name="'server-man'"
+            size="40"
+            label="客服"
+            labelPos="bottom"
+            labelSize="24"
+            @tap='handleContact'
+          ></u-icon>
+        <!-- </button> -->
       </view>
       <view class="foot-btn-def">
         <u-button
@@ -54,6 +66,8 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 export default {
   props: {
     tel: {
@@ -77,8 +91,15 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapGetters(['shopInfo']),
+  },
   methods: {
-    customerService() {
+    handleContact(e) {
+
+      // console.log('path----------------' + JSON.stringify( e.detail.path))
+      // console.log('query----------------' + JSON.stringify(e.detail.query))
+      // return
       this.$u.toast('正在开发中，敬请期待')
     },
     feedback() {
@@ -135,6 +156,10 @@ export default {
   }
   .left-icon {
     width: 100rpx;
+    .btn{
+      background: none;
+    }
+    .btn::after{ border: none;}
   }
 }
 </style>

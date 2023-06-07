@@ -16,19 +16,19 @@
       ></tabs>
       <view class="home-content">
         <!-- 推荐 -->
-        <view class="updata" v-if="selectClassIndex == 1">
-          <block v-for="(item, index) in taglist" :key="index">
+        <view class="updata" v-if="selectClassIndex == 0">
+          <block>
             <!-- 商城热卖 -->
-            <view v-if="item.style == 1">
-              <list :prods="item.prods" @eventParent="toProdPage"></list>
+            <view>
+              <list :prods="prods" @eventParent="toProdPage"></list>
             </view>
           </block>
         </view>
-        <view v-if="selectClassIndex == 2">
+        <view v-if="selectClassIndex == 1">
           <forum :list="list"></forum>
         </view>
-        <view v-if="selectClassIndex == 3">
-          <recommendation ></recommendation>
+        <view v-if="selectClassIndex == 2">
+          <recommendation></recommendation>
         </view>
       </view>
     </view>
@@ -41,7 +41,7 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import commSearch from '@/components/commSearch.vue'
 import list from './../components/list.vue'
-import { mallShopTypeListByParentId } from '@/api/shop.js'
+import { mallShopTypeListByParentId, getCommodityPage } from '@/api/shop.js'
 import cateGroup from '@/components/cateGroup'
 import forum from '@/components/forum'
 import recommendation from './../components/recommendation'
@@ -68,11 +68,9 @@ export default {
       news: [],
       statusList: [
         {
-          title: '关注',
+          title: '关注/推荐',
         },
-        {
-          title: '推荐',
-        },
+
         {
           title: '论坛',
         },
@@ -83,7 +81,7 @@ export default {
           title: '项目发布',
         },
       ],
-      selectClassIndex: 1,
+      selectClassIndex: 0,
       taglist: [
         {
           style: 1,
@@ -143,9 +141,12 @@ export default {
       ],
       sts: 0,
       scrollTop: '',
-      current: 0,
+      current: 1,
+      size: 10,
+      total: 0,
       updata: true,
       list: forumData.forumList,
+      prods: [],
     }
   },
 
@@ -159,6 +160,7 @@ export default {
   },
   created() {
     this.getAllCate()
+    this.getCommodityRecommend()
   },
   onLoad() {},
   onReady() {},
@@ -171,6 +173,23 @@ export default {
     ...mapMutations(['setCateAll', 'setCommodityInfo']),
     changeIndex(e) {
       this.selectClassIndex = e
+    },
+    async getCommodityRecommend() {
+      try {
+        let res = await getCommodityPage({
+          current: this.current,
+          size: this.size,
+        })
+        this.total = res.total
+
+        if (this.current == 1) {
+          this.prods = res.data
+        } else {
+          this.prods = [...this.prods, ...res.data]
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
     //获取所有一级分类
     async getAllCate() {
@@ -196,7 +215,7 @@ export default {
       this.setCommodityInfo(item)
 
       uni.navigateTo({
-        url: '/pages/subPack/merchant/commodityDetail',
+        url: `/pages/subPack/merchant/commodityDetail?Id=${item.id}&shopId=${item.shopId}`,
       })
     },
 

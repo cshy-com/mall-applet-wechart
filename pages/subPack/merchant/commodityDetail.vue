@@ -3,7 +3,7 @@
     <view class="store-block">
       <!-- #ifndef APP-NVUE || MP-TOUTIAO -->
       <u-swiper
-        :list="list4"
+        :list="swiperList"
         @change="(e) => (currentNum = e.current)"
         :autoplay="false"
         indicatorStyle="right: 20px"
@@ -11,7 +11,7 @@
       >
         <view slot="indicator" class="indicator-num">
           <text class="indicator-num__text"
-            >{{ currentNum + 1 }}/{{ list4.length }}</text
+            >{{ currentNum + 1 }}/{{ swiperList.length }}</text
           >
         </view>
       </u-swiper>
@@ -20,16 +20,22 @@
       <view class="store-content-box">
         <!-- 第一行 -->
         <view class="title">
-          <text class="name">{{ commodityInfo.prodName }}</text>
+          <text class="name">{{ commodityInfo.name }}</text>
           <text class="tag"> 新品 </text>
         </view>
         <view class="hot-text">
           <view class="prod-text-info">
             <view class="price">
-              <text class="price-value">¥ {{ commodityInfo.price }}</text>
-              <text class="discount-text">8.1折</text>
-              <text class="price-org">¥ 200</text>
-              <text class="discount-sale">半年售 800 +</text>
+              <text class="price-value">{{
+                commodityInfo.discountedPrice
+              }}</text>
+              <text class="discount-text" v-if="commodityInfo.discountRatio"
+                >{{ commodityInfo.discountRatio }}折</text
+              >
+              <text class="price-org"> {{ commodityInfo.originalPrice }}</text>
+              <text class="discount-sale"
+                >销量 {{ commodityInfo.salesVolume }} +</text
+              >
             </view>
           </view>
         </view>
@@ -37,15 +43,15 @@
         <view class="hot-sale-info">
           <view class="hot-sale-row">
             <text class="lable">限制 </text>
-            <text class="value">商品每桌限用1张券 </text>
+            <text class="value">{{ commodityInfo.limitation }} </text>
           </view>
           <view class="hot-sale-row">
             <text class="lable">须知 </text>
-            <text class="value">周一至周日可用 </text>
+            <text class="value">{{ commodityInfo.notice }} </text>
           </view>
           <view class="hot-sale-row">
             <text class="lable">保障 </text>
-            <text class="value">随时退·过期自动退 </text>
+            <text class="value">{{ commodityInfo.guarantee }}</text>
           </view>
         </view>
       </view>
@@ -54,7 +60,11 @@
     <view class="notes-block">
       <view class="notes-title">购买须知</view>
       <view class="notes-content">
-        <view class="notes-row">
+        <rich-text
+          :nodes="commodityInfo.purchaseNotes"
+          class="content"
+        ></rich-text>
+        <!-- <view class="notes-row">
           <text class="lable">有效期</text>
           <text class="value">2023.4.10至2026.4.10 23:59</text>
         </view>
@@ -63,8 +73,9 @@
           <text class="value">营业时间内可用</text>
         </view>
         <view class="notes-row">
-          <text class="lable">使用规则</text>
-          <text class="value"> · 可使用包间</text>
+          <text class="lable">使用规则</text> -->
+
+        <!-- <text class="value"> · 可使用包间</text>
           <text class="value"> · 本单发票由商家提供，详情请咨询商家</text>
           <text class="value"> · 仅限堂食</text>
           <text class="value"> · 团购用户不可同时享受商家的其他优惠</text>
@@ -85,7 +96,7 @@
           <text class="value"
             >价格公开透明价格公开透明价格公开透明价格公开透明价格公开透明价格公开透明</text
           >
-        </view>
+        </view> -->
       </view>
     </view>
     <u-gap height="40" bgColor="#f1f1f1"></u-gap>
@@ -102,9 +113,9 @@
       <!-- 推荐 -->
       <view class="article-grid-box">
         <view class="tab-header">
-          <text> 推荐(6)</text>
+          <text> 推荐({{ prods2.length }})</text>
         </view>
-        <articleGrid :prods="prods2"> </articleGrid
+        <commodity :prods="prods2"> </commodity
       ></view>
       <commFootBtn :tel="tel"></commFootBtn>
     </view>
@@ -119,6 +130,7 @@ import dataArr from './index.js'
 import commFootBtn from './commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import { getCommodityDetail, getCommodityPage } from '@/api/shop.js'
 export default {
   components: {
     articleGrid,
@@ -133,32 +145,7 @@ export default {
       currentNum: 0,
       tel: '027-1551512',
 
-      list4: [
-        {
-          url: 'https://cdn.uviewui.com/uview/resources/video.mp4',
-          title: '昨夜星辰昨夜风，画楼西畔桂堂东',
-          poster: 'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-          type: 'video',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-          title: '身无彩凤双飞翼，心有灵犀一点通',
-          type: 'image',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-          title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-          title: '身无彩凤双飞翼，心有灵犀一点通',
-          type: 'image',
-        },
-        {
-          url: 'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-          title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-        },
-      ],
+      swiperList: [],
       tags: [
         '有包厢',
         '有空调',
@@ -172,12 +159,63 @@ export default {
       ],
       count: 5,
       value: 4.6,
+      content: ``,
+      shopId: '',
+      commodityId: '',
+      commodityInfo: null,
+      size: 10,
+      current: 1,
     }
   },
   computed: {
-    ...mapGetters(['commodityInfo']),
+    // ...mapGetters(['commodityInfo']),
+  },
+  onShow() {},
+  onLoad(option) {
+    this.shopId = option.shopId
+    this.commodityId = option.Id
+    this.getCommodityInfo()
+    this.getCommodityRecommend()
+  },
+  onReachBottom() {
+    this.current++
+    this.getCommodityRecommend()
   },
   methods: {
+    ...mapMutations([['setCommodityInfo']]),
+    // 查看推荐商品
+    async getCommodityRecommend() {
+      try {
+        let res = await getCommodityPage({
+          current: this.current,
+          size: this.size,
+        })
+        if (this.current == 1) {
+          this.prods2 = res.data
+        } else {
+          this.prods2 = [...this.prods2, ...res.data]
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    async getCommodityInfo() {
+      try {
+        let res = await getCommodityDetail(this.commodityId)
+        if (res.data.images && res.data.images.length > 0) {
+          res.data.images.forEach((e) => {
+            this.swiperList.push({
+              url: e,
+              type: 'image',
+            })
+          })
+        }
+        this.commodityInfo = res.data
+      } catch (e) {
+        console.log(e)
+      }
+    },
     tab(index) {
       switch (index) {
         case 0:
@@ -217,6 +255,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.article-grid-box {
+  padding-bottom: 120rpx;
+}
 .store-block {
   padding: 20rpx;
 }
@@ -243,7 +284,7 @@ export default {
     align-items: center;
     margin: 20rpx 0;
     .name {
-      width: 356rpx;
+      max-width: 356rpx;
       font-size: 36rpx;
       font-weight: 600;
       white-space: nowrap;

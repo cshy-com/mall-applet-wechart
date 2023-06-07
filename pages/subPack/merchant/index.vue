@@ -15,11 +15,11 @@
       </view>
 
       <!-- 标签筛选 -->
-      <view class="tag-view">
+      <!-- <view class="tag-view">
         <text class="value" v-for="item in tagList" :key="item.id">{{
           item
         }}</text>
-      </view>
+      </view> -->
 
       <shopRow :list="shopList"> </shopRow>
       <!-- <uni-load-more :status="more"></uni-load-more> -->

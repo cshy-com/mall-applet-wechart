@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-12 11:00:49
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-25 14:54:50
+ * @LastEditTime: 2023-06-05 17:08:59
  * @FilePath: \mall-applet\pages\components\articleGrid.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,18 @@
     <block>
       <!-- 商城热卖 -->
       <view class="article-block">
-        <view class="article-item-cont">
+        <view class="empty" v-if="!prods || prods.length == 0">
+          <u-empty
+            mode="data"
+            marginTop="120"
+            iconSize="140"
+            textSize="32"
+            :text="'暂无数据'"
+          >
+          </u-empty>
+        </view>
+
+        <view class="article-item-cont" v-else>
           <block v-for="(prod, index2) in prods" :key="index2">
             <view
               class="prod-items"
@@ -21,16 +32,20 @@
               <view class="hot-imagecont">
                 <!-- prod.pic -->
                 <image
-                  :src="require('@/static/img/test5.png')"
+                  :lazy-load="true"
+                  :lazy-load-margin="0"
+                  :showLoading="true"
+                  :mode="'aspectFill'"
+                  :src="prod.mainImage"
                   class="articleimg"
                 ></image>
               </view>
               <view class="hot-text">
-                <view class="hotprod-text">{{ prod.prodName }}</view>
+                <view class="hotprod-text">{{ prod.name }}</view>
                 <!-- <view class="prod-info">{{prod.brief}}</view> -->
                 <view class="prod-text-info">
                   <view class="price">
-                    <text class="price-value">¥{{ prod.price }}</text>
+                    <text class="price-value">{{ prod.discountedPrice }}</text>
                     <text class="price-org">{{ prod.originalPrice }}</text>
                     <view class="btn">
                       <u-button
@@ -41,8 +56,12 @@
                     </view>
                   </view>
                   <view class="discount">
-                    <text class="discount-text">{{ prod.discount }}折</text>
-                    <text class="discount-sale">半年售 {{ prod.sale }} +</text>
+                    <text class="discount-text" v-if="prod.discountRatio"
+                      >{{ prod.discountRatio }}折</text
+                    >
+                    <text class="discount-sale"
+                      >销量 {{ prod.salesVolume }} +</text
+                    >
                   </view>
                 </view>
               </view>
@@ -55,6 +74,8 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 export default {
   data() {
     return {}
@@ -66,8 +87,12 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['setCommodityInfo']),
     toProdPage(e) {
-      this.$emit('eventParent', e)
+      this.setCommodityInfo(e)
+      uni.navigateTo({
+        url: `/pages/subPack/merchant/commodityDetail?Id=${e.id}&shopId=${e.shopId}`,
+      })
     },
   },
 }

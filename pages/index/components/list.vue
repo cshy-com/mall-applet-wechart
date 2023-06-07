@@ -13,7 +13,7 @@
                 <image
                   :lazy-load="true"
                   :lazy-load-margin="0"
-                  :src="prod.pic"
+                  :src="prod.mainImage"
                   class="hotsaleimg"
                   :showLoading="true"
                   :mode="'aspectFill'"
@@ -29,16 +29,16 @@
                 </view>
               </view>
               <view class="hot-text">
-                <view class="hotprod-text">{{ prod.prodName }}</view>
+                <view class="hotprod-text">{{ prod.name }}</view>
 
                 <view class="prod-text-info">
                   <view class="price">
                     <text class="symbol">￥</text>
-                    <text class="big-num">{{ prod.price }}</text>
+                    <text class="big-num">{{ prod.discountedPrice }}</text>
                   </view>
                   <view class="basket-img">
-                    <text class="iconfont icon-dianzan-weijujiao"></text>
-                    <text class="zan-num">123</text>
+                    <!-- <text class="iconfont icon-dianzan-weijujiao"></text> -->
+                    <text class="zan-num">销量 {{ prod.salesVolume }} +</text>
                   </view>
                 </view>
               </view>
