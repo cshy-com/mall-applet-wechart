@@ -27,7 +27,7 @@
               src="/static/img/cate/tag.png"
             ></image>
           </view>
-          <view class="star" @click="getCollect">
+          <view class="star" @click="getCollect" v-if="user.userType==1">
             <u-icon
               :name="isCollect ? 'star-fill' : 'star'"
               :color="isCollect ? '#ff6a13' : '#333'"
@@ -179,6 +179,7 @@ export default {
       isCollect: false, //是否已收藏
       current: 1,
       size: 10,
+      user:{}
     }
   },
   computed: {
@@ -186,6 +187,7 @@ export default {
   },
   onLoad(option) {
     this.shopId = option.id
+    this.user=uni.getStorageSync('user')
     this.getShopDetail()
     this.getCommodityList()
     this.getCommodityRecommend()

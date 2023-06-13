@@ -1,21 +1,21 @@
 <template>
   <view class="container">
-    <view class="userinfo" v-if="user">
+    <view class="userinfo" v-if="userInfo">
       <view class="userinfo-con" @click="getUserInfo">
         <view class="userinfo-avatar">
           <image
             :lazy-load="true"
             :lazy-load-margin="0"
-            :src="user.avatarUrl ? user.avatarUrl : '/static/img/test5.png'"
+            :src="userInfo.avatar ? userInfo.avatar : '/static/img/test5.png'"
           ></image>
         </view>
         <view class="userinfo-name">
-          <view>{{ user.nickName ? user.nickNamenickName : '用户昵称' }}</view>
+          <view>{{ userInfo.nickName ? userInfo.nickName : '用户昵称' }}</view>
         </view>
       </view>
     </view>
 
-    <view class="userinfo-none" v-if="!user">
+    <view class="userinfo-none" v-if="!userInfo">
       <view class="default-pic" @tap="toLogin">
         <image
           :lazy-load="true"
@@ -31,7 +31,7 @@
     <view class="user-integral">
       <view @click="integralEvent" class="user-integral-item">
         <text>我的积分</text>
-        <text class="grid-text">{{userAccount.totalScore||0}}</text>
+        <text class="grid-text">{{ user.totalScore || 0 }}</text>
       </view>
     </view>
     <view class="u-m-t-20">
@@ -86,6 +86,10 @@
         src="/static/img/user3.png"
       ></image>
     </view>
+    <view class="foot-btn" @click="logOut">
+      <button>退出登录</button>
+    </view>
+    <tab-bar :selected="userInfo.userType == 1 ? 2 : 1"></tab-bar>
   </view>
 </template>
 
@@ -93,6 +97,7 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('user')
 import { getUserInfo } from '@/api/index'
+import tabBar from '@/components/tab-bar.vue'
 export default {
   data() {
     return {
@@ -103,11 +108,10 @@ export default {
       loginResult: '',
       picDomain: '', // config.picDomain
       user: {},
-      userAccount:null
     }
   },
 
-  components: {},
+  components: { tabBar },
   props: {},
 
   /**
@@ -125,9 +129,7 @@ export default {
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow() {
-    this.user = uni.getStorageSync('user')
-  },
+  onShow() {},
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -158,10 +160,17 @@ export default {
   },
   methods: {
     ...mapMutations(['setUserInfo']),
+    logOut() {
+      this.setUserInfo(null)
+      uni.setStorageSync('user', null)
+      uni.redirectTo({ url: '/pages/public/login' })
+    },
     async getUser() {
       try {
         let res = await getUserInfo()
-      this.userAccount=res.data
+
+        this.setUserInfo(res.data)
+        uni.setStorageSync('user', res.data)
       } catch (e) {
         console.log(e)
       }
@@ -217,5 +226,21 @@ export default {
 @import './index.scss';
 .u-m-t-20 {
   background: #fff;
+}
+.foot-btn {
+  width: 90%;
+  margin: auto;
+  margin-top: 40rpx;
+  padding-bottom: 150rpx;
+  button {
+    height: 85rpx;
+    background: $Gradual-color;
+    border-radius: 10rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+    text-align: center;
+    color: #ffffff;
+    line-height: 85rpx;
+  }
 }
 </style>

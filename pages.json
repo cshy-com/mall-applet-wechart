@@ -22,7 +22,27 @@
                 "enablePullDownRefresh": true
             }
         },
-
+        {
+            "path": "pages/index/home/businessHome",
+            "style": {
+                "navigationBarTitleText": "首页",
+                "navigationBarBackgroundColor": "#FFFFFF",
+                "navigationStyle": "custom",
+                "onReachBottomDistance": 150,
+                "backgroundColor": "#FFFFFF",
+                "enablePullDownRefresh": true
+            }
+        }, {
+            "path": "pages/index/home/userHome",
+            "style": {
+                "navigationBarTitleText": "首页",
+                "navigationBarBackgroundColor": "#FFFFFF",
+                "navigationStyle": "custom",
+                "onReachBottomDistance": 150,
+                "backgroundColor": "#FFFFFF",
+                "enablePullDownRefresh": true
+            }
+        },
         {
             "path": "pages/index/user/index",
             "style": {
@@ -369,11 +389,24 @@
     },
     "tabBar": {
         "color": "#333333",
+        "custom": true,
         "selectedColor": "#333333",
         "borderStyle": "black",
         "backgroundColor": "#F8F8F8",
         "list": [{
                 "pagePath": "pages/index/home/index",
+                "iconPath": "static/img/tab_home_selected.png",
+                "selectedIconPath": "static/img/tab_home_selectedHl.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/index/home/businessHome",
+                "iconPath": "static/img/tab_home_selected.png",
+                "selectedIconPath": "static/img/tab_home_selectedHl.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/index/home/userHome",
                 "iconPath": "static/img/tab_home_selected.png",
                 "selectedIconPath": "static/img/tab_home_selectedHl.png",
                 "text": "首页"

@@ -51,6 +51,7 @@
         </view>
       </view>
     </view>
+    <tab-bar :userIdentity="1" :selected="0" ></tab-bar>
   </view>
 </template>
 
@@ -66,6 +67,7 @@ import forum from '@/components/forum'
 import recommendation from './../components/recommendation'
 import forumData from '@/mock/index.js'
 import projectList from '@/components/projectList'
+import tabBar from "@/components/tab-bar.vue"
 export default {
   data() {
     return {
@@ -181,7 +183,7 @@ export default {
     cateGroup,
     forum,
     recommendation,
-    projectList,
+    projectList,tabBar
   },
   props: {},
   computed: {
@@ -200,6 +202,18 @@ export default {
 
   options: {
     styleIsolation: 'shared',
+  },
+  onPullDownRefresh(){
+ this.current=0
+    this.getAllCate()
+    this.getCommodityRecommend()
+    setTimeout(function () {
+      uni.stopPullDownRefresh()
+    }, 1000)
+  },
+  onReachBottom: function () {
+    this.current++
+    this.getCommodityRecommend()
   },
   methods: {
     ...mapMutations(['setCateAll', 'setCommodityInfo']),

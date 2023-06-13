@@ -2,22 +2,24 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-30 09:27:05
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-02 15:32:16
+ * @LastEditTime: 2023-06-13 15:39:54
  * @FilePath: \mall-applet\pages\index\collection\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view class="content">
     <shopRow :list="shopList" :isShowPid="true"> </shopRow>
-  </view>
+    <tab-bar :userIdentity="1" :selected="1"></tab-bar>
+ </view>
 </template>
 
 <script>
 import { mallShopCollectList } from '@/api/shop.js'
 import shopRow from '@/components/shopRow.vue'
 import { getTotalPage } from '@/util/util'
+import tabBar from "@/components/tab-bar.vue"
 export default {
-  components: { shopRow },
+  components: { shopRow ,tabBar},
   data() {
     return {
       indexList: [],

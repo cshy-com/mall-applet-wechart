@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:40
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-13 11:00:53
+ * @LastEditTime: 2023-06-13 16:12:54
  * @FilePath: \mall-applet\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -37,8 +37,12 @@ export function listByParentId(data) {
 }
 
 export function getUserInfo() {
-    return getString('/mallUser/getInfo')
+    return getString('/mallUser/mallGetInfo')
 }
+export function updateUserInfo(data) {
+    return postPayload('/mallUser/mallUpdateUserInfo', data)
+}
+
 //获取论坛列表
 //获取论坛详情
 

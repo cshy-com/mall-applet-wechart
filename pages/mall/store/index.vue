@@ -37,7 +37,7 @@ import shopRow from '@/components/shopRow.vue'
 
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import commNav from './../components/commNav'
+import commNav from '@/components/commNav'
 import { mallShopTypeListByParentId, mallShopPage } from '@/api/shop.js'
 import cateGroup from '@/components/cateGroup.vue'
 import { getTotalPage } from '@/util/util'

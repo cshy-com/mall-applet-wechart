@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:31:56
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-01 15:11:48
+ * @LastEditTime: 2023-06-13 16:32:21
  * @FilePath: \mall-applet\pages\subPack\merchant\storeList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,7 +22,7 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import shopRow from '@/components/shopRow.vue'
 import commSearch from '@/components/commSearch'
-import commNav from './../components/commNav.vue'
+import commNav from '@/components/commNav.vue.js'
 import { mallShopPage } from '@/api/shop.js'
 import { getTotalPage } from '@/util/util'
 export default {

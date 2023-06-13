@@ -183,8 +183,8 @@ export default {
           this.setUserInfo(res.data)
           uni.setStorageSync('user', res.data)
           uni.switchTab({
-            url: '/pages/index/home/index',
-          })
+              url: res.data.userType==1?'/pages/index/home/userHome':'/pages/index/home/businessHome',
+            })
         } else {
           this.$u.toast(msg)
         }
@@ -246,7 +246,7 @@ export default {
             this.setUserInfo(res.data)
             uni.setStorageSync('user', res.data)
             uni.switchTab({
-              url: '/pages/index/home/index',
+              url: res.data.userType==1?'/pages/index/home/userHome':'/pages/index/home/businessHome',
             })
           } else {
             this.$u.toast(msg)

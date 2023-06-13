@@ -31,7 +31,10 @@ export default {
     routingIntercept()
   },
   onReady() {},
-  onShow: function () {},
+  onShow: function () {  uni.hideTabBar({
+        animation: false
+      })
+      },
   onHide: function () {
     console.log('App Hide')
   },
