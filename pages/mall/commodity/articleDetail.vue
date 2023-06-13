@@ -78,7 +78,7 @@
 import comment from './../components/comment.vue'
 import articleGrid from './../components/articleGrid.vue'
 import commodity from './../components/commodity.vue'
-import dataArr from './index.js'
+import dataArr from './../store/index.js'
 
 export default {
   components: {

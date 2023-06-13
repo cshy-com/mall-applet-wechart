@@ -109,7 +109,7 @@ export default {
     goEvent(item) {
       this.setShopInfo(item)
       uni.navigateTo({
-        url: '/pages/subPack/merchant/storeDetails?id=' + item.id,
+        url: '/pages/mall/store/storeDetails?id=' + item.id,
       })
     },
     imageError(e, index, i) {

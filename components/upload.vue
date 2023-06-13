@@ -78,7 +78,7 @@ export default {
   // 方法集合
   methods: {
     deletePic(event) {
-      this[`fileList${event.name}`].splice(event.index, 1)
+      this.fileList.splice(event.index, 1)
     },
     async afterRead(event) {
       // 当设置 multiple 为 true 时, file 为数组格式，否则为对象格式

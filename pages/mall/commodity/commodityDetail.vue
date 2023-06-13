@@ -126,8 +126,7 @@
 import comment from './../components/comment.vue'
 import articleGrid from './../components/articleGrid.vue'
 import commodity from './../components/commodity.vue'
-import dataArr from './index.js'
-import commFootBtn from './commFootBtn.vue'
+import commFootBtn from './../components/commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import { getCommodityDetail, getCommodityPage } from '@/api/shop.js'
@@ -140,8 +139,7 @@ export default {
   },
   data() {
     return {
-      prods: dataArr.shopProds,
-      prods2: dataArr.prods,
+      prods2: [],
       currentNum: 0,
       tel: '027-1551512',
 

@@ -3,7 +3,11 @@
     <view class="contant-top">
       <commNav :title="title" ref="navs"></commNav>
 
-      <cateGroup :cateList="cateList" @CateEvent="toCateCenter"></cateGroup>
+      <cateGroup
+        :isSwiper="false"
+        :cateList="cateList"
+        @CateEvent="toCateCenter"
+      ></cateGroup>
     </view>
     <view class="contant-center">
       <!-- tab切换 -->
@@ -22,9 +26,6 @@
       </view> -->
 
       <shopRow :list="shopList"> </shopRow>
-      <!-- <uni-load-more :status="more"></uni-load-more> -->
-      <photoWall v-if="cateId == -1"></photoWall>
-      <commNav v-if="cateId == -2"></commNav>
     </view>
   </view>
 </template>
@@ -33,12 +34,10 @@
 import dataArr from './index.js'
 import tabs from '@/components/tabs.vue'
 import shopRow from '@/components/shopRow.vue'
-import articleGrid from '@/pages/subPack/components/articleGrid.vue'
 
-import photoWall from './../components/photoWall.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import commNav from './../components/commNav.vue'
+import commNav from './../components/commNav'
 import { mallShopTypeListByParentId, mallShopPage } from '@/api/shop.js'
 import cateGroup from '@/components/cateGroup.vue'
 import { getTotalPage } from '@/util/util'
@@ -46,11 +45,9 @@ export default {
   components: {
     tabs,
     shopRow,
-    articleGrid,
 
-    photoWall,
-    commNav,
     cateGroup,
+    commNav,
   },
   data() {
     return {
@@ -156,17 +153,12 @@ export default {
     },
     toCateCenter(item, index = 0) {
       uni.navigateTo({
-        url: `/pages/subPack/merchant/storeList?pid=${item.id}&title=${item.name}`,
+        url: `/pages/mall/store/storeList?pid=${item.id}&title=${item.name}`,
       })
     },
     scrolltolower(item) {
       this.current++
       this.getPageList()
-    },
-    goArticleDetail() {
-      uni.navigateTo({
-        url: '/pages/subPack/merchant/commodityDetail',
-      })
     },
   },
 }

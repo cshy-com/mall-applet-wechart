@@ -5,7 +5,20 @@
       <view class="header-top"><text>高端定制</text></view>
       <commSearch :placeholder="'输入关键字搜索'"></commSearch>
       <view class="content">
-        <cateGroup :cateList="cateAll" @CateEvent="toCouponCenter"></cateGroup>
+        <view class="swiper">
+          <u-swiper
+            :list="list3"
+            indicator
+            indicatorMode="line"
+            circular
+            height="200"
+          ></u-swiper>
+        </view>
+        <cateGroup
+          :isSwiper="true"
+          :cateList="cateAll"
+          @CateEvent="toCouponCenter"
+        ></cateGroup>
       </view>
     </view>
     <view class="container-center">
@@ -30,6 +43,12 @@
         <view v-if="selectClassIndex == 2">
           <recommendation></recommendation>
         </view>
+        <view v-if="selectClassIndex == 3" class="project-box">
+          <projectList :list="projectList"></projectList>
+          <view class="btn">
+            <button @tap="goProjectList">查看更多</button>
+          </view>
+        </view>
       </view>
     </view>
   </view>
@@ -46,7 +65,7 @@ import cateGroup from '@/components/cateGroup'
 import forum from '@/components/forum'
 import recommendation from './../components/recommendation'
 import forumData from '@/mock/index.js'
-
+import projectList from '@/components/projectList'
 export default {
   data() {
     return {
@@ -56,6 +75,11 @@ export default {
       autoplay: true,
       interval: 2000,
       duration: 1000,
+      list3: [
+        'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+        'https://cdn.uviewui.com/uview/swiper/swiper2.png',
+        'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+      ],
       indexImgs: [
         {
           imgUrl: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
@@ -150,10 +174,18 @@ export default {
     }
   },
 
-  components: { tabs, commSearch, list, cateGroup, forum, recommendation },
+  components: {
+    tabs,
+    commSearch,
+    list,
+    cateGroup,
+    forum,
+    recommendation,
+    projectList,
+  },
   props: {},
   computed: {
-    ...mapGetters(['cateAll']),
+    ...mapGetters(['cateAll', 'projectList']),
     fileUrl() {
       return this.$fileUrl
     },
@@ -171,6 +203,11 @@ export default {
   },
   methods: {
     ...mapMutations(['setCateAll', 'setCommodityInfo']),
+    goProjectList() {
+      uni.navigateTo({
+        url: '/pages/article/projectList',
+      })
+    },
     changeIndex(e) {
       this.selectClassIndex = e
     },
@@ -215,13 +252,13 @@ export default {
       this.setCommodityInfo(item)
 
       uni.navigateTo({
-        url: `/pages/subPack/merchant/commodityDetail?Id=${item.id}&shopId=${item.shopId}`,
+        url: `/pages/mall/commodity/commodityDetail?Id=${item.id}&shopId=${item.shopId}`,
       })
     },
 
     toCouponCenter(item) {
       uni.navigateTo({
-        url: `/pages/subPack/merchant/index?cateId=${item.id}&title=${item.name}`,
+        url: `/pages/mall/store/index?cateId=${item.id}&title=${item.name}`,
       })
     },
   },
@@ -229,4 +266,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import './index.scss';
+.swiper {
+  height: 200rpx;
+  margin: 20rpx;
+}
+.project-box {
+  padding-bottom: 40rpx;
+  .btn {
+    width: 600rpx;
+    margin: 0 auto;
+    margin-top: 40rpx;
+  }
+}
 </style>

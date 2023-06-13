@@ -91,7 +91,7 @@ export default {
     toProdPage(e) {
       this.setCommodityInfo(e)
       uni.navigateTo({
-        url: `/pages/subPack/merchant/commodityDetail?Id=${e.id}&shopId=${e.shopId}`,
+        url: `/pages/mall/commodity/commodityDetail?Id=${e.id}&shopId=${e.shopId}`,
       })
     },
   },

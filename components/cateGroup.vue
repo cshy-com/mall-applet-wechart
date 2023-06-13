@@ -1,27 +1,81 @@
 <template>
   <view>
-    <view class="cat-row">
+    <view :class="isSwiper ? 'cat-row-1' : 'cat-row'">
       <view v-if="!cateList || cateList.length == 0" class="empty">
         <u-empty mode="data" iconSize="140" textSize="32" :text="'暂无数据'">
         </u-empty>
       </view>
-      <view class="cat-item" v-else>
-        <view
-          class="item"
-          v-for="(item, index) in cateList"
-          @tap="($event) => toDetail(item, index)"
-          data-sts="item.id"
-          :key="item.id"
-        >
-          <view class="icon-box">
-            <image
-              :lazy-load="true"
-              :lazy-load-margin="0"
-              :src="item.ico"
-              class="icon-cover"
-            ></image>
+      <view v-else>
+        <view v-if="!isSwiper" class="cat-item">
+          <view
+            class="item"
+            v-for="(item, index) in cateList"
+            @tap="($event) => toDetail(item, index)"
+            data-sts="item.id"
+            :key="item.id"
+          >
+            <view class="icon-box">
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="item.ico"
+                class="icon-cover"
+              ></image>
+            </view>
+            <text>{{ item.name }}</text>
           </view>
-          <text>{{ item.name }}</text>
+        </view>
+        <view v-else>
+          <swiper :indicator-dots="true" class="swiper">
+            <swiper-item>
+              <view class="cat-item">
+                <view
+                  class="item"
+                  v-for="(item, index) in cateList.slice(0, 10)"
+                  @tap="($event) => toDetail(item, index)"
+                  data-sts="item.id"
+                  :index="index"
+                  :key="index"
+                >
+                  <view class="icon-box">
+                    <image
+                      :lazy-load="true"
+                      :lazy-load-margin="0"
+                      :src="item.ico"
+                      class="icon-cover"
+                    ></image>
+                  </view>
+                  <text>{{ item.name }}</text>
+                </view></view
+              >
+            </swiper-item>
+            <swiper-item v-if="cateList.length > 10">
+              <view class="cat-item">
+                <view
+                  :customStyle="{ width: 220 + 'rpx', height: 220 + 'rpx' }"
+                  class="item"
+                  v-for="(item, index) in cateList.slice(10, 15)"
+                  @tap="($event) => toDetail(item, index)"
+                  data-sts="item.id"
+                  :index="index + 10"
+                  :key="index"
+                >
+                  <view
+                    class="icon-box"
+                    :customStyle="{ paddingTop: 20 + 'rpx' }"
+                  >
+                    <image
+                      :lazy-load="true"
+                      :lazy-load-margin="0"
+                      :src="item.ico"
+                      class="icon-cover"
+                    ></image>
+                  </view>
+                  <text>{{ item.name }}</text>
+                </view>
+              </view>
+            </swiper-item>
+          </swiper>
         </view>
       </view>
     </view>
@@ -35,6 +89,10 @@ export default {
     cateList: {
       type: Array,
       defualt: () => [],
+    },
+    isSwiper: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -55,8 +113,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.swiper {
+  height: 400rpx;
+  width: 100%;
+}
 .cat-row {
   padding-top: 50rpx;
+}
+.cat-row-1 {
+  padding-top: 7rpx;
 }
 
 .cat-item {

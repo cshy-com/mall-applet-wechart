@@ -1,5 +1,6 @@
+import { createNamespacedHelpers } from 'vuex';
 <template>
-  <view class="content">
+  <view>
     <view
       class="content-box"
       v-for="item in list"
@@ -8,37 +9,16 @@
     >
       <view class="content-item">
         <view class="content-item-left">
-          <view class="title over-ellipsis"
+          <view class="sub-title over-ellipsis"
             ><text>{{ item.title }}</text></view
           >
-          <view class="sub-title over-ellipsis"
-            ><text>{{ item.subTitle }}</text></view
-          >
-          <view class="content-footer">
-            <view class="avater">
-              <image :src="item.avater"> </image>
-            </view>
-
-            <text class="author">
-              {{ item.author }}
-            </text>
-
-            <text class="createTime">
-              {{ item.createTime }}
-            </text>
+          <view class="createTime">
+            <text> {{ item.time }} </text>
           </view>
         </view>
-        <view class="content-right">
-          <image
-            :src="item.image"
-            :lazy-load="true"
-            :lazy-load-margin="0"
-            :mode="'aspectFill'"
-          />
-        </view>
       </view>
-    </view>
-  </view>
+    </view></view
+  >
 </template>
 
 <script>
@@ -60,22 +40,19 @@ export default {
   computed: {},
   // 监听data中的数据变化
   watch: {},
-  onLoad: function () {},
-
   // 方法集合
   methods: {
-    ...mapMutations(['setForumInfo']),
+    ...mapMutations(['seTenderDetails']),
     goDetail(item) {
-      this.setForumInfo(item)
+      this.seTenderDetails(item)
 
       uni.navigateTo({
-        url: '/pages/article/forumDatail',
+        url: '/pages/article/projectDetail',
       })
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {},
-  onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期：创建之前
@@ -93,28 +70,18 @@ export default {
   .content-item {
     padding: 20rpx;
     margin: 20rpx 20rpx 0 20rpx;
-    height: 270rpx;
+
     display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
+
     justify-content: space-between;
     position: relative;
+    flex-direction: column;
     background: #fff;
     border-radius: 20rpx;
     .content-item-left {
-      flex: 0 0 420rpx;
-      width: 420rpx;
-      .title {
-        font-size: 32rpx;
-        line-height: 42rpx;
-        color: #151515;
-        margin-bottom: 20rpx;
-        max-height: 84rpx;
-      }
       .sub-title {
         font-size: 26rpx;
-        color: #999;
+        color: #151515;
         line-height: 36rpx;
         margin-bottom: 20rpx;
         max-height: 72rpx;
@@ -126,48 +93,23 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
       }
-    }
-    .content-right {
-      flex: 0 0 240rpx;
-      width: 240rpx;
-      height: 170rpx;
-      position: relative;
-      overflow: hidden;
-      image {
-        width: 100%;
-        height: 100%;
-        will-change: transform;
-      }
-    }
-    .content-footer {
-      position: absolute;
-      bottom: 25rpx;
-      left: 30rpx;
-      height: 40rpx;
-      display: flex;
-
-      align-items: center;
-      font-size: 22rpx;
-      color: #999;
-      .avater {
-        width: 40rpx;
-        height: 40rpx;
-        border-radius: 40rpx;
-        margin-right: 14rpx;
-        vertical-align: middle;
+      .content-img {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
         image {
-          width: 100%;
-          height: 100%;
-          border-radius: 40rpx;
+          width: 200rpx;
+          height: 200rpx;
+          border-radius: 30rpx;
+          margin-right: 20rpx;
         }
       }
-      .author {
-        padding-right: 28rpx;
-        position: relative;
-        display: inline-block;
-      }
       .createTime {
+        color: #999;
+        font-size: 22rpx;
       }
+    }
+    .reply {
     }
   }
 }
