@@ -11,17 +11,7 @@
                 "navigationStyle": "custom"
             }
         },
-        {
-            "path": "pages/index/home/index",
-            "style": {
-                "navigationBarTitleText": "首页",
-                "navigationBarBackgroundColor": "#FFFFFF",
-                "navigationStyle": "custom",
-                "onReachBottomDistance": 150,
-                "backgroundColor": "#FFFFFF",
-                "enablePullDownRefresh": true
-            }
-        },
+
         {
             "path": "pages/index/home/businessHome",
             "style": {
@@ -137,8 +127,13 @@
         },
         {
             "root": "pages/order",
-            "pages": [
-
+            "pages": [{
+                    "path": "submit-order/index",
+                    "style": {
+                        "navigationBarTitleText": "平台预定",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+                    }
+                },
                 {
                     "path": "editAddress/editAddress",
                     "style": {
@@ -162,6 +157,26 @@
                     "path": "order-list/order-list",
                     "style": {
                         "navigationBarTitleText": "订单列表",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+                    }
+                }, {
+                    "path": "business-order-detail/business-order-detail",
+                    "style": {
+                        "navigationBarTitleText": "订单详情",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+                    }
+                },
+                {
+                    "path": "business-order-list/business-order-list",
+                    "style": {
+                        "navigationBarTitleText": "订单列表",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+                    }
+                },
+                {
+                    "path": "scanOrder",
+                    "style": {
+                        "navigationBarTitleText": "扫码核销",
                         "navigationBarBackgroundColor": "#FFFFFF"
                     }
                 }
@@ -394,12 +409,6 @@
         "borderStyle": "black",
         "backgroundColor": "#F8F8F8",
         "list": [{
-                "pagePath": "pages/index/home/index",
-                "iconPath": "static/img/tab_home_selected.png",
-                "selectedIconPath": "static/img/tab_home_selectedHl.png",
-                "text": "首页"
-            },
-            {
                 "pagePath": "pages/index/home/businessHome",
                 "iconPath": "static/img/tab_home_selected.png",
                 "selectedIconPath": "static/img/tab_home_selectedHl.png",

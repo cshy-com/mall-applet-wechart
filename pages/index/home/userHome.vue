@@ -2,7 +2,7 @@
   <!--index.wxml-->
   <view class="container">
     <view class="container-top">
-      <view class="header-top"><text>高端定制</text></view>
+      <view class="header-top"><text>私人银行服务平台</text></view>
       <commSearch :placeholder="'输入关键字搜索'"></commSearch>
       <view class="content">
         <view class="swiper">

@@ -130,7 +130,7 @@
         ></view
       >
       <!-- 底部操作按钮 -->
-      <commFootBtn :tel="shopInfo.tel"></commFootBtn>
+      <commFootBtn :tel="shopInfo.tel" :shopId="shopId"></commFootBtn>
     </view>
   </view>
 </template>

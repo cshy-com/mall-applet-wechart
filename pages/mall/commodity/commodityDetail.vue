@@ -117,7 +117,7 @@
         </view>
         <commodity :prods="prods2"> </commodity
       ></view>
-      <commFootBtn :tel="tel"></commFootBtn>
+      <commFootBtn :tel="tel" :shopId="shopId"></commFootBtn>
     </view>
   </view>
 </template>

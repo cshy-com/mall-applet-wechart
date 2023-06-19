@@ -114,7 +114,7 @@ export default {
 
 <style lang="scss" scoped>
 .swiper {
-  height: 400rpx;
+  height:380rpx;
   width: 100%;
 }
 .cat-row {
@@ -137,7 +137,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 40rpx;
+  margin-bottom:35rpx;
   margin-right: 49rpx;
 }
 

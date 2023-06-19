@@ -59,6 +59,13 @@ export default {
   watch: {},
   created() {
     this.user = uni.getStorageSync('user')
+    console.log('tab-this.user:'+  this.user)
+    if(!this.user){
+      uni.redirectTo({
+        url: '/pages/public/login',
+      })
+      return
+    }
     if (this.user.userType == 2) {
       this.list[0].pagePath = '/pages/index/home/businessHome'
       this.list = this.list.filter((val, index) => index != 1)

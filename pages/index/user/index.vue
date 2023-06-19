@@ -36,6 +36,24 @@
     </view>
     <view class="u-m-t-20">
       <u-cell-group>
+        <u-cell
+          title="扫一扫"
+          @click="scanCode"
+          v-if="userInfo.userType == 2"
+        ></u-cell>
+
+        <u-cell
+          title="订单列表"
+          isLink
+          url="/pages/order/order-list/order-list"
+          v-if="userInfo.userType == 1"
+        ></u-cell>
+        <u-cell
+          title="订单列表"
+          isLink
+          url="/pages/order/business-order-list/business-order-list"
+          v-if="userInfo.userType == 2"
+        ></u-cell>
         <!-- <u-cell
           title="发布文章"
           isLink
@@ -97,6 +115,7 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('user')
 import { getUserInfo } from '@/api/index'
+import { getUrlParams } from '@/util/util'
 import tabBar from '@/components/tab-bar.vue'
 export default {
   data() {
@@ -160,6 +179,20 @@ export default {
   },
   methods: {
     ...mapMutations(['setUserInfo']),
+    scanCode() {
+      uni.scanCode({
+        onlyFromCamera: true,
+        scanType: 'qrCode',
+        success: function (res) {
+          let code = getUrlParams(res.scanType)
+          uni.navigateTo({
+            url:
+              '/pages/order/business-order-detail/business-order-detail?code=' +
+              code,
+          })
+        },
+      })
+    },
     logOut() {
       this.setUserInfo(null)
       uni.setStorageSync('user', null)
@@ -231,7 +264,7 @@ export default {
   width: 90%;
   margin: auto;
   margin-top: 40rpx;
-  padding-bottom: 150rpx;
+  padding-bottom: 250rpx;
   button {
     height: 85rpx;
     background: $Gradual-color;

@@ -3,12 +3,12 @@ import routingIntercept from '@/util/permission.js'
 import { getAuthorization } from '@/util/auth'
 export default {
   created() {
-    let token = getAuthorization()
-    if (!token) {
-      uni.redirectTo({
-        url: '/pages/public/login',
-      })
-    }
+    // let token = getAuthorization()
+    // if (!token) {
+    //   uni.redirectTo({
+    //     url: '/pages/public/login',
+    //   })
+    // }
   },
   onLaunch: function () {
     //   uni.loadFontFace({

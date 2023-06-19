@@ -65,7 +65,19 @@ const getTotalPage = (totalCount, pageSize) => {
     return (totalCount + pageSize - 1) / pageSize
 }
 
-
+const getUrlParams = (url) => {
+    let o = {}
+    if (url.indexOf('?') != -1) {
+        let str = url.substr(url.indexOf('?') + 1).replace(/[#/|/#/]/g, '')
+            // console.log(str);
+        let strs = str.split('&')
+            // console.log(strs);
+        for (let i = 0; i < strs.length; i++) {
+            o[strs[i].split('=')[0]] = decodeURIComponent(strs[i].split('=')[1])
+        }
+    }
+    return o
+}
 
 module.exports = {
     wxuuid,
@@ -73,4 +85,5 @@ module.exports = {
     formatDate: formatDate,
     regular,
     getTotalPage,
+    getUrlParams
 }

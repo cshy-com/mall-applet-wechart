@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:16:21
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-05 11:02:35
+ * @LastEditTime: 2023-06-16 16:55:03
  * @FilePath: \mall-applet\pages\subPack\merchant\commFootBtn.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,7 @@
     <!-- 底部操作按钮 -->
     <view class="footer-btn">
       <view class="left-icon">
-        <!-- <button  class="btn"
+        <button  class="btn"
           open-type="contact"
           @contact="handleContact"
           show-message-card
@@ -20,7 +20,7 @@
             '/pages/subPack/merchant/storeDetails?id=' + shopInfo.id
           "
           :sendMessageImg="shopInfo.mainImage"
-        > -->
+        >
           <u-icon
             :name="'server-man'"
             size="40"
@@ -29,9 +29,9 @@
             labelSize="24"
             @tap='handleContact'
           ></u-icon>
-        <!-- </button> -->
+        </button>
       </view>
-      <view class="foot-btn-def">
+      <view class="foot-btn-def" v-if="user.userType==1">
         <u-button
           class="foot-btn-value"
           text="预定"
@@ -74,6 +74,10 @@ export default {
       type: String, //父页面传过来关于商家的联系方式
       default: '',
     },
+    shopId:{
+      type:String,
+      default:''
+    }
   },
   data() {
     return {
@@ -89,6 +93,7 @@ export default {
           index: 1,
         },
       ],
+      user: uni.getStorageSync('user')
     }
   },
   computed: {
@@ -100,7 +105,7 @@ export default {
       // console.log('path----------------' + JSON.stringify( e.detail.path))
       // console.log('query----------------' + JSON.stringify(e.detail.query))
       // return
-      this.$u.toast('正在开发中，敬请期待')
+      // this.$u.toast('正在开发中，敬请期待')
     },
     feedback() {
       this.$u.toast('正在开发中，敬请期待')
@@ -113,7 +118,9 @@ export default {
     },
     selectClick(item) {
       if (item.index == 0) {
-        this.$u.toast('正在开发中，敬请期待')
+      uni.navigateTo({
+        url:'/pages/order/submit-order/index?shopId='+this.shopId
+      })
         return
       }
       if (item.index == 1) {
