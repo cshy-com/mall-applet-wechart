@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:16:21
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-19 16:15:38
+ * @LastEditTime: 2023-06-19 17:00:07
  * @FilePath: \mall-applet\pages\subPack\merchant\commFootBtn.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -17,7 +17,7 @@
           show-message-card
           :send-message-title="shopInfo.name"
           :send-message-path="
-            '/pages/subPack/merchant/storeDetails?id=' + shopInfo.id
+            '/pages/mall/store/storeDetails?id=' + shopInfo.id
           "
           :sendMessageImg="shopInfo.mainImage"
         >
