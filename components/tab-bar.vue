@@ -1,3 +1,5 @@
+import { list } from '@/api/monitor/logininfor'; import { listUser } from
+'@/api/system/user';
 <template>
   <view class="tab-bar">
     <view
@@ -33,7 +35,7 @@ export default {
     return {
       color: '#333333',
       selectedColor: '#333333',
-      list: [
+      listUser: [
         {
           pagePath: '/pages/index/home/userHome',
           iconPath: '/static/img/tab_home_selected.png',
@@ -53,22 +55,39 @@ export default {
           text: '个人中心',
         },
       ],
+      listShop: [
+        {
+          pagePath: '/pages/index/home/businessHome',
+          iconPath: '/static/img/tab_home_selected.png',
+          selectedIconPath: '/static/img/tab_home_selectedHl.png',
+          text: '首页',
+        },
+        {
+          pagePath: '/pages/index/user/index',
+          iconPath: '/static/img/tab_user_selected.png',
+          selectedIconPath: '/static/img/tab_user_selectedHl.png',
+          text: '个人中心',
+        },
+      ],
+      list: [],
       user: {},
     }
   },
   watch: {},
   created() {
     this.user = uni.getStorageSync('user')
-    console.log('tab-this.user:'+  this.user)
-    if(!this.user){
+    console.log('tab-this.user:' + this.user)
+    if (!this.user) {
       uni.redirectTo({
         url: '/pages/public/login',
       })
       return
     }
+    if (this.user.userType == 1) {
+      this.list = this.listUser
+    }
     if (this.user.userType == 2) {
-      this.list[0].pagePath = '/pages/index/home/businessHome'
-      this.list = this.list.filter((val, index) => index != 1)
+      this.list = this.listShop
     }
   },
   methods: {
