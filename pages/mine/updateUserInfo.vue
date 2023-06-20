@@ -23,6 +23,7 @@
           v-model="model1.userInfo.avatar"
           width="200"
           height="200"
+          :maxSize="1"
         ></upload>
       </u-form-item>
       <u-form-item
@@ -145,8 +146,13 @@ export default {
         }
         await updateUserInfo({ ...params })
         uni.$u.toast('修改成功')
-        this.setUserInfo({ ...params })
-        uni.setStorageSync('user', { ...params })
+        this.userInfo.avatar=params.avatar
+        this.userInfo.nickName=params.nickName
+        this.userInfo.sex=params.sex
+
+        
+        this.setUserInfo({ ...this.userInfo })
+        uni.setStorageSync('user', { ...this.userInfo })
         uni.switchTab({
           url: '/pages/index/user/index',
         })

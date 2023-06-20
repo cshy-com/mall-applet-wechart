@@ -18,7 +18,7 @@ export function mallShopById(data) {
 }
 // 获取店铺列表
 export function mallShopPage(data) {
-    return postPayload('/mallShop/mallPage', data)
+    return postPayload('/mallShop/page', data)
 }
 // 获取用户店铺收藏列表
 export function mallShopCollectList(data) {
@@ -35,15 +35,15 @@ export function mallShopCollectDel(data) {
 // 获取商品列表
 
 export function getCommodityList(data) {
-    return postPayload('/mallCommodity/mallList', data)
+    return postPayload('/mallCommodity/list', data)
 
 }
 // 查分页
 export function getCommodityPage(data) {
-    return postPayload('/mallCommodity/mallPage', data)
+    return postPayload('/mallCommodity/page', data)
 
 }
 // 获取商品详情
 export function getCommodityDetail(data) {
-    return getString('/mallCommodity/mallObj/' + data)
+    return getString('/mallCommodity/obj/' + data)
 }

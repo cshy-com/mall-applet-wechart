@@ -153,7 +153,10 @@ export default {
    */
   onLoad: function (options) {
     this.orderId = options.orderId
-    this.orderCode = getUrlParams(options.code)
+    if(options?.code){
+      this.orderCode = getUrlParams(options.code)
+    }
+   
 
     const { q } = options
 

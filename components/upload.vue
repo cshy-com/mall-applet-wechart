@@ -9,7 +9,9 @@
       :width="width"
       :height="height"
       :maxCount="maxCount"
+      :maxSize="maxSize * 1024 * 1024"
       :previewFullImage="previewFullImage"
+      @oversize="overSize"
     ></u-upload>
   </view>
 </template>
@@ -48,6 +50,10 @@ export default {
       type: String,
       default: 'upload',
     },
+    maxSize:{
+      type:Number,
+      default:1
+    }
   },
   data() {
     return {
@@ -77,6 +83,11 @@ export default {
   },
   // 方法集合
   methods: {
+    // 图片大小超出最大允许大小
+overSize(e) {
+   
+	uni.$u.toast(`上传图片大小不能超过${this.maxSize}MB!`)
+},
     deletePic(event) {
       this.fileList.splice(event.index, 1)
     },
