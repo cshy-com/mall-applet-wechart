@@ -1,8 +1,16 @@
+<!--
+ * @Author: zxs 774004514@qq.com
+ * @Date: 2023-05-08 17:00:40
+ * @LastEditors: zxs 774004514@qq.com
+ * @LastEditTime: 2023-06-21 11:17:25
+ * @FilePath: \mall-admind:\work\mall-applet\components\previewImage.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
 	<uni-popup style="z-index: 99999999;position: relative;" :mask-click="false" ref="previewImgPop">
 		<view style="z-index: 99999999;" class="popup-content">
 			<view class="previewImgCont">
-				<image :src="previewData.tempUrl" class="imgUrl" mode='aspectFit'></image>
+				<image :src="tempUrl" class="imgUrl" mode='aspectFit'></image>
 				<image src="https://smfk-oss-bucket.oss-cn-beijing.aliyuncs.com/mystical/img/icon_close.png" class="closeImg" @tap="handelCancel"></image>
 			</view>
 		</view>
@@ -20,6 +28,10 @@
 			previewData:{
 				type:Object,
 				default:()=>{}
+			},
+			tempUrl:{
+				type:String,
+				default:''
 			}
 		},
 		data(){

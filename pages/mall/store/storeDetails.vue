@@ -12,6 +12,7 @@
         bgColor="#ffffff"
         keyName="url"
         height="220"
+        @click="clickSwiper($event)"
         :displayMultipleItems="swiperList.length > 3 ? 2.5 : 1"
       ></u-swiper>
       <!-- #endif -->
@@ -132,6 +133,7 @@
       <!-- 底部操作按钮 -->
       <commFootBtn :tel="shopInfo.tel" :shopId="shopId"></commFootBtn>
     </view>
+    <previewImage @cancel="previewVisible=false" :visible="previewVisible" :tempUrl="swiperList[previewIndex].url" ></previewImage>
   </view>
 </template>
 
@@ -149,13 +151,13 @@ import {
   getCommodityPage,
 } from '@/api/shop.js'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-
+import previewImage from "@/components/previewImage"
 export default {
   components: {
     articleGrid,
     comment,
     commodity,
-    commFootBtn,
+    commFootBtn,previewImage
   },
   data() {
     return {
@@ -179,7 +181,9 @@ export default {
       isCollect: false, //是否已收藏
       current: 1,
       size: 10,
-      user:{}
+      user:{},
+      previewIndex:0,
+      previewVisible:false
     }
   },
   computed: {
@@ -201,7 +205,12 @@ export default {
   },
   methods: {
     ...mapMutations(['setCommodityInfo', 'setShopInfo']),
+    clickSwiper(index){
+      this.previewIndex=index
+      this.previewVisible=true
+     
 
+    },
     async getCollect() {
       let http = this.isCollect ? mallShopCollectDel : mallShopCollectAdd
       try {

@@ -5,6 +5,7 @@
       <u-swiper
         :list="swiperList"
         @change="(e) => (currentNum = e.current)"
+        @click="clickSwiper($event)"
         :autoplay="false"
         indicatorStyle="right: 20px"
         height="220"
@@ -119,6 +120,7 @@
       ></view>
       <commFootBtn :tel="tel" :shopId="shopId"></commFootBtn>
     </view>
+    <previewImage @cancel="previewVisible=false" :visible="previewVisible" :tempUrl="swiperList[previewIndex].url" ></previewImage>
   </view>
 </template>
 
@@ -130,12 +132,13 @@ import commFootBtn from './../components/commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import { getCommodityDetail, getCommodityPage } from '@/api/shop.js'
+import previewImage from "@/components/previewImage"
 export default {
   components: {
     articleGrid,
     comment,
     commodity,
-    commFootBtn,
+    commFootBtn,previewImage
   },
   data() {
     return {
@@ -163,6 +166,8 @@ export default {
       commodityInfo: null,
       size: 10,
       current: 1,
+      previewIndex:0,
+      previewVisible:false
     }
   },
   computed: {
@@ -181,6 +186,12 @@ export default {
   },
   methods: {
     ...mapMutations([['setCommodityInfo']]),
+    clickSwiper(index){
+      this.previewIndex=index
+      this.previewVisible=true
+     
+
+    },
     // 查看推荐商品
     async getCommodityRecommend() {
       try {
