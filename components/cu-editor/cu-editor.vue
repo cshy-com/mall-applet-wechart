@@ -136,7 +136,7 @@
 
 <script>
 import { handleHtmlImage } from './util'
-
+import { pathToBase64 } from './../../js_sdk/mmmm-image-tools/index'
 export default {
   name: 'cuEditor',
   props: {
@@ -683,24 +683,49 @@ export default {
       this.formats = e.detail
       console.log(this.formats)
     },
+    async transPath(path) {
+      let base64 = await pathToBase64(path)
+      
+      return base64
+    },
     chooseImage(onlyCamera) {
       const success = (res) => {
-        this.tempFilePaths = res.tempFiles.map((item) => ({
-          url: item.path,
-          size: item.size,
-          type: item.path.substring(
-            item.path.lastIndexOf('.') + 1,
-            item.path.length
-          ),
-          uid: this.getUid(),
-        }))
+        this.tempFilePaths = []
+        res.tempFiles.forEach(async (item) => {
+          let url = await this.transPath(item.path)
+
+          this.tempFilePaths.push({
+            url: url,
+            size: item.size,
+            type: item.path.substring(
+              item.path.lastIndexOf('.') + 1,
+              item.path.length
+            ),
+            uid: this.getUid(),
+          })
+          console.log('this.tempFilePaths' + this.tempFilePaths)
+          
+        })
+        // this.tempFilePaths = res.tempFiles.map(async(item) =>
+
+        //   ({
+        //   url: this.transPath(item.path),
+        //   size: item.size,
+        //   type: item.path.substring(
+        //     item.path.lastIndexOf('.') + 1,
+        //     item.path.length
+        //   ),
+        //   uid: this.getUid(),
+        // }))
+        
         // 当前插入图片src地址直接使用临时路径，如果对接接口上传，更改为使用【上传文件】代码片段：
 
         /* 直接插入临时图片地址 start */
-
-        this.tempFilePaths.forEach((file) => {
-          this.insertImage(file.url, file)
-        })
+        setTimeout(() => {
+          this.tempFilePaths.forEach((file) => {
+            this.insertImage(file.url, file)
+          })
+        }, 0)
 
         /* 直接插入临时图片地址 end */
 

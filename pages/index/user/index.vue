@@ -54,11 +54,11 @@
           url="/pages/order/business-order-list/business-order-list"
           v-if="userInfo.userType == 2"
         ></u-cell>
-        <!-- <u-cell
+        <u-cell
           title="发布文章"
           isLink
-          url="/pages/article/addForum"
-        ></u-cell> -->
+          url="/pages/article/forumAdd"
+        ></u-cell>
         <u-cell title="我的论坛" isLink url="/pages/article/forumList"></u-cell>
         <u-cell
           title="历史建议"
