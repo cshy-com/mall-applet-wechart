@@ -37,7 +37,7 @@
             </view>
           </block>
         </view>
-        <view v-if="selectClassIndex == 1">
+        <view class="forum-content" v-if="selectClassIndex == 1">
           <forum :list="list"></forum>
         </view>
         <view v-if="selectClassIndex == 2">
@@ -51,7 +51,7 @@
         </view>
       </view>
     </view>
-    <tab-bar :userIdentity="1" :selected="0" ></tab-bar>
+    <tab-bar :userIdentity="1" :selected="0"></tab-bar>
   </view>
 </template>
 
@@ -67,7 +67,7 @@ import forum from '@/components/forum'
 import recommendation from './../components/recommendation'
 import forumData from '@/mock/index.js'
 import projectList from '@/components/projectList'
-import tabBar from "@/components/tab-bar.vue"
+import tabBar from '@/components/tab-bar.vue'
 export default {
   data() {
     return {
@@ -82,14 +82,7 @@ export default {
         'https://cdn.uviewui.com/uview/swiper/swiper2.png',
         'https://cdn.uviewui.com/uview/swiper/swiper1.png',
       ],
-      indexImgs: [
-        {
-          imgUrl: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-        },
-        {
-          imgUrl: 'https://csdnimg.cn/70592b2299594e37aedcaa91fc52a294.png',
-        },
-      ],
+
       seq: 0,
       news: [],
       statusList: [
@@ -108,63 +101,7 @@ export default {
         },
       ],
       selectClassIndex: 0,
-      taglist: [
-        {
-          style: 1,
-          id: 1,
-          title: '上新',
-          prods: [
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/111.png',
-              prodName: '番茄脆菇沙拉',
-              price: 98,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/222.png',
-              prodName: '海鲜',
-              price: 198,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/333.png',
-              prodName: '古都',
-              price: 899,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/444.png',
-              prodName: '水产采摘',
-              price: 368,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/555.png',
-              prodName: '高级美甲',
-              price: 88,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/666.png',
-              prodName: '美甲DIY',
-              price: 128,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/777.png',
-              prodName: '户外运动',
-              price: 299,
-              prodid: 33,
-            },
-            {
-              pic: 'http://39.104.53.172:8888/upload/2023/05/888.png',
-              prodName: '艺术品鉴',
-              price: 1099,
-              prodid: 33,
-            },
-          ],
-        },
-      ],
+
       sts: 0,
       scrollTop: '',
       current: 1,
@@ -173,6 +110,9 @@ export default {
       updata: true,
       list: forumData.forumList,
       prods: [],
+      currentForum: 1,
+      sizeForum: 10,
+      totalForum: 0,
     }
   },
 
@@ -183,7 +123,8 @@ export default {
     cateGroup,
     forum,
     recommendation,
-    projectList,tabBar
+    projectList,
+    tabBar,
   },
   props: {},
   computed: {
@@ -193,8 +134,12 @@ export default {
     },
   },
   created() {
+    uni.showLoading({
+      title: '加载中',
+    })
     this.getAllCate()
     this.getCommodityRecommend()
+    uni.hideLoading()
   },
   onLoad() {},
   onReady() {},
@@ -203,20 +148,48 @@ export default {
   options: {
     styleIsolation: 'shared',
   },
-  onPullDownRefresh(){
- this.current=0
+  onPullDownRefresh() {
     this.getAllCate()
-    this.getCommodityRecommend()
+    switch (this.selectClassIndex) {
+      case 0:
+        this.current = 0
+        this.getCommodityRecommend()
+        break
+      case 1:
+        this.currentForum = 0
+        this.getForumList()
+        break
+      default:
+        this.current = 0
+        this.getCommodityRecommend()
+    }
+
     setTimeout(function () {
       uni.stopPullDownRefresh()
     }, 1000)
   },
   onReachBottom: function () {
-    this.current++
-    this.getCommodityRecommend()
+    switch (this.selectClassIndex) {
+      case 0:
+        this.current++
+        this.getCommodityRecommend()
+        break
+      case 1:
+        this.currentForum++
+        this.getForumList()
+        break
+      default:
+        this.current++
+        this.getCommodityRecommend()
+    }
+
+    if (this.selectClassIndex == 0) {
+    }
   },
   methods: {
     ...mapMutations(['setCateAll', 'setCommodityInfo']),
+    // 论坛列表
+    getForumList() {},
     goProjectList() {
       uni.navigateTo({
         url: '/pages/article/projectList',

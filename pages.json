@@ -150,27 +150,31 @@
                     "path": "order-detail/order-detail",
                     "style": {
                         "navigationBarTitleText": "订单详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
                     }
                 },
                 {
                     "path": "order-list/order-list",
                     "style": {
                         "navigationBarTitleText": "订单列表",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
                     }
                 }, {
                     "path": "business-order-detail/business-order-detail",
                     "style": {
                         "navigationBarTitleText": "订单详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
                     }
                 },
                 {
                     "path": "business-order-list/business-order-list",
                     "style": {
                         "navigationBarTitleText": "订单列表",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
                     }
                 },
                 {
@@ -317,7 +321,8 @@
                     "path": "forumList",
                     "style": {
                         "navigationBarTitleText": "我的论坛",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
 
                     }
 

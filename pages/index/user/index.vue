@@ -58,8 +58,14 @@
           title="发布论坛"
           isLink
           url="/pages/article/forumAdd"
+          v-if="userInfo.userType == 1"
         ></u-cell>
-        <u-cell title="我的论坛" isLink url="/pages/article/forumList"></u-cell>
+        <u-cell
+          title="我的论坛"
+          isLink
+          url="/pages/article/forumList"
+          v-if="userInfo.userType == 1"
+        ></u-cell>
         <u-cell
           title="历史建议"
           isLink

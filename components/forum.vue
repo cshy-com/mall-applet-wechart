@@ -6,13 +6,18 @@
       :key="item.id"
       @tap="($event) => goDetail(item)"
     >
+   
       <view class="content-item">
         <view class="content-item-left">
           <view class="title over-ellipsis"
             ><text>{{ item.title }}</text></view
           >
           <view class="sub-title over-ellipsis"
-            ><text>{{ item.subTitle }}</text></view
+            >
+            
+            <text v-if="current!=2">{{ item.subTitle }}</text>
+            <text v-else>拒绝原因：巴拉巴拉</text>
+            </view
           >
           <view class="content-footer">
             <view class="avater">
@@ -29,15 +34,24 @@
           </view>
         </view>
         <view class="content-right">
+          <view class="content-img">
+            
           <image
             :src="item.image"
             :lazy-load="true"
             :lazy-load-margin="0"
             :mode="'aspectFill'"
           />
+          </view>
+          <view v-if="current==3" class="right-btn" @click.stop="show=true">
+            <button class="'btn-del'">删除</button>
+          </view>
         </view>
       </view>
+    
+
     </view>
+    <u-modal :title="'是否确认删除？'"  @cancel="show=false" :showCancelButton='true' :show="show" @confirm="confirm" ref="uModal" :asyncClose="true"></u-modal>
   </view>
 </template>
 
@@ -52,9 +66,15 @@ export default {
       type: Array,
       default: () => [],
     },
+    current:{
+      type:Number,
+      default:0
+    }
   },
   data() {
-    return {}
+    return {  
+      show: false    
+              }
   },
   // 计算属性
   computed: {},
@@ -65,6 +85,15 @@ export default {
   // 方法集合
   methods: {
     ...mapMutations(['setForumInfo']),
+    delData(item){
+
+    },
+    confirm() {
+			setTimeout(() => {
+				// 3秒后自动关闭
+				this.show = false;
+			}, 3000)
+		},
     goDetail(item) {
       this.setForumInfo(item)
 
@@ -130,14 +159,17 @@ export default {
     .content-right {
       flex: 0 0 240rpx;
       width: 240rpx;
-      height: 170rpx;
-      position: relative;
-      overflow: hidden;
-      image {
+     
+     
+      .content-img{
+        height: 170rpx; position: relative;
+      overflow: hidden;image {
         width: 100%;
         height: 100%;
         will-change: transform;
       }
+      }
+      
     }
     .content-footer {
       position: absolute;
@@ -181,5 +213,21 @@ export default {
 }
 .content {
   padding-bottom: 20rpx;
+}
+.right-btn{
+  width:200rpx;
+  margin: auto;
+  margin-top: 40rpx;
+  padding-bottom: 250rpx;
+  button {
+    height: 60rpx;
+    background: $Gradual-color;
+    border-radius: 10rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+    text-align: center;
+    color: #ffffff;
+    line-height: 60rpx
+  }
 }
 </style>
