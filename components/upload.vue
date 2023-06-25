@@ -13,6 +13,9 @@
       :previewFullImage="previewFullImage"
       @oversize="overSize"
     ></u-upload>
+    <view class="tip" v-if="showTips">
+      <text class="tip-value">请上传 大小不超过 <text class="color">{{maxSize}}MB</text> 格式为 png/jpg/jpeg 的文件，最多上传  <text class="color">{{maxCount}} </text>张</text>
+    </view>
   </view>
 </template>
 <script>
@@ -53,6 +56,10 @@ export default {
     maxSize:{
       type:Number,
       default:1
+    },
+    showTips:{
+      type:Boolean,
+      default:true
     }
   },
   data() {
@@ -158,6 +165,14 @@ overSize(e) {
 }
 </script>
 <style lang="scss" scoped>
+.tip{
+  .tip-value{
+    font-size: 22rpx;
+    .color{
+      color: rgb(245, 108, 108);
+    }
+  }
+}
 .upload {
   /deep/ .u-upload__deletable {
     height: 40rpx !important;

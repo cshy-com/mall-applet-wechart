@@ -55,7 +55,7 @@
           v-if="userInfo.userType == 2"
         ></u-cell>
         <u-cell
-          title="发布文章"
+          title="发布论坛"
           isLink
           url="/pages/article/forumAdd"
         ></u-cell>
