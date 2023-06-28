@@ -9,7 +9,7 @@
         ref="item1"
         labelWidth="100"
       >
-        <u-input v-model="model1.userInfo.nickName" border="none"></u-input>
+        <u-input v-model="model1.userInfo.nickName" border="none"  ></u-input>
       </u-form-item>
       <u-form-item
         label="头像"
@@ -18,6 +18,7 @@
         ref="item1"
         labelWidth="100"
       >
+    
         <upload
           :maxCount="1"
           v-model="model1.userInfo.avatar"
@@ -114,6 +115,7 @@ export default {
       radio: '',
       switchVal: false,
       user: {},
+      defaultAvatar:require('@/static/img/icon/head04.png')
     }
   },
   computed: {
@@ -121,6 +123,8 @@ export default {
   },
   methods: {
     ...mapMutations(['setUserInfo']),
+   
+
     sexSelect(e) {
       this.model1.userInfo.sex = e.name
 
@@ -174,14 +178,18 @@ export default {
     },
   },
   onReady() {
+     
     this.model1.userInfo.nickName = this.userInfo.nickName
     this.model1.userInfo.sex = this.actions.find(
       (val) => val.index == this.userInfo.sex
     ).name
     this.sexIndex = this.userInfo.sex
-    this.model1.userInfo.avatar.push({
+    if( this.userInfo.avatar){
+      this.model1.userInfo.avatar.push({
       url: this.userInfo.avatar,
     })
+    }
+    
 
     //如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
     this.$refs.uForm.setRules(this.rules)

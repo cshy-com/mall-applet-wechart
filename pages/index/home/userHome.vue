@@ -62,12 +62,14 @@ const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import commSearch from '@/components/commSearch.vue'
 import list from './../components/list.vue'
 import { mallShopTypeListByParentId, getCommodityPage } from '@/api/shop.js'
+import { ForumPage } from '@/api/index'
 import cateGroup from '@/components/cateGroup'
 import forum from '@/components/forum'
 import recommendation from './../components/recommendation'
 import forumData from '@/mock/index.js'
 import projectList from '@/components/projectList'
 import tabBar from '@/components/tab-bar.vue'
+import { getTotalPage } from '@/util/util'
 export default {
   data() {
     return {
@@ -108,11 +110,13 @@ export default {
       size: 10,
       total: 0,
       updata: true,
-      list: forumData.forumList,
+      list: [],
       prods: [],
       currentForum: 1,
       sizeForum: 10,
       totalForum: 0,
+      more: 'more',
+      moreForum: 'more',
     }
   },
 
@@ -150,20 +154,7 @@ export default {
   },
   onPullDownRefresh() {
     this.getAllCate()
-    switch (this.selectClassIndex) {
-      case 0:
-        this.current = 0
-        this.getCommodityRecommend()
-        break
-      case 1:
-        this.currentForum = 0
-        this.getForumList()
-        break
-      default:
-        this.current = 0
-        this.getCommodityRecommend()
-    }
-
+    this.resetPage()
     setTimeout(function () {
       uni.stopPullDownRefresh()
     }, 1000)
@@ -171,16 +162,22 @@ export default {
   onReachBottom: function () {
     switch (this.selectClassIndex) {
       case 0:
-        this.current++
-        this.getCommodityRecommend()
+        if (this.more == 'more') {
+          this.current++
+          this.getCommodityRecommend()
+        }
         break
       case 1:
-        this.currentForum++
-        this.getForumList()
+        if (this.moreForum == 'more') {
+          this.currentForum++
+          this.getForumList()
+        }
         break
       default:
-        this.current++
-        this.getCommodityRecommend()
+        if (this.more == 'more') {
+          this.current++
+          this.getCommodityRecommend()
+        }
     }
 
     if (this.selectClassIndex == 0) {
@@ -188,8 +185,53 @@ export default {
   },
   methods: {
     ...mapMutations(['setCateAll', 'setCommodityInfo']),
+    resetPage() {
+      switch (this.selectClassIndex) {
+        case 0:
+          this.current = 1
+          this.getCommodityRecommend()
+          break
+        case 1:
+          this.currentForum = 1
+          this.getForumList()
+          break
+        default:
+          this.current =1
+          this.getCommodityRecommend()
+      }
+    },
     // 论坛列表
-    getForumList() {},
+    async getForumList() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await ForumPage({
+          current: this.currentForum,
+          size: this.sizeForum,
+          type: 'comm',
+        })
+    
+        this.totalForum = res.total
+        let totalPage = getTotalPage(this.totalForum, this.sizeForum)
+      
+        if (this.currentForum == 1) {
+          this.list = res.data
+        } else {
+          this.list = [...this.list, ...res.data]
+        }
+        
+        if (totalPage > this.currentForum) {
+          this.moreForum = 'more'
+        } else {
+          this.moreForum = 'noMore'
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
     goProjectList() {
       uni.navigateTo({
         url: '/pages/article/projectList',
@@ -197,22 +239,33 @@ export default {
     },
     changeIndex(e) {
       this.selectClassIndex = e
+      this.resetPage()
     },
     async getCommodityRecommend() {
+      uni.showLoading({
+        title: '加载中',
+      })
       try {
         let res = await getCommodityPage({
           current: this.current,
           size: this.size,
         })
         this.total = res.total
-
+        let totalPage = getTotalPage(this.total, this.size)
         if (this.current == 1) {
           this.prods = res.data
         } else {
           this.prods = [...this.prods, ...res.data]
         }
+        if (totalPage > this.current) {
+          this.more = 'more'
+        } else {
+          this.more = 'noMore'
+        }
       } catch (e) {
         console.log(e)
+      } finally {
+        uni.hideLoading()
       }
     },
     //获取所有一级分类

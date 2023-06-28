@@ -1,5 +1,20 @@
 <template>
+  <view>
+  
+
+    <view class="nav">
+    <hx-navbar :config="config" ref="hxnb">
+      <view slot="center">
+        <view class="center" style="">
+          <text class="color" style="font-size: 18px">{{ config.title }}</text>
+        </view>
+      </view>
+      
+    </hx-navbar>
+  </view>
+ 
   <view class="page">
+    
     <view class="form">
       <u-form
         :model="form"
@@ -92,6 +107,8 @@
       </view>
     </popup>
   </view>
+ 
+</view>
 </template>
 
 <script>
@@ -102,8 +119,9 @@ import check from '@/pages/public/components/check.vue'
 import popup from '@/pages/public/components/popup.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapMutations } = createNamespacedHelpers('user')
+import commNav from '@/components/commNav'
 export default {
-  components: { check, popup },
+  components: { check, popup ,commNav},
   data() {
     return {
       seconds: 60,
@@ -150,9 +168,24 @@ export default {
       code: '',
       open: false,
       dialogBtn: '',
+      config: {
+        color: ['#000', '#000'],
+        title: '登录',
+        // centerSlot: true,
+        // leftSlot: true,
+        back: false,
+        fixed: true,
+        centerSlot: true
+        // backgroundColor: [0, ['#3a6cba']],
+        // // 滑动屏幕后切换颜色，注意颜色为数组时长度必须一样，还有使用滑动切换必须监听 onPageScroll 事件
+        // slideBackgroundColor: [1, ['#3b6dbb']],
+      },
     }
   },
   onLoad() {
+    wx.enableAlertBeforeUnload({
+      message: '请先登录',
+    })
     var that = this
     uni.login({
       provider: 'weixin',
@@ -161,6 +194,7 @@ export default {
       },
     })
   },
+  
   onReady() {
     this.$refs.uForm.setRules(this.rules)
   },
@@ -173,10 +207,15 @@ export default {
   },
   methods: {
     ...mapMutations(['setUserInfo']),
+   
     codeChange(text) {
       this.tips = text
     },
     getPhoneNumber(e) {
+      if (!this.selected) {
+        this.$tip.toast('请先勾选隐私协议')
+        return
+      }
       wxLogin(e.detail.code).then((res) => {
         if (res && res.code == 0) {
           setAuthorization(res.data.token)
@@ -493,4 +532,23 @@ export default {
     }
   }
 }
+.nav /deep/ .hx-navbar__content__main_center {
+  justify-content: center;
+  width: 100vw;
+  position: fixed;
+}
+.center {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: 28rpx;
+  font-family: SourceHanSerifCN-SemiBold, SourceHanSerifCN;
+  font-weight: 400;
+  color: #000;
+}
+ 
 </style>

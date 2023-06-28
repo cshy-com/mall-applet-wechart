@@ -4,15 +4,15 @@
       <view class="content-title">
         <text class="title">{{ forumInfo.title }}</text>
         <view class="title-info">
-          <text class="browse appmore">阅读&nbsp;{{ forumInfo.readNum }}</text>
+          <text class="browse appmore">阅读&nbsp;{{ forumInfo.visits }}</text>
         </view>
         <view class="user-info">
           <view class="user-info-left user">
             <view class="avater">
-              <image :src="forumInfo.avater" />
+              <image :src="forumInfo.avatar||defaultAvatar" />
             </view>
             <view>
-              <text class="name">{{ forumInfo.author }}</text>
+              <text class="name">{{ forumInfo.nickName }}</text>
               <text class="time">{{ forumInfo.createTime }}</text>
             </view>
           </view>
@@ -21,7 +21,7 @@
     </view>
 
     <view class="content-main">
-      <view> {{ forumInfo.content }} </view>
+      <view><u-parse :content="forumInfo.content"></u-parse> </view>
     </view>
     <view>
       <view class="content-activity bottom">
@@ -35,7 +35,7 @@
           >
             <view class="thumbnail">
               <image
-                :src="item.image || defaultImg"
+                :src="item.mainUrl || defaultImg"
                 :lazy-load="true"
                 :lazy-load-margin="0"
                 :mode="'aspectFill'"
@@ -53,14 +53,17 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import forumData from '@/mock/index.js'
+import { forumDetail, ForumPage,forumView } from '@/api/index'
 export default {
   //import引入组件才能使用
   components: {},
   props: {},
   data() {
     return {
-      list: forumData.forumList,
+      list: [],
       defaultImg: require('@/static/img/default.png'),
+      viewNum:0,
+      defaultAvatar:require('@/static/img/icon/head04.png')
     }
   },
   // 计算属性
@@ -79,10 +82,36 @@ export default {
         url: '/pages/subPack/forum/forumDatail',
       })
     },
+    async getPageList() {
+      let res = await ForumPage({
+        type: 'comm',
+        current: 1,
+        size: 10,
+        order: {
+          field: 'visits',
+          type: 'desc',
+        },
+      })
+      this.list = res.data
+    },
+    async getDetail() {
+      await forumView(this.id)
+      let res = await forumDetail(this.id)
+      this.setForumInfo(res.data)
+
+      
+    },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {
     console.log(this.forumInfo)
+  },
+  onLoad(options) {
+    if (options.id) {
+      this.id = options.id
+      this.getDetail()
+    }
+    this.getPageList()
   },
   onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）

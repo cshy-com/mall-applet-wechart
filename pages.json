@@ -170,6 +170,14 @@
                     }
                 },
                 {
+                    "path": "business-order-detail/business-order-detail-data",
+                    "style": {
+                        "navigationBarTitleText": "订单详情",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
+                    }
+                },
+                {
                     "path": "business-order-list/business-order-list",
                     "style": {
                         "navigationBarTitleText": "订单列表",
@@ -193,6 +201,9 @@
                     "style": {
                         "navigationBarTitleText": "登录",
                         "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom",
+
+                        "disableSwipeBack": true,
                         "app-plus": {
                             "bounce": "vertical",
                             "titleNView": {
@@ -407,6 +418,7 @@
             "background": "#efeff4"
         }
     },
+
     "tabBar": {
         "color": "#333333",
         "custom": true,

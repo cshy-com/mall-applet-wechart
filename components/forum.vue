@@ -6,26 +6,22 @@
       :key="item.id"
       @tap="($event) => goDetail(item)"
     >
-   
       <view class="content-item">
         <view class="content-item-left">
           <view class="title over-ellipsis"
             ><text>{{ item.title }}</text></view
           >
-          <view class="sub-title over-ellipsis"
-            >
-            
-            <text v-if="current!=2">{{ item.subTitle }}</text>
-            <text v-else>拒绝原因：巴拉巴拉</text>
-            </view
-          >
+          <view class="sub-title over-ellipsis">
+            <text v-if="current != 2">{{ item.content }}</text>
+            <text v-else>拒绝原因：{{item.remarks}}</text>
+          </view>
           <view class="content-footer">
             <view class="avater">
-              <image :src="item.avater"> </image>
+              <image :src="item.avatar||defaultAvatar"> </image>
             </view>
 
             <text class="author">
-              {{ item.author }}
+              {{ item.nickName }}
             </text>
 
             <text class="createTime">
@@ -35,29 +31,39 @@
         </view>
         <view class="content-right">
           <view class="content-img">
-            
-          <image
-            :src="item.image"
-            :lazy-load="true"
-            :lazy-load-margin="0"
-            :mode="'aspectFill'"
-          />
+            <image
+              :src="item.mainUrl||defaultImg"
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :mode="'aspectFill'"
+            />
           </view>
-          <view v-if="current==3" class="right-btn" @click.stop="show=true">
+          <view
+            v-if="current == 3"
+            class="right-btn"
+            @click.stop="delModelShow(item)"
+          >
             <button class="'btn-del'">删除</button>
           </view>
         </view>
       </view>
-    
-
     </view>
-    <u-modal :title="'是否确认删除？'"  @cancel="show=false" :showCancelButton='true' :show="show" @confirm="confirm" ref="uModal" :asyncClose="true"></u-modal>
+    <u-modal
+      :title="'是否确认删除？'"
+      @cancel="show = false"
+      :showCancelButton="true"
+      :show="show"
+      @confirm="confirm"
+      ref="uModal"
+      :asyncClose="true"
+    ></u-modal>
   </view>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import { forumDel } from '@/api/index'
 export default {
   //import引入组件才能使用
   components: {},
@@ -66,15 +72,17 @@ export default {
       type: Array,
       default: () => [],
     },
-    current:{
-      type:Number,
-      default:0
-    }
+    current: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
-    return {  
-      show: false    
-              }
+    return {
+      show: false,
+      selectItem: null, defaultImg: require('@/static/img/default.png'),
+      defaultAvatar:require('@/static/img/icon/head04.png')
+    }
   },
   // 计算属性
   computed: {},
@@ -85,21 +93,35 @@ export default {
   // 方法集合
   methods: {
     ...mapMutations(['setForumInfo']),
-    delData(item){
-
+    delData(item) {},
+    delModelShow(item) {
+      this.selectItem = item
+      this.show = true
     },
-    confirm() {
-			setTimeout(() => {
-				// 3秒后自动关闭
-				this.show = false;
-			}, 3000)
-		},
+    async confirm() {
+      // 3秒后自动关闭
+
+      try {
+        await forumDel(this.selectItem.id)
+        this.show = false
+        this.$emit('getPage')
+      } catch (e) {
+        console.log(e)
+      }
+    },
     goDetail(item) {
       this.setForumInfo(item)
-
-      uni.navigateTo({
-        url: '/pages/article/forumDatail',
-      })
+      // 查看详情
+      if (this.current == 0) {
+        uni.navigateTo({
+          url: '/pages/article/forumDatail?id='+item.id,
+        })
+      } else {
+        // 继续编辑
+        uni.navigateTo({
+          url: '/pages/article/forumAdd?id='+item.id,
+        })
+      }
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
@@ -159,17 +181,17 @@ export default {
     .content-right {
       flex: 0 0 240rpx;
       width: 240rpx;
-     
-     
-      .content-img{
-        height: 170rpx; position: relative;
-      overflow: hidden;image {
-        width: 100%;
-        height: 100%;
-        will-change: transform;
+
+      .content-img {
+        height: 170rpx;
+        position: relative;
+        overflow: hidden;
+        image {
+          width: 100%;
+          height: 100%;
+          will-change: transform;
+        }
       }
-      }
-      
     }
     .content-footer {
       position: absolute;
@@ -214,11 +236,12 @@ export default {
 .content {
   padding-bottom: 20rpx;
 }
-.right-btn{
-  width:200rpx;
+.right-btn {
+  width:120rpx;
   margin: auto;
   margin-top: 40rpx;
   padding-bottom: 250rpx;
+  padding-left: 30px;
   button {
     height: 60rpx;
     background: $Gradual-color;
@@ -227,7 +250,7 @@ export default {
     font-weight: 400;
     text-align: center;
     color: #ffffff;
-    line-height: 60rpx
+    line-height: 60rpx;
   }
 }
 </style>

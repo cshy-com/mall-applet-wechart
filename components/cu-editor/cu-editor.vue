@@ -3,7 +3,7 @@
     <!-- <view id="fixed-top" class="fixed-top" :class="{ isFixed: isFixed }"> -->
     <!-- <button class="btn btn-primary" @click="save">保存</button> -->
     <!-- </view> -->
-    <view class="fixed-top__place"></view>
+    <!-- <view class="fixed-top__place"></view> -->
     <scroll-view scroll-y :style="{ height: scrollViewHeight + 'px' }">
       <editor
         id="editor"
@@ -57,8 +57,9 @@
         <view class="toolbar-item" @touchend.stop="hideToolbar">
           <i class="iconfont icon-check"></i>
         </view>
-        <view class="toolbar-item-footer" @touchend.stop="save"
-          ><button class="btn btn-primary" @click="save">保存</button>
+        <view class="toolbar-item-footer" 
+          ><button class="btn btn-primary" @touchend.stop="save(0)">保存</button>
+          <button class="btn btn-primary" @touchend.stop="save(1)">发布</button>
         </view>
       </view>
       <swiper
@@ -168,7 +169,7 @@ export default {
     //chooseImage参数，最大文件大小，上传文件前校验是否符合规则，单位MB
     maxSize: {
       type: Number,
-      default: 5,
+      default: 1,
     },
     //chooseImage参数，最多可以选择的图片张数
     count: {
@@ -186,7 +187,8 @@ export default {
     sourceType: {
       type: Array,
       default() {
-        return ['album', 'camera']
+        return ['album']
+        // return ['album', 'camera']
       },
     },
     //不允许上传的图片类型
@@ -240,10 +242,10 @@ export default {
               name: 'chooseImage',
               icon: 'image',
             },
-            {
-              name: 'chooseImagebyCamera',
-              icon: 'photo',
-            },
+            // {
+            //   name: 'chooseImagebyCamera',
+            //   icon: 'photo',
+            // },
             // {
             // 	name: 'insertDivider',
             // 	icon: 'line'
@@ -689,55 +691,37 @@ export default {
       return base64
     },
     chooseImage(onlyCamera) {
+      
       const success = (res) => {
-        this.tempFilePaths = []
-        res.tempFiles.forEach(async (item) => {
-          let url = await this.transPath(item.path)
-
-          this.tempFilePaths.push({
-            url: url,
-            size: item.size,
-            type: item.path.substring(
-              item.path.lastIndexOf('.') + 1,
-              item.path.length
-            ),
-            uid: this.getUid(),
-          })
-          console.log('this.tempFilePaths' + this.tempFilePaths)
-          
-        })
-        // this.tempFilePaths = res.tempFiles.map(async(item) =>
-
-        //   ({
-        //   url: this.transPath(item.path),
-        //   size: item.size,
-        //   type: item.path.substring(
-        //     item.path.lastIndexOf('.') + 1,
-        //     item.path.length
-        //   ),
-        //   uid: this.getUid(),
-        // }))
-        
+        this.tempFilePaths = res.tempFiles.map((item) => ({
+          url: item.path,
+          size: item.size,
+          type: item.path.substring(
+            item.path.lastIndexOf('.') + 1,
+            item.path.length
+          ),
+          uid: this.getUid(),
+        }))
         // 当前插入图片src地址直接使用临时路径，如果对接接口上传，更改为使用【上传文件】代码片段：
 
         /* 直接插入临时图片地址 start */
-        setTimeout(() => {
-          this.tempFilePaths.forEach((file) => {
-            this.insertImage(file.url, file)
-          })
-        }, 0)
+
+        // this.tempFilePaths.forEach((file) => {
+        //   this.insertImage(file.url, file)
+        // })
 
         /* 直接插入临时图片地址 end */
 
         /* 上传文件 start */
 
-        // this.$emit('before', res)
-        // this.verifyFile()
-        // this.$nextTick(() => {
-        // 	this.uploadFile(this.tempFilePaths.length)
-        // })
+        this.$emit('before', res)
+        this.verifyFile()
+        this.$nextTick(() => {
+        	this.uploadFile(this.tempFilePaths.length)
+        })
 
         /* 上传文件 end */
+
       }
 
       const { count, sizeType } = this
@@ -751,7 +735,9 @@ export default {
       }, 100)
     },
     insertImage(src, file) {
+      console.log("开始插入了码",JSON.stringify( src), JSON.stringify( file))
       var that = this
+      console.log("进到this了码"+JSON.stringify(that.editorCtx))
       that.editorCtx.insertImage({
         src,
         data: {
@@ -760,14 +746,23 @@ export default {
         // extClass:'editor-img',
         extClass: 'editor--editor-img', //添加到图片 img标签上的类名为editor-img，设置前缀editor--才生效。部分机型点击图片右边的光标时不灵敏，需将样式editor-img宽度调小 max-width:98%;从而在图片右侧中留出部分位置供用户点击聚集。
         success(e) {
+          console.log("插入成功")
           //真机会自动插入一行空格
         },
+        fail(e){
+          console.log("失败"+JSONs.stringify(e))
+        },
+        complete(e){
+          console.log("完成"+JSON.stringify(e) )
+        }
       })
     },
     /**
      * 上传文件，支持多图递归上传
      */
     uploadFile(uploadCount, curIndex) {
+     console.log( this.url,this.header)
+      
       if (!this.tempFilePaths.length) return
       const { url, name, header, formData, progress } = this
       const file = this.tempFilePaths.shift()
@@ -831,9 +826,13 @@ export default {
 				   	data: '{"code":0,"msg":"上传成功","data":{"path":"https://xxx.com/images/upload/1.png"}}'
 				   }
 				*/
+        debugger
+        console.log("成功"+JSON.stringify(res.data))
       let json = JSON.parse(res.data)
-      if (json.code == 0) {
-        this.insertImage(json.data.path, file)
+      console.log("11111111111")
+      if (json.code == 200) {
+        console.log("2222222222222")
+        this.insertImage(json.uploadBaseUrl+json.url, file)
       } else {
         uni.showToast({
           title: '图片上传失败',
@@ -906,12 +905,12 @@ export default {
         },
       })
     },
-    save() {
+    save(status) {
       this.editorCtx.getContents({
         success: (res) => {
           console.log(res)
           res.html = handleHtmlImage(res.html, true)
-          this.$emit('save', res)
+          this.$emit(status==0?'save':'release', res)
           uni.showToast({
             title: '保存成功',
             icon: 'none',
@@ -1065,7 +1064,7 @@ $main-color: #5b8ff9;
 
   .toolbar-item-header,
   .toolbar-item-footer {
-    width: 160rpx;
+    width: 220rpx;
     text-align: center;
     justify-content: center;
     align-items: center;
@@ -1085,6 +1084,8 @@ $main-color: #5b8ff9;
       font-size: 24rpx;
       margin: 14rpx 0;
       text-align: center;
+      margin-left: 20rpx;
+      margin-right: 20rpx;
     }
 
     .btn-primary {
@@ -1099,6 +1100,7 @@ $main-color: #5b8ff9;
 
   .toolbar-item-header {
     border-right: solid 1rpx $uni-border-color;
+    width: 100rpx;
   }
 
   .toolbar-item-footer {

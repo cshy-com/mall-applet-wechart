@@ -6,7 +6,7 @@
           <image
             :lazy-load="true"
             :lazy-load-margin="0"
-            :src="userInfo.avatar ? userInfo.avatar : '/static/img/test5.png'"
+            :src="userInfo.avatar || defaultAvatar"
           ></image>
         </view>
         <view class="userinfo-name">
@@ -20,7 +20,7 @@
         <image
           :lazy-load="true"
           :lazy-load-margin="0"
-          src="/static/img/test5.png"
+          :src="defaultAvatar"
         ></image>
       </view>
       <view class="none-login" @tap="toLogin">
@@ -69,6 +69,7 @@
         <u-cell
           title="历史建议"
           isLink
+          v-if="userInfo.userType == 1"
           url="/pages/article/recommendationList"
         ></u-cell>
         <!-- <u-cell
@@ -123,6 +124,7 @@ const { mapGetters, mapMutations } = createNamespacedHelpers('user')
 import { getUserInfo } from '@/api/index'
 import { getUrlParams } from '@/util/util'
 import tabBar from '@/components/tab-bar.vue'
+import { removeAuthorization } from '@/util/auth'
 export default {
   data() {
     return {
@@ -133,6 +135,7 @@ export default {
       loginResult: '',
       picDomain: '', // config.picDomain
       user: {},
+      defaultAvatar:require('@/static/img/icon/head04.png')
     }
   },
 
@@ -190,11 +193,14 @@ export default {
         onlyFromCamera: true,
         scanType: 'qrCode',
         success: function (res) {
-          let code = getUrlParams(res.scanType)
+          console.log("res"+JSON.stringify(res))
+          let result = getUrlParams(res.result)
+          console.log('code----'+JSON.stringify(result.code))
+   
           uni.navigateTo({
             url:
               '/pages/order/business-order-detail/business-order-detail?code=' +
-              code,
+              result.code,
           })
         },
       })
@@ -202,12 +208,14 @@ export default {
     logOut() {
       this.setUserInfo(null)
       uni.setStorageSync('user', null)
+      removeAuthorization('Authorization')
       uni.redirectTo({ url: '/pages/public/login' })
+      
     },
     async getUser() {
       try {
         let res = await getUserInfo()
-
+        
         this.setUserInfo(res.data)
         uni.setStorageSync('user', res.data)
       } catch (e) {

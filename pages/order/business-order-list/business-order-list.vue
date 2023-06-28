@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-19 15:44:43
+ * @LastEditTime: 2023-06-28 11:51:44
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -64,7 +64,7 @@
                 <view class="prod-info">
                   <view class="prodname">
                     <view class="prod-pic">
-                      <image :src="item.avatar"></image>
+                      <image :src="item.avatar||defaultAvatar"></image>
                     </view>
                     <view class="name"> {{ item.nickName }}</view>
                   </view>
@@ -140,6 +140,7 @@ export default {
       size: 10,
       current:1,
       currentIndex: 0,
+      defaultAvatar:require('@/static/img/icon/head04.png')
     }
   },
 
@@ -266,7 +267,7 @@ export default {
     toOrderDetailPage (e) {
       uni.navigateTo({
         url:
-          '/pages/order/business-order-detail/business-order-detail?orderId=' +
+          '/pages/order/business-order-detail/business-order-detail-data?orderId=' +
           e.id,
       })
     },
