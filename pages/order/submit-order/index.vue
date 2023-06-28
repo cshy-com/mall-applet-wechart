@@ -6,7 +6,7 @@
         prop="time"
         borderBottom
         ref="item1"
-        labelWidth="130"
+        labelWidth="180"
       >
         <text @click="pickerShow">{{
           $u.timeFormat(orderInfo.time, 'yyyy-mm-dd hh:MM')
@@ -29,7 +29,7 @@
         prop="number"
         borderBottom
         ref="item1"
-        labelWidth="130"
+        labelWidth="180"
       >
         <!-- button-size="36"
     color="#ffffff"
@@ -56,7 +56,7 @@
         prop="remark"
         borderBottom
         ref="item1"
-        labelWidth="130"
+        labelWidth="180"
         ><u-textarea
           v-model="orderInfo.remark"
           placeholder="请输入备注"

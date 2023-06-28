@@ -454,7 +454,7 @@ export default {
       ],
       curLength: 0,
       swiperCurrent: 0,
-      toolbarShow: false,
+      toolbarShow: true,
       toolBarContentShow: false,
       fixedTopHeight: 0, // 顶部工具栏高度
       toolBarHeight: 100, // 工具栏高度
