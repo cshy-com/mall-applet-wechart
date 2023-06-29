@@ -1,7 +1,7 @@
 <template>
   <!--pages/order-detail/order-detail.wxml-->
 
-  <view class="container">
+  <view class="container" v-if="orderItemDtos && orderItemDtos.id">
     <view class="order-detail">
       <view class="order-steps">
         <u-steps :current="current">
@@ -20,7 +20,7 @@
             <view class="prod-info">
               <view class="prodname">
                 <view class="prod-pic">
-                  <image :src="orderItemDtos.avatar||defaultAvatar"></image>
+                  <image :src="orderItemDtos.avatar || defaultAvatar"></image>
                 </view>
                 <view class="name"> {{ orderItemDtos.nickName }}</view>
               </view>
@@ -143,7 +143,7 @@ export default {
       stepsList: [],
       orderCode: '',
       current: 0,
-      defaultAvatar:require('@/static/img/icon/head04.png')
+      defaultAvatar: require('@/static/img/icon/head04.png'),
     }
   },
 
@@ -154,12 +154,11 @@ export default {
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-   
     this.orderId = options.orderId
-   
-    if(options?.code){
-      this.orderCode = (options.code)
-      console.log('this.orderCode'+this.orderCode)
+
+    if (options?.code) {
+      this.orderCode = options.code
+      console.log('this.orderCode' + this.orderCode)
       // console.log("扫码参数"+JSON.stringify(options) )
       // console.log('orderCode'+JSON.stringify(this.orderCode))
     }
@@ -216,26 +215,30 @@ export default {
      * 加载订单数据
      */
     async loadOrderDetail() {
-      let res
+      try {
+        let res
 
-      if (this.orderId) {
-        res = await orderDatail(this.orderId)
-        console.log("列表进详情")
-      } else {
-        console.log("扫码进详情"+this.orderCode)
-        res = await orderDetailByQrcode(this.orderCode)
-      }
+        if (this.orderId) {
+          res = await orderDatail(this.orderId)
+          console.log('列表进详情')
+        } else {
+          console.log('扫码进详情' + this.orderCode)
+          res = await orderDetailByQrcode(this.orderCode)
+        }
 
-      this.orderItemDtos = res.data
-      if (this.orderItemDtos.status >= 0) {
-        this.stepsList = this.stepsListSuccess
-        this.current = this.stepsList.findIndex(
-          (val) => val.id == res.data.status
-        )
-      } else {
-        this.stepsList = this.stepsListError
+        this.orderItemDtos = res.data
+        if (this.orderItemDtos.status >= 0) {
+          this.stepsList = this.stepsListSuccess
+          this.current = this.stepsList.findIndex(
+            (val) => val.id == res.data.status
+          )
+        } else {
+          this.stepsList = this.stepsListError
 
-        this.current = 1
+          this.current = 1
+        }
+      } catch (e) {
+        console.log(e)
       }
     },
 

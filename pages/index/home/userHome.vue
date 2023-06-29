@@ -38,7 +38,7 @@
           </block>
         </view>
         <view class="forum-content" v-if="selectClassIndex == 1">
-          <forum :list="list"></forum>
+          <forum :list="list" ></forum>
         </view>
         <view v-if="selectClassIndex == 2">
           <recommendation></recommendation>

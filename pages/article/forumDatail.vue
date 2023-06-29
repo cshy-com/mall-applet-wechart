@@ -23,7 +23,7 @@
     <view class="content-main">
       <view><u-parse :content="forumInfo.content"></u-parse> </view>
     </view>
-    <view>
+    <view v-if="status==30">
       <view class="content-activity bottom">
         <view class="tip">值得推荐</view>
         <view>
@@ -63,6 +63,7 @@ export default {
       list: [],
       defaultImg: require('@/static/img/default.png'),
       viewNum:0,
+      status:null,
       defaultAvatar:require('@/static/img/icon/head04.png')
     }
   },
@@ -95,7 +96,11 @@ export default {
       this.list = res.data
     },
     async getDetail() {
+      if(this.status==30){
+        
       await forumView(this.id)
+      
+    }
       let res = await forumDetail(this.id)
       this.setForumInfo(res.data)
 
@@ -111,7 +116,13 @@ export default {
       this.id = options.id
       this.getDetail()
     }
-    this.getPageList()
+    if(options.status){
+    this.status=options.status
+    }
+    if(this.status==30){
+      this.getPageList()
+    }
+  
   },
   onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）

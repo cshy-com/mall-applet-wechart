@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-20 15:04:02
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-28 12:01:47
+ * @LastEditTime: 2023-06-28 17:55:57
  * @FilePath: \mall-admind:\work\mall-applet\pages\article\forumAdd.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -56,6 +56,7 @@ export default {
   },
   onLoad(options) {
     if (options.id) {
+      console.log("options.id"+options.id)
       this.id = options.id
       this.getDetail()
     }
@@ -89,12 +90,22 @@ export default {
     async onRelease(e) {
       this.content = e.html
       try {
-        await forumUpdate({
+        if(this.id){
+          await forumUpdate({
           title: this.title,
           content: this.content,
           id: this.id,
           status: 10,
         })
+        }else{
+          await forumAdd({
+          title: this.title,
+          content: this.content,
+          status:10
+         
+        })
+        }
+       
         uni.navigateBack({})
       } catch (e) {
         console.log(e)

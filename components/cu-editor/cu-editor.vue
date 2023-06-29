@@ -138,6 +138,7 @@
 <script>
 import { handleHtmlImage } from './util'
 import { pathToBase64 } from './../../js_sdk/mmmm-image-tools/index'
+var that=this
 export default {
   name: 'cuEditor',
   props: {
@@ -735,10 +736,12 @@ export default {
       }, 100)
     },
     insertImage(src, file) {
+       
+        var _this=this
       console.log("开始插入了码",JSON.stringify( src), JSON.stringify( file))
-      var that = this
-      console.log("进到this了码"+JSON.stringify(that.editorCtx))
-      that.editorCtx.insertImage({
+       
+      console.log("进到this了码"+JSON.stringify(_this.editorCtx))
+      _this.editorCtx.insertImage({
         src,
         data: {
           id: file.uid,
@@ -756,6 +759,7 @@ export default {
           console.log("完成"+JSON.stringify(e) )
         }
       })
+      
     },
     /**
      * 上传文件，支持多图递归上传

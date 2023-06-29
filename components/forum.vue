@@ -112,9 +112,9 @@ export default {
     goDetail(item) {
       this.setForumInfo(item)
       // 查看详情
-      if (this.current == 0) {
+      if (this.current == 0||this.current == 1) {
         uni.navigateTo({
-          url: '/pages/article/forumDatail?id='+item.id,
+          url: `/pages/article/forumDatail?id=${item.id}&status=${item.status}`
         })
       } else {
         // 继续编辑
