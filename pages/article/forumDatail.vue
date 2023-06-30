@@ -9,7 +9,7 @@
         <view class="user-info">
           <view class="user-info-left user">
             <view class="avater">
-              <image :src="forumInfo.avatar||defaultAvatar" />
+              <image :src="forumInfo.avatar || defaultAvatar" />
             </view>
             <view>
               <text class="name">{{ forumInfo.nickName }}</text>
@@ -23,7 +23,7 @@
     <view class="content-main">
       <view><u-parse :content="forumInfo.content"></u-parse> </view>
     </view>
-    <view v-if="status==30">
+    <view v-if="status == 30">
       <view class="content-activity bottom">
         <view class="tip">值得推荐</view>
         <view>
@@ -53,7 +53,7 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import forumData from '@/mock/index.js'
-import { forumDetail, ForumPage,forumView } from '@/api/index'
+import { forumDetail, ForumPage, forumView } from '@/api/index'
 export default {
   //import引入组件才能使用
   components: {},
@@ -62,9 +62,9 @@ export default {
     return {
       list: [],
       defaultImg: require('@/static/img/default.png'),
-      viewNum:0,
-      status:null,
-      defaultAvatar:require('@/static/img/icon/head04.png')
+      viewNum: 0,
+      status: null,
+      defaultAvatar: require('@/static/img/icon/head04.png'),
     }
   },
   // 计算属性
@@ -96,15 +96,20 @@ export default {
       this.list = res.data
     },
     async getDetail() {
-      if(this.status==30){
-        
-      await forumView(this.id)
-      
-    }
-      let res = await forumDetail(this.id)
-      this.setForumInfo(res.data)
-
-      
+      if (this.status == 30) {
+        await forumView(this.id)
+      }
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await forumDetail(this.id)
+        this.setForumInfo(res.data)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
@@ -116,13 +121,12 @@ export default {
       this.id = options.id
       this.getDetail()
     }
-    if(options.status){
-    this.status=options.status
+    if (options.status) {
+      this.status = options.status
     }
-    if(this.status==30){
+    if (this.status == 30) {
       this.getPageList()
     }
-  
   },
   onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）

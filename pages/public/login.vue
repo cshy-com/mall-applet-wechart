@@ -1,114 +1,111 @@
 <template>
   <view>
-  
-
     <view class="nav">
-    <hx-navbar :config="config" ref="hxnb">
-      <view slot="center">
-        <view class="center" style="">
-          <text class="color" style="font-size: 18px">{{ config.title }}</text>
-        </view>
-      </view>
-      
-    </hx-navbar>
-  </view>
- 
-  <view class="page">
-    
-    <view class="form">
-      <u-form
-        :model="form"
-        ref="uForm"
-        :label-width="0"
-        :error-type="errorType"
-      >
-        <u-form-item class="form-item" prop="tel"
-          ><u-input
-            prefixIconStyle="font-size: 22px;color:#abacad"
-            prefixIcon="account"
-            v-model="form.tel"
-            type="number"
-            :maxlength="11"
-            placeholder="请输入您的手机号"
-        /></u-form-item>
-
-        <u-form-item class="form-item" prop="code">
-          <view class="code-item">
-            <u-input
-              prefixIcon="chat"
-              placeholder="请输入验证码"
-              v-model="form.code"
-              prefixIconStyle="font-size: 22px;color:#abacad"
-            >
-              <template slot="suffix">
-                <view class="view-code">
-                  <u-code
-                    ref="uCode"
-                    @change="codeChange"
-                    seconds="60"
-                    changeText="X秒重新获取"
-                  ></u-code>
-                </view>
-                <view class="btn">
-                  <u-button
-                    @tap="getCode"
-                    :text="tips"
-                    color="#000"
-                    type="success"
-                    size="mini"
-                  ></u-button>
-                </view>
-              </template>
-            </u-input>
+      <hx-navbar :config="config" ref="hxnb">
+        <view slot="center">
+          <view class="center" style="">
+            <text class="color" style="font-size: 18px">{{
+              config.title
+            }}</text>
           </view>
-        </u-form-item>
-      </u-form>
-    </view>
-    <view class="login-options">
-      <check :selected="selected" @result="checkResult"
-        ><view class="agreement" @click="watchAgreement"
-          >勾选即同意隐私协议</view
-        ></check
-      >
-    </view>
-    <view class="submit">
-      <button @click="submit">登录</button>
-    </view>
-    <view class="weixin-btn">
-      <button
-        type="text"
-        open-type="getPhoneNumber"
-        @getphonenumber="getPhoneNumber"
-        :plain="true"
-      >
-        <view class="weixin-btn-content">
-          <u-icon name="weixin-circle-fill" size="80"></u-icon>
-          <text>微信登录</text>
         </view>
-      </button>
+      </hx-navbar>
     </view>
 
-    <u-toast ref="uToast"></u-toast>
-    <popup
-      :visible="open"
-      :allowClickShadowClose="false"
-      @closeCallBack="closeCallBack"
-    >
-      <view>
-        <view class="dialog-header">
-          <text>协议及隐私说明</text>
-        </view>
-        <view class="dialog-bodys">
-          <view> 这里是说明 </view>
-        </view>
-        <view class="dialog-footer">
-          <view class="dialog-btn" @click="closeDialog">{{ dialogBtn }}</view>
-        </view>
+    <view class="page">
+      <view class="form">
+        <u-form
+          :model="form"
+          ref="uForm"
+          :label-width="0"
+          :error-type="errorType"
+        >
+          <u-form-item class="form-item" prop="tel"
+            ><u-input
+              prefixIconStyle="font-size: 22px;color:#abacad"
+              prefixIcon="account"
+              v-model="form.tel"
+              type="number"
+              :maxlength="11"
+              placeholder="请输入您的手机号"
+          /></u-form-item>
+
+          <u-form-item class="form-item" prop="code">
+            <view class="code-item">
+              <u-input
+                prefixIcon="chat"
+                placeholder="请输入验证码"
+                v-model="form.code"
+                prefixIconStyle="font-size: 22px;color:#abacad"
+              >
+                <template slot="suffix">
+                  <view class="view-code">
+                    <u-code
+                      ref="uCode"
+                      @change="codeChange"
+                      seconds="60"
+                      changeText="X秒重新获取"
+                    ></u-code>
+                  </view>
+                  <view class="btn">
+                    <u-button
+                      @tap="getCode"
+                      :text="tips"
+                      color="#000"
+                      type="success"
+                      size="mini"
+                    ></u-button>
+                  </view>
+                </template>
+              </u-input>
+            </view>
+          </u-form-item>
+        </u-form>
       </view>
-    </popup>
+      <view class="login-options">
+        <check :selected="selected" @result="checkResult"
+          ><view class="agreement" @click="watchAgreement"
+            >勾选即同意隐私协议</view
+          ></check
+        >
+      </view>
+      <view class="submit">
+        <button @click="submit">登录</button>
+      </view>
+      <view class="weixin-btn">
+        <button
+          type="text"
+          open-type="getPhoneNumber"
+          @getphonenumber="getPhoneNumber"
+          :plain="true"
+        >
+          <view class="weixin-btn-content">
+            <u-icon name="weixin-circle-fill" size="80"></u-icon>
+            <text>微信登录</text>
+          </view>
+        </button>
+      </view>
+
+      <u-toast ref="uToast"></u-toast>
+      <popup
+        :visible="open"
+        :allowClickShadowClose="false"
+        @closeCallBack="closeCallBack"
+      >
+        <view>
+          <view class="dialog-header">
+            <text>协议及隐私说明</text>
+          </view>
+          <view class="dialog-bodys">
+            <view> 这里是说明 </view>
+          </view>
+          <view class="dialog-footer">
+            <view class="dialog-btn" @click="closeDialog">{{ dialogBtn }}</view>
+          </view>
+        </view>
+      </popup>
+    </view>
   </view>
- 
-</view>
 </template>
 
 <script>
@@ -121,7 +118,7 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapMutations } = createNamespacedHelpers('user')
 import commNav from '@/components/commNav'
 export default {
-  components: { check, popup ,commNav},
+  components: { check, popup, commNav },
   data() {
     return {
       seconds: 60,
@@ -175,7 +172,7 @@ export default {
         // leftSlot: true,
         back: false,
         fixed: true,
-        centerSlot: true
+        centerSlot: true,
         // backgroundColor: [0, ['#3a6cba']],
         // // 滑动屏幕后切换颜色，注意颜色为数组时长度必须一样，还有使用滑动切换必须监听 onPageScroll 事件
         // slideBackgroundColor: [1, ['#3b6dbb']],
@@ -194,7 +191,7 @@ export default {
       },
     })
   },
-  
+
   onReady() {
     this.$refs.uForm.setRules(this.rules)
   },
@@ -207,7 +204,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setUserInfo']),
-   
+
     codeChange(text) {
       this.tips = text
     },
@@ -222,8 +219,11 @@ export default {
           this.setUserInfo(res.data)
           uni.setStorageSync('user', res.data)
           uni.switchTab({
-              url: res.data.userType==1?'/pages/index/home/userHome':'/pages/index/home/businessHome',
-            })
+            url:
+              res.data.userType == 1
+                ? '/pages/index/home/userHome'
+                : '/pages/index/home/businessHome',
+          })
         } else {
           this.$u.toast(msg)
         }
@@ -285,7 +285,10 @@ export default {
             this.setUserInfo(res.data)
             uni.setStorageSync('user', res.data)
             uni.switchTab({
-              url: res.data.userType==1?'/pages/index/home/userHome':'/pages/index/home/businessHome',
+              url:
+                res.data.userType == 1
+                  ? '/pages/index/home/userHome'
+                  : '/pages/index/home/businessHome',
             })
           } else {
             this.$u.toast(msg)
@@ -550,5 +553,4 @@ export default {
   font-weight: 400;
   color: #000;
 }
- 
 </style>

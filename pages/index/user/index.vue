@@ -36,17 +36,11 @@
     </view>
     <view class="u-m-t-20">
       <u-cell-group>
+        <!-- 商家扫一扫核销订单 -->
         <u-cell
           title="扫一扫"
           @click="scanCode"
           v-if="userInfo.userType == 2"
-        ></u-cell>
-
-        <u-cell
-          title="订单列表"
-          isLink
-          url="/pages/order/order-list/order-list"
-          v-if="userInfo.userType == 1"
         ></u-cell>
         <u-cell
           title="订单列表"
@@ -54,6 +48,19 @@
           url="/pages/order/business-order-list/business-order-list"
           v-if="userInfo.userType == 2"
         ></u-cell>
+        <!-- 用户扫一扫 付款给商家 -->
+        <u-cell
+          title="扫一扫"
+          @click="scanCode"
+          v-if="userInfo.userType == 1"
+        ></u-cell>
+        <u-cell
+          title="订单列表"
+          isLink
+          url="/pages/order/order-list/order-list"
+          v-if="userInfo.userType == 1"
+        ></u-cell>
+
         <u-cell
           title="发布论坛"
           isLink
@@ -135,7 +142,7 @@ export default {
       loginResult: '',
       picDomain: '', // config.picDomain
       user: {},
-      defaultAvatar:require('@/static/img/icon/head04.png')
+      defaultAvatar: require('@/static/img/icon/head04.png'),
     }
   },
 
@@ -193,15 +200,20 @@ export default {
         onlyFromCamera: true,
         scanType: 'qrCode',
         success: function (res) {
-          console.log("res"+JSON.stringify(res))
+          console.log('res' + JSON.stringify(res))
           let result = getUrlParams(res.result)
-          console.log('code----'+JSON.stringify(result.code))
-   
-          uni.navigateTo({
-            url:
-              '/pages/order/business-order-detail/business-order-detail?code=' +
-              result.code,
-          })
+          console.log('code----' + JSON.stringify(result.code))
+          if (this.userInfo.userType == 1) {
+            uni.navigateTo({
+              url: '/pages/coupon/scanCode?code=' + result.code,
+            })
+          } else {
+            uni.navigateTo({
+              url:
+                '/pages/order/business-order-detail/business-order-detail?code=' +
+                result.code,
+            })
+          }
         },
       })
     },
@@ -210,12 +222,11 @@ export default {
       uni.setStorageSync('user', null)
       removeAuthorization('Authorization')
       uni.redirectTo({ url: '/pages/public/login' })
-      
     },
     async getUser() {
       try {
         let res = await getUserInfo()
-        
+
         this.setUserInfo(res.data)
         uni.setStorageSync('user', res.data)
       } catch (e) {

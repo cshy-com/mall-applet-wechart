@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-11 16:59:40
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-11 17:25:28
+ * @LastEditTime: 2023-06-30 16:40:19
  * @FilePath: \mall-applet\pages\merchant\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -330,7 +330,10 @@ const selectData =
         [{
                 title: '特价团购',
                 data: [
-
+                    { text: '小吃', identity: 1, status: false },
+                    { text: '火锅', identity: 2, status: false },
+                    { text: '烧烤', identity: 3, status: false },
+                    { text: '自助', identity: 4, status: false },
                 ]
             },
 

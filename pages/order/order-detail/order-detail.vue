@@ -19,7 +19,6 @@
           :src="qrCodesrc"
           width="200px"
           height="200px"
-          
         ></u-image>
       </view>
       <!-- 商品信息 -->
@@ -146,8 +145,9 @@ export default {
           id: -10,
           desc: '',
         },
-      ],  stepsList: [],
-      current:0
+      ],
+      stepsList: [],
+      current: 0,
     }
   },
 
@@ -206,7 +206,7 @@ export default {
       this.qrCodesrc = res.data
     },
     //跳转商品详情页
-    toProdPage (e) {
+    toProdPage(e) {
       uni.navigateTo({
         url: '/pages/mall/store/storeDetails?id=' + e,
       })
@@ -216,17 +216,26 @@ export default {
      * 加载订单数据
      */
     async loadOrderDetail() {
-      let res = await orderDatail(this.orderId)
-      this.orderItemDtos = res.data
-      if (this.orderItemDtos.status >= 0) {
-        this.stepsList = this.stepsListSuccess
-        this.current = this.stepsList.findIndex(
-          (val) => val.id == res.data.status
-        )
-      } else {
-        this.stepsList = this.stepsListError
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await orderDatail(this.orderId)
+        this.orderItemDtos = res.data
+        if (this.orderItemDtos.status >= 0) {
+          this.stepsList = this.stepsListSuccess
+          this.current = this.stepsList.findIndex(
+            (val) => val.id == res.data.status
+          )
+        } else {
+          this.stepsList = this.stepsListError
 
-        this.current = 1
+          this.current = 1
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
       }
     },
 

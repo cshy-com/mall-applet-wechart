@@ -2,21 +2,64 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-25 11:13:04
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-12 10:39:48
+ * @LastEditTime: 2023-06-30 09:23:05
  * @FilePath: \mall-applet\pages\coupon\receive.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <view class="btn-def"> <u-button @click="btnEvent" class="btn"  text="领取积分"    size="small"></u-button></view>
+  <view>
+   <view class="nav">
+      <hx-navbar :config="config" ref="hxnb">
+        <view slot="center">
+          <view class="center" style="">
+            <text class="color" style="font-size: 18px">{{
+              config.title
+            }}</text>
+          </view>
+        </view>
+      </hx-navbar>
+    </view>
+  <view class="btn-def">
+
+    <button
+      type="text"
+      open-type="getPhoneNumber"
+      @getphonenumber="getPhoneNumber"
+      :plain="true"
+    >
+      <text>领取积分</text>
+    </button>
+    <u-modal :show="show" :content="content" @confirm="confirm"></u-modal>
+  </view>
+</view>
 </template>
 
 <script>
+import { getUrlParams } from '@/util/util'
+import { setAuthorization, getAuthorization } from '@/util/auth.js'
+import {collectPoints} from "@/api/integral"
+import { createNamespacedHelpers } from 'vuex';
+const  { mapMutations,mapGetters}=createNamespacedHelpers('user') 
 export default {
   //import引入组件才能使用
   components: {},
   props: {},
   data() {
-    return {}
+    return {
+      show: false,
+
+      content: '领取成功，去其他地方逛逛吧',
+      userType:1,
+      config: {
+        color: ['#000', '#000'],
+        title: '领取积分',
+    
+        back: false,
+        fixed: true,
+        centerSlot: true,
+ 
+      },
+    }
   },
   // 计算属性
   computed: {},
@@ -24,23 +67,29 @@ export default {
   watch: {},
   // 方法集合
   methods: {
-    getUrlParams(url) {
-        let o = {};    
-        if (url.indexOf("?") != -1) {       
-        let str = url.substr(url.indexOf("?") + 1).replace(/[#/|/#/]/g, "");       
-        // console.log(str);       
-        let strs = str.split("&");       
-        // console.log(strs);      
-        for (let i = 0; i < strs.length; i++) {      
-        o[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);        
-         }
+    ...mapMutations(['setUserInfo']),
+    confirm(e) {
+      uni.switchTab({
+        url:
+          this.userType == 1
+            ? '/pages/index/home/userHome'
+            : '/pages/index/home/businessHome',
+      })
+    },
+    // 获取当前微信用户手机号，领取积分
+    getPhoneNumber(e) {
+      collectPoints(e.detail.code).then((res) => {
+        if (res && res.code == 0) {
+          setAuthorization(res.data.token)
+          this.setUserInfo(res.data)
+          uni.setStorageSync('user', res.data)
+          this.userType=res,data.userType
+          this.show = true
+        } else {
+          this.$u.toast(msg)
         }
-        return o;
-      },
-      // 领取积分
-      btnEvent(){
-
-      }
+      })
+    },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {},
@@ -50,12 +99,11 @@ export default {
     const { q } = options
     if (q) {
       let urlStr = decodeURIComponent(q)
-  
-      let urlParams = this.getUrlParams(urlStr)
-      let code= urlParams.id
-      console.log('urlParams'+urlParams)
-      console.log('code'+code)
 
+      let urlParams = getUrlParams(urlStr)
+      let code = urlParams.code
+      console.log('urlParams' +  JSON.stringify(urlParams))
+      console.log('code' + code)
     }
   },
   beforeCreate() {}, //生命周期：创建之前
@@ -68,18 +116,36 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-  .btn-def {
-    width: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 500rpx 0;
-    margin: 0 auto;
-    /deep/ button {
-      background: #ff6a13;
-      border-radius: 30rpx;
-      color: #fff;
-      height: 70rpx !important;
-    }
+.btn-def {
+  width:40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 500rpx 0;
+  margin: 0 auto;
+  /deep/ button {
+    background: #000;
+    border-radius: 30rpx;
+    color: #fff;
+    height: 70rpx !important;
   }
+}
+.nav /deep/ .hx-navbar__content__main_center {
+  justify-content: center;
+  width: 100vw;
+  position: fixed;
+}
+.center {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: 28rpx;
+  font-family: SourceHanSerifCN-SemiBold, SourceHanSerifCN;
+  font-weight: 400;
+  color: #000;
+}
 </style>

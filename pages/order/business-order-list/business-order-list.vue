@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-28 11:51:44
+ * @LastEditTime: 2023-06-30 16:46:34
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -215,6 +215,9 @@ export default {
      * 加载订单数据
      */
    async loadOrderData () {
+    uni.showLoading({
+        title: '加载中',
+      })
       try {
         let res = await orderList({
           current: this.current,
@@ -237,6 +240,8 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      }finally {
+        uni.hideLoading()
       }
     },
 

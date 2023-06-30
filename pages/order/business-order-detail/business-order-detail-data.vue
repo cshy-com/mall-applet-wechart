@@ -215,6 +215,9 @@ export default {
      * 加载订单数据
      */
     async loadOrderDetail() {
+      uni.showLoading({
+        title: '加载中',
+      })
       try {
         let res
 
@@ -239,6 +242,8 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      } finally {
+        uni.hideLoading()
       }
     },
 

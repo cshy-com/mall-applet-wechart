@@ -209,7 +209,10 @@ export default {
       }
     },
 
-    async getCommodityInfo() {
+    async getCommodityInfo() {  
+      uni.showLoading({
+      title: '加载中',
+    })
       try {
         let res = await getCommodityDetail(this.commodityId)
         if (res.data.images && res.data.images.length > 0) {
@@ -223,6 +226,8 @@ export default {
         this.commodityInfo = res.data
       } catch (e) {
         console.log(e)
+      }finally{
+        uni.hideLoading()
       }
     },
     tab(index) {

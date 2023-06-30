@@ -221,6 +221,9 @@ export default {
      * 加载订单数据
      */
     async loadOrderData() {
+      uni.showLoading({
+      title: '加载中',
+    })
       try {
         let res = await orderList({
           current: this.current,
@@ -243,6 +246,8 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      }finally{
+        uni.hideLoading()
       }
     },
 

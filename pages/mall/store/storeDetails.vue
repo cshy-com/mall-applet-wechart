@@ -222,6 +222,9 @@ export default {
       }
     },
     async getShopDetail() {
+      uni.showLoading({
+      title: '加载中',
+    })
       try {
         let res = await mallShopById(this.shopId)
         this.setShopInfo(res.data)
@@ -236,6 +239,8 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      } finally{
+        uni.hideLoading()
       }
     },
     // 查看商家下面商品信息

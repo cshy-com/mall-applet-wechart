@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:31:56
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-14 09:16:39
+ * @LastEditTime: 2023-06-30 16:33:37
  * @FilePath: \mall-applet\pages\subPack\merchant\storeList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -92,6 +92,9 @@ export default {
   methods: {
     ...mapMutations(['setShopInfo']),
     async getPageList() {
+      uni.showLoading({
+      title: '加载中',
+    })
       try {
         let res = await mallShopPage({
           current: this.current,
@@ -113,6 +116,8 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      }finally{
+        uni.hideLoading()
       }
     },
   },

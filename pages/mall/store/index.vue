@@ -72,6 +72,7 @@ export default {
   computed: {},
   created() {},
   onLoad(option) {
+   
     console.log('option.cateId' + option.cateId)
     this.cateId = option.cateId
     this.getCateList(option.cateId)
@@ -82,6 +83,7 @@ export default {
     this.mockJson = dataArr.mockJson.filter((val) => val.pid == option.cateId)
 
     this.title = option.title
+   
   },
 
   computed: { ...mapGetters(['shopInfo', 'cateAll']) },
@@ -116,6 +118,9 @@ export default {
       }
     },
     async getPageList() {
+      uni.showLoading({
+      title: '加载中',
+    })
       try {
         this.more = 'loading'
         let res = await mallShopPage({
@@ -139,6 +144,8 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      } finally{
+        uni.hideLoading()
       }
     },
     navBack() {
