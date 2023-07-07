@@ -2,11 +2,12 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:40
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-27 17:35:06
+ * @LastEditTime: 2023-07-07 15:08:07
  * @FilePath: \mall-applet\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { postPayload, postFormdata, putPayload, deleteFormdata, getString } from '@/util/api.js'
+import { data } from 'uview-ui/libs/mixin/mixin'
 export function pageHome(data) {
     return getString('/index', data)
 }
@@ -66,8 +67,23 @@ export function forumView(data) {
     return getString('/mallForum/mallPageView/' + data)
 }
 //客户建议列表
+export function customerSuggestList(data) {
+    return postPayload("", data)
+}
 //新增客户建议
+export function customerSuggestAdd(data) {
+    return postPayload("", data)
+}
 //客户建议详情
+export function customerSuggestObj(data) {
+    return getString("" + data)
+}
 
 // 项目列表
+export function projectList(data) {
+    return postPayload("", data)
+}
 //项目详情
+export function projectObj(data) {
+    return getString("" + data)
+}

@@ -14,30 +14,9 @@
         </u-steps>
       </view>
       <!-- 商品信息 -->
-      <view class="prod-item" v-if="orderItemDtos">
-        <block>
-          <view class="item-cont" :data-prodid="orderItemDtos.prodId">
-            <view class="prod-info">
-              <view class="prodname">
-                <view class="prod-pic">
-                  <image :src="orderItemDtos.avatar || defaultAvatar"></image>
-                </view>
-                <view class="name"> {{ orderItemDtos.nickName }}</view>
-              </view>
-              <view class="prod-info-cont">
-                <text class="number"
-                  >到店人数：{{ orderItemDtos.numberOfPeople }}</text
-                >
-              </view>
-              <view class="price-nums clearfix">
-                <text class="prodprice">
-                  到店时间：{{ orderItemDtos.estimatedTime }}</text
-                >
-              </view>
-            </view>
-          </view>
-        </block>
-      </view>
+      <template v-if="orderItemDtos">
+        <businessOrderList :orderInfo="orderItemDtos"></businessOrderList>
+      </template>
 
       <!-- 订单信息 -->
       <view class="order-msg">
@@ -76,6 +55,7 @@
 // pages/order-detail/order-detail.js
 // var http = require("../../utils/http.js");
 import { getUrlParams } from '@/util/util'
+import businessOrderList from './../components/business-order-item'
 import {
   orderDatail,
   orderComplete,
@@ -147,7 +127,7 @@ export default {
     }
   },
 
-  components: {},
+  components: { businessOrderList },
   props: {},
 
   /**

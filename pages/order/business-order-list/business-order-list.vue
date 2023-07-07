@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-30 16:46:34
+ * @LastEditTime: 2023-07-07 16:40:11
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,11 +13,11 @@
     <!-- 头部菜单 -->
     <view class="order-tit">
       <view class="order-tab">
-      <u-tabs
-        :current="currentIndex"
-        :list="tabList"
-        @click="onStsTap"
-        lineColor="#3b6dbb"
+        <u-tabs
+          :current="currentIndex"
+          :list="tabList"
+          @click="onStsTap"
+          lineColor="#3b6dbb"
           :activeStyle="{
             color: '#3b6dbb',
             fontWeight: 'bold',
@@ -25,21 +25,22 @@
           }"
           lineHeight="5"
           lineWidth="45"
-      ></u-tabs>
+        ></u-tabs>
       </view>
-
     </view>
     <!-- end 头部菜单 -->
     <view class="main">
       <view class="empty" v-if="list.length == 0"> 还没有任何相关订单 </view>
       <!-- 订单列表 -->
       <block v-for="(item, index) in list" :key="index">
-        <view class="prod-item">
-          <view class="order-num">
-            <text>订单编号：{{ item.id }}</text>
+        <businessOrderList
+          :orderInfo="item"
+          @toOrderDetailPage="toOrderDetailPage(item)"
+        >
+          <template v-slot:state>
             <view class="order-state">
               <text>{{
-                 item.status == 20
+                item.status == 20
                   ? '预约中'
                   : item.status == 10
                   ? '预约成功'
@@ -50,49 +51,22 @@
                   : '已取消'
               }}</text>
             </view>
-          </view>
-
-          <!-- 商品列表 -->
-          <!-- 一个订单单个商品的显示 -->
-          <block>
-            <view>
-              <view
-                class="item-cont"
-                @tap="toOrderDetailPage(item)"
-                :data-ordernum="item.id"
-              >
-                <view class="prod-info">
-                  <view class="prodname">
-                    <view class="prod-pic">
-                      <image :src="item.avatar||defaultAvatar"></image>
-                    </view>
-                    <view class="name"> {{ item.nickName }}</view>
-                  </view>
-                  <view class="prod-info-cont"
-                    >到店人数：{{ item.numberOfPeople }}</view
-                  >
-                  <view class="price-nums">
-                    <text class="prodcount">到店时间：{{ item.estimatedTime }}</text>
-                  </view>
-                </view>
+          </template>
+          <template v-slot:footer>
+            <view class="prod-foot">
+              <view class="btn">
+                <text
+                  v-if="item.status == 30"
+                  class="button"
+                  @tap="orderListComplete(item)"
+                  :data-ordernum="item.orderNumber"
+                  hover-class="none"
+                  >完成订单</text
+                >
               </view>
             </view>
-          </block>
-
-          <!-- end 商品列表 -->
-          <view class="prod-foot">
-            <view class="btn">
-              <text
-                v-if="item.status == 30"
-                class="button"
-                @tap="orderListComplete(item)"
-                :data-ordernum="item.orderNumber"
-                hover-class="none"
-                >完成订单</text
-              >
-            </view>
-          </view>
-        </view>
+          </template>
+        </businessOrderList>
       </block>
     </view>
   </view>
@@ -100,16 +74,15 @@
 </template>
 
 <script>
-import { orderList,orderComplete } from '@/api/order'
+import { orderList, orderComplete } from '@/api/order'
 import { getTotalPage } from '@/util/util'
+import businessOrderList from './../components/business-order-item'
 export default {
   data() {
     return {
-      list: [
-   
-      ],
+      list: [],
       tabList: [
-      {
+        {
           name: '全部',
           id: null,
         },
@@ -134,17 +107,17 @@ export default {
           id: -10,
         },
       ],
-     
+
       total: 0,
       more: 'noMore',
       size: 10,
-      current:1,
+      current: 1,
       currentIndex: 0,
-      defaultAvatar:require('@/static/img/icon/head04.png')
+      defaultAvatar: require('@/static/img/icon/head04.png'),
     }
   },
 
-  components: {},
+  components: { businessOrderList },
   props: {},
   computed: {
     orderDetailsState(status) {
@@ -186,14 +159,12 @@ export default {
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh () {
-
+  onPullDownRefresh() {
     this.current = 1
     this.loadOrderData()
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 1000)
-
   },
 
   /**
@@ -214,8 +185,8 @@ export default {
     /**
      * 加载订单数据
      */
-   async loadOrderData () {
-    uni.showLoading({
+    async loadOrderData() {
+      uni.showLoading({
         title: '加载中',
       })
       try {
@@ -240,7 +211,7 @@ export default {
         }
       } catch (e) {
         console.log(e)
-      }finally {
+      } finally {
         uni.hideLoading()
       }
     },
@@ -256,7 +227,7 @@ export default {
     /**
      * 完成订单
      */
-   async  orderListComplete (e) {
+    async orderListComplete(e) {
       try {
         await orderComplete(e.id)
         uni.$u.toast('操作成功')
@@ -269,7 +240,7 @@ export default {
     /**
      * 查看订单详情
      */
-    toOrderDetailPage (e) {
+    toOrderDetailPage(e) {
       uni.navigateTo({
         url:
           '/pages/order/business-order-detail/business-order-detail-data?orderId=' +
@@ -280,11 +251,10 @@ export default {
 }
 </script>
 <style>
-  page {
-    background-color: #f4f4f4;
-    color: #333;
+page {
+  background-color: #f4f4f4;
+  color: #333;
 }
-
 </style>
 <style lang="scss" scoped>
 /deep/ .u-tabs__wrapper__nav__line {
