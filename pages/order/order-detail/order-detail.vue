@@ -22,34 +22,13 @@
         ></u-image>
       </view>
       <!-- 商品信息 -->
-      <view class="prod-item" v-if="orderItemDtos">
-        <block>
-          <view
-            class="item-cont"
-            @tap="toProdPage(orderItemDtos.shopId)"
-            :data-prodid="orderItemDtos.shopId"
-          >
-            <view class="prod-pic">
-              <image :src="orderItemDtos.mainImage"></image>
-            </view>
-            <view class="prod-info">
-              <view class="prodname">
-                {{ orderItemDtos.shopName }}
-              </view>
-              <view class="prod-info-cont">
-                <text class="number"
-                  >到店人数：{{ orderItemDtos.numberOfPeople }}</text
-                >
-              </view>
-              <view class="price-nums clearfix">
-                <text class="prodprice">
-                  到店时间：{{ orderItemDtos.estimatedTime }}</text
-                >
-              </view>
-            </view>
-          </view>
-        </block>
-      </view>
+      <template  v-if="orderItemDtos">
+        
+      <orderItem :orderInfo="orderItemDtos" @toOrderDetailPage="toProdPage(orderItemDtos.shopId)">
+
+      </orderItem>
+      </template>
+      
 
       <!-- 订单信息 -->
       <view class="order-msg">
@@ -74,13 +53,16 @@
       <view class="order-detail-footer" v-if="orderItemDtos.status == 20">
         <text class="dele-order" @tap="delOrderList">取消订单</text>
       </view>
+      <view class="order-detail-footer" v-if="orderItemDtos.status == 0">
+        <text class="dele-order" @tap="createComment">评价</text>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
 // pages/order-detail/order-detail.js
-// var http = require("../../utils/http.js");
+import orderItem from './../components/order-item'
 import { orderDatail, orderQrCode } from '@/api/order'
 export default {
   data() {
@@ -151,7 +133,7 @@ export default {
     }
   },
 
-  components: {},
+  components: {orderItem},
   props: {},
 
   /**
@@ -211,7 +193,11 @@ export default {
         url: '/pages/mall/store/storeDetails?id=' + e,
       })
     },
-
+    createComment(e) {
+      uni.navigateTo({
+        url: '/pages/order/order-comment/order-comment-add?orderId=' + this.orderId,
+      })
+    },
     /**
      * 加载订单数据
      */
@@ -251,6 +237,7 @@ export default {
         },
       })
     },
+    
   },
 }
 </script>

@@ -148,15 +148,15 @@ export default {
 .cat-item .item .icon-box {
   width: 100rpx;
   height: 100rpx;
-  border: 2rpx solid #a67139;
-  border-radius: 50%;
+
   .iconfont {
     font-size: 88rpx;
     line-height: 100rpx;
   }
   .icon-cover {
     width: 100rpx;
-    height: 100rpx;
+    height: 100rpx;  border: 2rpx solid #a67139;
+  border-radius: 50%;
   }
   image {
     will-change: transform;

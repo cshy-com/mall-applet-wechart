@@ -80,8 +80,10 @@
           :plain="true"
         >
           <view class="weixin-btn-content">
-            <u-icon name="weixin-circle-fill" size="80"></u-icon>
-            <text>微信登录</text>
+            <!-- <u-icon name="weixin-circle-fill" size="80"></u-icon> -->
+            
+            <u-icon name="chat-fill" size="80"></u-icon>
+            <text>手机号快捷登录</text>
           </view>
         </button>
       </view>
@@ -552,5 +554,8 @@ export default {
   font-family: SourceHanSerifCN-SemiBold, SourceHanSerifCN;
   font-weight: 400;
   color: #000;
+}
+/deep/ .u-icon--right{
+  justify-content: center;
 }
 </style>

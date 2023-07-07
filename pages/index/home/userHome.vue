@@ -1,5 +1,7 @@
 <template>
   <!--index.wxml-->
+  <user1 v-if="loading"></user1>
+  <view v-else>
   <view class="container">
     <view class="container-top">
       <view class="header-top"><text>私人银行服务平台</text></view>
@@ -38,7 +40,9 @@
           </block>
         </view>
         <view class="forum-content" v-if="selectClassIndex == 1">
-          <forum :list="list" ></forum>
+       
+            <forum :list="list" ></forum>
+         
         </view>
         <view v-if="selectClassIndex == 2">
           <recommendation></recommendation>
@@ -53,6 +57,7 @@
     </view>
     <tab-bar :userIdentity="1" :selected="0"></tab-bar>
   </view>
+</view>
 </template>
 
 <script>
@@ -70,6 +75,7 @@ import forumData from '@/mock/index.js'
 import projectList from '@/components/projectList'
 import tabBar from '@/components/tab-bar.vue'
 import { getTotalPage } from '@/util/util'
+import user1 from "./user1.vue"
 export default {
   data() {
     return {
@@ -117,6 +123,7 @@ export default {
       totalForum: 0,
       more: 'more',
       moreForum: 'more',
+      loading:false
     }
   },
 
@@ -129,6 +136,7 @@ export default {
     recommendation,
     projectList,
     tabBar,
+    user1
   },
   props: {},
   computed: {
@@ -138,6 +146,7 @@ export default {
     },
   },
   created() {
+   
     uni.showLoading({
       title: '加载中',
     })
@@ -147,7 +156,12 @@ export default {
   },
   onLoad() {},
   onReady() {},
-  onShow() {},
+  onShow() {
+    // this.loading=true 
+    // setTimeout(()=>{
+    //   this.loading=false
+    // },1000)
+  },
 
   options: {
     styleIsolation: 'shared',
@@ -196,7 +210,7 @@ export default {
           this.getForumList()
           break
         default:
-          this.current =1
+          this.current = 1
           this.getCommodityRecommend()
       }
     },
@@ -211,16 +225,16 @@ export default {
           size: this.sizeForum,
           type: 'comm',
         })
-    
+
         this.totalForum = res.total
         let totalPage = getTotalPage(this.totalForum, this.sizeForum)
-      
+
         if (this.currentForum == 1) {
           this.list = res.data
         } else {
           this.list = [...this.list, ...res.data]
         }
-        
+
         if (totalPage > this.currentForum) {
           this.moreForum = 'more'
         } else {

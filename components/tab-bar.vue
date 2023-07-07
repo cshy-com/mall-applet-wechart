@@ -1,5 +1,3 @@
-import { list } from '@/api/monitor/logininfor'; import { listUser } from
-'@/api/system/user';
 <template>
   <view class="tab-bar">
     <view
@@ -11,6 +9,7 @@ import { list } from '@/api/monitor/logininfor'; import { listUser } from
       <image
         class="tab_img"
         :src="selected === index ? item.selectedIconPath : item.iconPath"
+      
       ></image>
       <view
         class="tab_text"
@@ -19,16 +18,17 @@ import { list } from '@/api/monitor/logininfor'; import { listUser } from
       >
     </view>
   </view>
+ 
 </template>
 
 <script>
 export default {
   props: {
-    selected: {
-      // 当前选中的tab index
-      type: Number,
-      default: 0,
-    },
+    // selected: {
+    //   // 当前选中的tab index
+    //   type: Number,
+    //   default: 0,
+    // },
   },
 
   data() {
@@ -71,9 +71,16 @@ export default {
       ],
       list: [],
       user: {},
+      selected: 0,
+    
     }
   },
-  watch: {},
+  computed: {
+    
+  },
+  watch: {
+   
+  },
   created() {
     this.user = uni.getStorageSync('user')
     console.log('tab-this.user:' + this.user)
@@ -89,9 +96,16 @@ export default {
     if (this.user.userType == 2) {
       this.list = this.listShop
     }
+    this.getCurrentPageUrl()
   },
+  onShow() {},
   methods: {
+  
     switchTab(item, index) {
+       
+
+   
+     
       let url = item.pagePath
       if (index == 0) {
         switch (this.user.userType) {
@@ -108,6 +122,16 @@ export default {
       uni.switchTab({
         url,
       })
+      // this.getCurrentPageUrl()
+    },
+    getCurrentPageUrl() {
+      console.log('执行了吗')
+      const pages = getCurrentPages() // 获取当前页面栈
+      const currentPage = pages[pages.length - 1] // 获取当前页面
+      const currentPath = '/' + currentPage.route // 获取当前页面路径
+      let index = this.list.findIndex((val) => val.pagePath === currentPath)
+      this.selected = index
+      console.log('重新赋值了')
     },
   },
 }
@@ -138,7 +162,6 @@ export default {
       width: 37rpx;
       height: 41rpx;
     }
-
     .tab_text {
       font-size: 20rpx;
       margin-top: 9rpx;

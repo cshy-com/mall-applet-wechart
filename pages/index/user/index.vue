@@ -48,6 +48,12 @@
           url="/pages/order/business-order-list/business-order-list"
           v-if="userInfo.userType == 2"
         ></u-cell>
+        <u-cell
+          title="收款码"
+          isLink
+          url="/pages/coupon/paymentCode"
+          v-if="userInfo.userType == 2"
+        ></u-cell>
         <!-- 用户扫一扫 付款给商家 -->
         <u-cell
           title="扫一扫"
@@ -83,12 +89,13 @@
           title="领积分快捷入口"
           isLink
           url="/pages/coupon/receive"
-        ></u-cell>
-        <u-cell
+        ></u-cell> -->
+        <!-- <u-cell
           title="积分支付给商家"
           isLink
-          url="/pages/coupon/receive"
+          url="/pages/coupon/scanCode"
         ></u-cell> -->
+        
       </u-cell-group>
     </view>
     <view class="user-block-1">

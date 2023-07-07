@@ -52,21 +52,52 @@
         </u-number-box>
       </u-form-item>
       <u-form-item
-        label="备注"
+        label="特殊服务"
         prop="remark"
         borderBottom
         ref="item1"
         labelWidth="180"
         ><u-textarea
           v-model="orderInfo.remark"
-          placeholder="请输入备注"
+          placeholder="请输入"
         ></u-textarea>
       </u-form-item>
+      <!-- <u-form-item
+        label="是否需要专人到场"
+        prop="remark"
+        borderBottom
+        ref="item1"
+        labelWidth="180"
+        >
+      <u-radio-group
+        v-model="radiovalue1"
+        placement="row"
+        @change="groupChange"
+        
+      >
+        <u-radio
+        iconSize="30"
+        size="30"
+        activeColor="#000"
+        labelSize="30"
+          :customStyle="{ marginBottom: '8px' }"
+          v-for="(item, index) in radiolist1"
+          :key="index"
+          :label="item.name"
+          :name="item.id"
+          @change="radioChange"
+        >
+        </u-radio>
+      </u-radio-group>
+      </u-form-item> -->
+
     </u-form>
 
     <view class="form-btn" @click="submitOrder">
       <button>下单</button>
     </view>
+
+
   </view>
 </template>
 
@@ -102,6 +133,19 @@ export default {
           trigger: ['blur', 'change'],
         },
       },
+      radiovalue1: 0,
+      radiolist1: [
+        {
+          name: '需要',
+          id: 0,
+          disabled: false,
+        },
+        {
+          name: '不需要',
+          id: 1,
+          disabled: false,
+        },
+      ],
       shopId: '',
     }
   },
@@ -111,6 +155,12 @@ export default {
   watch: {},
   // 方法集合
   methods: {
+    groupChange(n) {
+      console.log('groupChange', n)
+    },
+    radioChange(n) {
+      console.log('radioChange', n)
+    },
     pickerShow() {
       this.show = true
       this.orderInfo.time = this.time

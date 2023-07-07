@@ -1,5 +1,9 @@
 <template>
-  <view>收款码</view>
+  <view>
+    <view class="code">
+      <image :lazy-load="true" :lazy-load-margin="0" :src="defCode"></image>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -8,7 +12,9 @@ export default {
   components: {},
   props: {},
   data() {
-    return {}
+    return {
+      defCode: require('@/static/img/qrcode.png'),
+    }
   },
   // 计算属性
   computed: {},
@@ -29,4 +35,15 @@ export default {
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发执行
 }
 </script>
-<style scoped></style>
+<style scoped lang="scss">
+.code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 200rpx;
+  image {
+    width: 300rpx;
+    height: 300rpx;
+  }
+}
+</style>

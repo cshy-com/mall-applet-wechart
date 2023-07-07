@@ -1,23 +1,16 @@
 <!--
  * @Author: zxs 774004514@qq.com
- * @Date: 2023-06-07 15:59:36
+ * @Date: 2023-07-04 13:40:21
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-04 14:06:07
- * @FilePath: \mall-admind:\work\mall-applet\pages\coupon\scanCode.vue
+ * @LastEditTime: 2023-07-04 14:13:07
+ * @FilePath: \mall-admind:\work\mall-applet\pages\coupon\scanCodeResult.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view>
-
-    <u-input
-            prefixIconStyle="font-size: 22px;color:#abacad"
-            prefixIcon="account"
-            v-model="num"
-            type="number"
-            :maxlength="5"
-            placeholder="请输入积分"
-        />
-        <u-button @click="btnEvent" class="btn"  text="支付"    size="small"></u-button>
+    <u-empty textSize="30" mode="favor" :text="reaultCode == 0 ? '支付成功' : '支付失败'">
+    </u-empty>
+    <u-button text="返回首页" @click="goHome"></u-button>
   </view>
 </template>
 
@@ -28,7 +21,7 @@ export default {
   props: {},
   data() {
     return {
-      num:0
+      reaultCode: 0,
     }
   },
   // 计算属性
@@ -37,12 +30,14 @@ export default {
   watch: {},
   // 方法集合
   methods: {
-    btnEvent(){
-uni.navigateTo({
-  url:`/pages/coupon/scanCodeResult?code=0`
-})
-    }
-
+    goHome() {
+      uni.switchTab({
+        url: '/pages/index/home/userHome',
+      })
+    },
+  },
+  onLoad(option) {
+    this.reaultCode = option.code
   },
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {},

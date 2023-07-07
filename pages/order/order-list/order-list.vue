@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-19 15:44:15
+ * @LastEditTime: 2023-07-07 10:24:00
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -34,67 +34,48 @@
       <view class="empty" v-if="list.length == 0"> 还没有任何相关订单 </view>
       <!-- 订单列表 -->
       <block v-for="(item, index) in list" :key="index">
-        <view class="prod-item">
-          <view class="order-num">
-            <text>订单编号：{{ item.id }}</text>
+        <orderItem
+          :orderInfo="item"
+          @toOrderDetailPage="toOrderDetailPage(item)"
+        >
+          <template v-slot:state>
             <view class="order-state">
               <text>{{
                 item.status == 20
                   ? '预约中'
-                  : item.status == 10
+                  : orderInfo.status == 10
                   ? '预约成功'
-                  : item.status == 30
+                  : orderInfo.status == 30
                   ? '已到店'
-                  : item.status == 0
+                  : orderInfo.status == 0
                   ? '已完成'
                   : '已取消'
               }}</text>
             </view>
-          </view>
-
-          <!-- 商品列表 -->
-          <!-- 一个订单单个商品的显示 -->
-          <block>
-            <view>
-              <view
-                class="item-cont"
-                @click="toOrderDetailPage(item)"
-                :data-ordernum="item.id"
-              >
-                <view class="prod-pic">
-                  <image :src="item.mainImage"></image>
-                </view>
-                <view class="prod-info">
-                  <view class="prodname">
-                    {{ item.shopName }}
-                  </view>
-                  <view class="prod-info-cont"
-                    >到店人数：{{ item.numberOfPeople }}</view
-                  >
-                  <view class="price-nums">
-                    <text class="prodcount"
-                      >到店时间：{{ item.estimatedTime }}</text
-                    >
-                  </view>
-                </view>
+          </template>
+          <template v-slot:footer>
+            <view class="prod-foot">
+              <view class="btn" v-if="item.status == 20">
+                <text
+                  class="button"
+                  @tap="onCancelOrder"
+                  :data-ordernum="item.orderNumber"
+                  hover-class="none"
+                  >取消订单</text
+                >
               </view>
-            </view>
-          </block>
-
-          <!-- end 商品列表 -->
-          <view class="prod-foot">
-            <view class="btn">
-              <text
-                v-if="item.status == 20"
-                class="button"
-                @tap="onCancelOrder"
-                :data-ordernum="item.orderNumber"
-                hover-class="none"
-                >取消订单</text
-              >
-            </view>
-          </view>
-        </view>
+              <view class="btn" v-if="item.status == 0">
+                <text
+                  class="button"
+                  @click="createComment(item)"
+                  :data-ordernum="item.orderNumber"
+                  hover-class="none"
+                  >评价</text
+                >
+              </view>
+            </view></template
+          >
+        </orderItem>
       </block>
     </view>
   </view>
@@ -103,7 +84,7 @@
 
 <script>
 // var http = require('../../utils/http.js')
-// var config = require('../../utils/config.js')
+import orderItem from './../components/order-item'
 import { orderList } from '@/api/order'
 import { getTotalPage } from '@/util/util'
 export default {
@@ -145,7 +126,7 @@ export default {
     }
   },
 
-  components: {},
+  components: { orderItem },
   props: {},
   computed: {
     orderDetailsState(status) {
@@ -222,8 +203,8 @@ export default {
      */
     async loadOrderData() {
       uni.showLoading({
-      title: '加载中',
-    })
+        title: '加载中',
+      })
       try {
         let res = await orderList({
           current: this.current,
@@ -246,7 +227,7 @@ export default {
         }
       } catch (e) {
         console.log(e)
-      }finally{
+      } finally {
         uni.hideLoading()
       }
     },
@@ -273,7 +254,11 @@ export default {
         },
       })
     },
-
+    createComment(e) {
+      uni.navigateTo({
+        url: '/pages/order/order-comment/order-comment-add?orderId=' + e.id,
+      })
+    },
     /**
      * 查看订单详情
      */
@@ -289,7 +274,11 @@ export default {
 /deep/ .u-tabs__wrapper__nav__line {
   left: 24rpx;
 }
+@import './order-list.scss';
 </style>
 <style>
-@import './order-list.css';
+page {
+  background-color: #f4f4f4;
+  color: #333;
+}
 </style>

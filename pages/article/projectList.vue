@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-07 11:07:33
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-25 15:30:47
+ * @LastEditTime: 2023-07-06 15:54:47
  * @FilePath: \mall-applet\pages\article\projectList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -35,8 +35,37 @@
         @click="sectionChange"
       ></u-tabs>
     </view>
-
-    <projectList :list="projectList"></projectList>
+    <u-skeleton 
+      rows="2"
+      :loading="loading"
+      :title="false"
+      :rows="10"
+      :rowsWidth="[
+        '200%',
+        '200%',
+        '200%',
+        '200%',
+        '200%',
+        '200%',
+        '200%',
+        '200%',
+      ]"
+      :rowsHeight="[
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+        '80px',
+      ]"
+      :animate="true"
+    >
+      <projectList :list="projectList"></projectList>
+    </u-skeleton>
   </view>
 </template>
 
@@ -74,6 +103,7 @@ export default {
       ],
       current: 1,
       keyword: '',
+      loading: true,
     }
   },
   // 计算属性
@@ -92,7 +122,11 @@ export default {
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
-  created() {},
+  created() {
+    uni.$u.sleep(2000).then(() => {
+      this.loading = false
+    })
+  },
   onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {},

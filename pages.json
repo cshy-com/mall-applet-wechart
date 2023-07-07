@@ -191,7 +191,15 @@
                         "navigationBarTitleText": "扫码核销",
                         "navigationBarBackgroundColor": "#FFFFFF"
                     }
+                },
+                {
+                    "path": "order-comment/order-comment-add",
+                    "style": {
+                        "navigationBarTitleText": "添加评论",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+                    }
                 }
+
 
             ]
         }, {
@@ -327,6 +335,15 @@
                     "path": "scanCode",
                     "style": {
                         "navigationBarTitleText": "扫码支付",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+
+                    }
+
+                },
+                {
+                    "path": "scanCodeResult",
+                    "style": {
+                        "navigationBarTitleText": "支付结果",
                         "navigationBarBackgroundColor": "#FFFFFF"
 
                     }

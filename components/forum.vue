@@ -1,11 +1,13 @@
 <template>
   <view class="content">
+   
     <view
       class="content-box"
       v-for="item in list"
       :key="item.id"
       @tap="($event) => goDetail(item)"
     >
+   
       <view class="content-item">
         <view class="content-item-left">
           <view class="title over-ellipsis"
@@ -47,7 +49,9 @@
           </view>
         </view>
       </view>
+  
     </view>
+
     <u-modal
       :title="'是否确认删除？'"
       @cancel="show = false"
@@ -80,6 +84,7 @@ export default {
   data() {
     return {
       show: false,
+     
       selectItem: null, defaultImg: require('@/static/img/default.png'),
       defaultAvatar:require('@/static/img/icon/head04.png')
     }
@@ -88,7 +93,9 @@ export default {
   computed: {},
   // 监听data中的数据变化
   watch: {},
-  onLoad: function () {},
+  onLoad: function () {
+    
+  },
 
   // 方法集合
   methods: {
@@ -125,7 +132,9 @@ export default {
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
-  created() {},
+  created() {
+   
+  },
   onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {},

@@ -22,19 +22,51 @@ export default {
     //     console.log('失败的回调函数')
     //   },
     //   complete(){
-    //     console.log('接口调用结束的回调函数（调用成功、失败都会执行）')
+    //     console.log('接口调用结束的回调函数（调用成功、失败都会执行）')fq
     //   }
     // })
+
+    const updateManager = uni.getUpdateManager() // 小程序版本更新管理器
+    updateManager.onCheckForUpdate((res) => {
+      // 检测新版本后的回调
+      if (res.hasUpdate) {
+        // 如果有新版本提醒并进行强制升级
+        uni.showModal({
+          content: '新版本已经准备好，是否重启应用？',
+          showCancel: false,
+          confirmText: '确定',
+          success: (res) => {
+            if (res.confirm) {
+              updateManager.onUpdateReady((res) => {
+                // 新版本下载完成的回调
+                updateManager.applyUpdate() // 强制当前小程序应用上新版本并重启
+              })
+
+              updateManager.onUpdateFailed((res) => {
+                // 新版本下载失败的回调
+                // 新版本下载失败，提示用户删除后通过冷启动重新打开
+                uni.showModal({
+                  content: '下载失败，请删除当前小程序后重新打开',
+                  showCancel: false,
+                  confirmText: '知道了',
+                })
+              })
+            }
+          },
+        })
+      }
+    })
 
     console.log('App Launch')
     // 对路由进行统一拦截，实现路由导航守卫 router.beforeEach 功能
     routingIntercept()
   },
   onReady() {},
-  onShow: function () {  uni.hideTabBar({
-        animation: false
-      })
-      },
+  onShow: function () {
+    uni.hideTabBar({
+      animation: false,
+    })
+  },
   onHide: function () {
     console.log('App Hide')
   },
@@ -49,6 +81,7 @@ export default {
 @import './common/uni.css';
 @import './static/iconfont/iconfont.css';
 @import url('./static/babes.css');
+@import url('./static/animate.min.css');
 /*每个页面公共css */
 page {
   background-color: #f5f5f5;

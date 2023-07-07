@@ -8,7 +8,7 @@
         @click="clickSwiper($event)"
         :autoplay="false"
         indicatorStyle="right: 20px"
-        height="220"
+        height="320"
       >
         <view slot="indicator" class="indicator-num">
           <text class="indicator-num__text"

@@ -19,11 +19,20 @@
         </view>
       </view>
     </view>
+ 
+      <view class="content-main">
+        <view>
+         
+            <!-- <u-parse :content="forumInfo.content"></u-parse> -->
+            <rich-text :nodes="forumInfo.content"  ></rich-text>
+ 
+          </view>
+      </view>
 
-    <view class="content-main">
-      <view><u-parse :content="forumInfo.content"></u-parse> </view>
-    </view>
-    <view v-if="status == 30">
+    <!-- 评论区域 -->
+    <forumComment></forumComment>
+    <u-gap height="40" bgColor="#f6f7f8"></u-gap>
+    <view v-if="status == 30" class="recommend-box">
       <view class="content-activity bottom">
         <view class="tip">值得推荐</view>
         <view>
@@ -46,17 +55,29 @@
         </view>
       </view>
     </view>
+    <view class="fix-footer">
+      <view class="fix-content">
+        <u-input
+          placeholder="请输入内容"
+          border="surround"
+          clearable
+          shape="circle"
+          maxlength="200"
+          confirmType="send"
+        ></u-input>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import forumData from '@/mock/index.js'
 import { forumDetail, ForumPage, forumView } from '@/api/index'
+import forumComment from './forumComment.vue'
 export default {
   //import引入组件才能使用
-  components: {},
+  components: { forumComment },
   props: {},
   data() {
     return {
@@ -83,6 +104,7 @@ export default {
         url: '/pages/subPack/forum/forumDatail',
       })
     },
+    
     async getPageList() {
       let res = await ForumPage({
         type: 'comm',
@@ -105,6 +127,9 @@ export default {
       try {
         let res = await forumDetail(this.id)
         this.setForumInfo(res.data)
+        // this.$nextTick(() => {
+				// 	this.$refs.uReadMore.init();
+				// })
       } catch (e) {
         console.log(e)
       } finally {
@@ -128,9 +153,13 @@ export default {
       this.getPageList()
     }
   },
-  onShow() {},
+  onShow() {
+
+  },
   // 生命周期：挂载完成时（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    
+  },
   beforeCreate() {}, //生命周期：创建之前
   beforpxount() {}, //生命周期：挂载之前
   beforeUpdate() {}, //生命周期：更新之前
@@ -216,6 +245,7 @@ page {
   font-family: PingFangSC-Regular !important;
   padding: 20rpx 32rpx;
   border-bottom: 20rpx solid #f6f7f8;
+  min-height: 400rpx;
 }
 .content-activity {
   padding: 0 38rpx 30rpx !important;
@@ -257,6 +287,20 @@ page {
       line-height: 50rpx;
       word-break: break-all;
     }
+  }
+}
+.recommend-box {
+  padding-bottom: 140rpx;
+}
+.fix-footer {
+  position: fixed;
+  bottom: 0;
+  height: 120rpx;
+  width: 100%;
+  border-top: 1rpx solid #dedede;
+  background: #fff;
+  .fix-content {
+    margin: 20rpx 30rpx 30rpx 30rpx;
   }
 }
 </style>
