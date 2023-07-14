@@ -215,6 +215,8 @@ export default {
         this.$tip.toast('请先勾选隐私协议')
         return
       }
+      console.log('e.detail.code'+e.detail.code)
+      debugger
       wxLogin(e.detail.code).then((res) => {
         if (res && res.code == 0) {
           setAuthorization(res.data.token)

@@ -89,6 +89,10 @@ export default {
           name: '女',
           index: 1,
         },
+        {
+          name: '未知',
+          index: 2,
+        },
       ],
       sexIndex: 0,
       rules: {

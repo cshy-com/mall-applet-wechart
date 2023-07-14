@@ -31,7 +31,7 @@
     <view class="user-integral">
       <view @click="integralEvent" class="user-integral-item">
         <text>我的积分</text>
-        <text class="grid-text">{{ user.totalScore || 0 }}</text>
+        <text class="grid-text">{{ userInfo.totalScore || 0 }}</text>
       </view>
     </view>
     <view class="u-m-t-20">
@@ -85,11 +85,11 @@
           v-if="userInfo.userType == 1"
           url="/pages/article/recommendationList"
         ></u-cell>
-        <!-- <u-cell
+        <u-cell
           title="领积分快捷入口"
           isLink
           url="/pages/coupon/receive"
-        ></u-cell> -->
+        ></u-cell>
         <!-- <u-cell
           title="积分支付给商家"
           isLink
@@ -186,7 +186,12 @@ export default {
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {},
+  onPullDownRefresh () {
+    this.getUser()
+    setTimeout(function () {
+      uni.stopPullDownRefresh()
+    }, 1000)
+  },
 
   /**
    * 页面上拉触底事件的处理函数
@@ -236,6 +241,7 @@ export default {
 
         this.setUserInfo(res.data)
         uni.setStorageSync('user', res.data)
+        
       } catch (e) {
         console.log(e)
       }
@@ -245,10 +251,12 @@ export default {
         url: '/pages/coupon/integralList',
       })
     },
+ 
     getUserInfo() {
       uni.navigateTo({
         url: '/pages/mine/updateUserInfo',
       })
+      //     
       //   let that=this
       //   wx.getUserProfile({
       //   desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写

@@ -2,13 +2,13 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-25 11:13:04
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-30 09:23:05
+ * @LastEditTime: 2023-07-14 15:34:36
  * @FilePath: \mall-applet\pages\coupon\receive.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view>
-   <view class="nav">
+    <view class="nav">
       <hx-navbar :config="config" ref="hxnb">
         <view slot="center">
           <view class="center" style="">
@@ -19,27 +19,37 @@
         </view>
       </hx-navbar>
     </view>
-  <view class="btn-def">
-
-    <button
-      type="text"
-      open-type="getPhoneNumber"
-      @getphonenumber="getPhoneNumber"
-      :plain="true"
-    >
-      <text>领取积分</text>
-    </button>
+    
+    <view class="btn-def" >
+      <button v-if="showDef"
+        type="text"
+        @click="getTicket"
+        :plain="true"
+      >
+        <text>账号直接领取积分</text>
+      </button>
+      <button  
+        type="text"
+        open-type="getPhoneNumber"
+        @getphonenumber="getPhoneNumber"
+        :plain="true"
+      >
+        <text>手机号领取积分</text>
+      </button>
+      
+     
+    </view>
     <u-modal :show="show" :content="content" @confirm="confirm"></u-modal>
   </view>
-</view>
 </template>
 
 <script>
 import { getUrlParams } from '@/util/util'
 import { setAuthorization, getAuthorization } from '@/util/auth.js'
-import {collectPoints} from "@/api/integral"
-import { createNamespacedHelpers } from 'vuex';
-const  { mapMutations,mapGetters}=createNamespacedHelpers('user') 
+import { mallIntegralTicket } from '@/api/integral'
+import { wxLogin } from '@/api/index.js'
+import { createNamespacedHelpers } from 'vuex'
+const { mapMutations, mapGetters } = createNamespacedHelpers('user')
 export default {
   //import引入组件才能使用
   components: {},
@@ -49,20 +59,21 @@ export default {
       show: false,
 
       content: '领取成功，去其他地方逛逛吧',
-      userType:1,
+      userType: 1,
+      code: '',
+      showDef:false,
       config: {
         color: ['#000', '#000'],
         title: '领取积分',
-    
+
         back: false,
         fixed: true,
         centerSlot: true,
- 
       },
     }
   },
   // 计算属性
-  computed: {},
+  computed: {...mapGetters(['userInfo']),},
   // 监听data中的数据变化
   watch: {},
   // 方法集合
@@ -78,15 +89,22 @@ export default {
     },
     // 获取当前微信用户手机号，领取积分
     getPhoneNumber(e) {
-      collectPoints(e.detail.code).then((res) => {
+      wxLogin(e.detail.code).then((res) => {
         if (res && res.code == 0) {
           setAuthorization(res.data.token)
           this.setUserInfo(res.data)
           uni.setStorageSync('user', res.data)
-          this.userType=res,data.userType
+          this.getTicket()
+        }
+      })
+    },
+    getTicket() {
+      mallIntegralTicket({ code: this.code }).then((res) => {
+        if (res && res.code == 0) {
           this.show = true
         } else {
-          this.$u.toast(msg)
+          this.content=res.msg+',去其他地方逛逛吧'
+          this.show=true
         }
       })
     },
@@ -101,9 +119,17 @@ export default {
       let urlStr = decodeURIComponent(q)
 
       let urlParams = getUrlParams(urlStr)
-      let code = urlParams.code
-      console.log('urlParams' +  JSON.stringify(urlParams))
-      console.log('code' + code)
+      this.code = urlParams.code
+      console.log('urlParams' + JSON.stringify(urlParams))
+      console.log('code' + this.code)
+    }
+    
+  },
+  onShow(){
+
+    if(this.userInfo){
+      this.showDef=true
+
     }
   },
   beforeCreate() {}, //生命周期：创建之前
@@ -117,17 +143,20 @@ export default {
 </script>
 <style scoped lang="scss">
 .btn-def {
-  width:40%;
+  width: 40%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 500rpx 0;
   margin: 0 auto;
+  flex-direction: column;
   /deep/ button {
     background: #000;
     border-radius: 30rpx;
     color: #fff;
-    height: 70rpx !important;
+    width: 300rpx;
+    font-size: 28rpx;
+    margin-bottom: 30rpx;
   }
 }
 .nav /deep/ .hx-navbar__content__main_center {

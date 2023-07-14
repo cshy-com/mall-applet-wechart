@@ -37,7 +37,8 @@
             "path": "pages/index/user/index",
             "style": {
                 "navigationBarTitleText": "个人中心",
-                "navigationBarBackgroundColor": "#FFFFFF"
+                "navigationBarBackgroundColor": "#FFFFFF",
+                "enablePullDownRefresh": true
             }
         },
 
