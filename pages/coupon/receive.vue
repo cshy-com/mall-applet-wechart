@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-25 11:13:04
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-14 15:34:36
+ * @LastEditTime: 2023-07-18 17:09:29
  * @FilePath: \mall-applet\pages\coupon\receive.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -19,16 +19,12 @@
         </view>
       </hx-navbar>
     </view>
-    
-    <view class="btn-def" >
-      <button v-if="showDef"
-        type="text"
-        @click="getTicket"
-        :plain="true"
-      >
+
+    <view class="btn-def">
+      <button v-if="showDef" type="text" @click="getTicket" :plain="true">
         <text>账号直接领取积分</text>
       </button>
-      <button  
+      <button
         type="text"
         open-type="getPhoneNumber"
         @getphonenumber="getPhoneNumber"
@@ -36,8 +32,6 @@
       >
         <text>手机号领取积分</text>
       </button>
-      
-     
     </view>
     <u-modal :show="show" :content="content" @confirm="confirm"></u-modal>
   </view>
@@ -49,7 +43,7 @@ import { setAuthorization, getAuthorization } from '@/util/auth.js'
 import { mallIntegralTicket } from '@/api/integral'
 import { wxLogin } from '@/api/index.js'
 import { createNamespacedHelpers } from 'vuex'
-const { mapMutations, mapGetters } = createNamespacedHelpers('user')
+const { mapMutations, mapGetters, mapActions } = createNamespacedHelpers('user')
 export default {
   //import引入组件才能使用
   components: {},
@@ -61,7 +55,7 @@ export default {
       content: '领取成功，去其他地方逛逛吧',
       userType: 1,
       code: '',
-      showDef:false,
+      showDef: false,
       config: {
         color: ['#000', '#000'],
         title: '领取积分',
@@ -73,12 +67,13 @@ export default {
     }
   },
   // 计算属性
-  computed: {...mapGetters(['userInfo']),},
+  computed: { ...mapGetters(['userInfo']) },
   // 监听data中的数据变化
   watch: {},
   // 方法集合
   methods: {
     ...mapMutations(['setUserInfo']),
+    ...mapActions(['setUserInfoAction']),
     confirm(e) {
       uni.switchTab({
         url:
@@ -98,15 +93,27 @@ export default {
         }
       })
     },
-    getTicket() {
-      mallIntegralTicket({ code: this.code }).then((res) => {
-        if (res && res.code == 0) {
+    // 积分入账
+    async getTicket() {
+      try {
+        uni.showLoading({
+          title: '加载中',
+        })
+        let { code,msg } = await mallIntegralTicket({ code: this.code })
+    
+        if (code == 0) {
           this.show = true
+          this.setUserInfoAction()
         } else {
-          this.content=res.msg+',去其他地方逛逛吧'
-          this.show=true
+          
+          this.content = msg + ',去其他地方逛逛吧'
+          this.show = true
         }
-      })
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
@@ -114,22 +121,26 @@ export default {
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {},
   onLoad: function (options) {
+
     const { q } = options
+    
     if (q) {
       let urlStr = decodeURIComponent(q)
 
       let urlParams = getUrlParams(urlStr)
       this.code = urlParams.code
+    
       console.log('urlParams' + JSON.stringify(urlParams))
       console.log('code' + this.code)
     }
-    
+    if(options?.code){
+      this.code=options.code
+    } 
+   
   },
-  onShow(){
-
-    if(this.userInfo){
-      this.showDef=true
-
+  onShow() {
+    if (this.userInfo) {
+      this.showDef = true
     }
   },
   beforeCreate() {}, //生命周期：创建之前
@@ -151,12 +162,15 @@ export default {
   margin: 0 auto;
   flex-direction: column;
   /deep/ button {
-    background: #000;
-    border-radius: 30rpx;
+    background: $Gradual-color;
+    border-radius: 10rpx;
+    font-weight: 400;
     color: #fff;
     width: 300rpx;
-    font-size: 28rpx;
+    font-size: 30rpx;
     margin-bottom: 30rpx;
+    border:none;
+    height: 85rpx;
   }
 }
 .nav /deep/ .hx-navbar__content__main_center {

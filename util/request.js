@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:41
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-17 10:44:33
+ * @LastEditTime: 2023-07-18 17:02:56
  * @FilePath: \mall-applet\util\request.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,6 +23,7 @@ export const request = (options) => {
             header: headers,
             success: res => {
                 const statusCode = res.statusCode // http状态码
+
                 if (statusCode === 200) {
                     const requestCode = res.data.code // 自己后端定义code
                         // 成功
@@ -52,7 +53,9 @@ export const request = (options) => {
                         } else {
                             uni.showToast({
                                 title: res.data.msg || '请求接口失败',
-                                icon: "none"
+                                icon: "none",
+                                duration: 2500
+
                             })
                             reject(res.data)
                         }
@@ -69,7 +72,8 @@ export const request = (options) => {
                     } else {
                         uni.showToast({
                             title: res.data.msg || '请求接口失败',
-                            icon: "none"
+                            icon: "none",
+                            duration: 2500
                         })
                     }
                     reject(res.data)
@@ -80,10 +84,11 @@ export const request = (options) => {
                 // 	title:"请求接口失败",
                 // })
                 console.log('err', err)
-                debugger
+
                 uni.showToast({
                     title: err.data.msg || '请求接口失败',
-                    icon: "none"
+                    icon: "none",
+                    duration: 2500
                 })
                 reject(err)
             }

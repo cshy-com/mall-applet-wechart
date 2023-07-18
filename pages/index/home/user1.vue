@@ -200,6 +200,265 @@
     </view>
   </view>
 </template>
+
+<script>
+import tabs from '@/components/tabs.vue'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import commSearch from '@/components/commSearch.vue'
+import list from './../components/list.vue'
+import { mallShopTypeListByParentId, getCommodityPage } from '@/api/shop.js'
+import { ForumPage } from '@/api/index'
+import cateGroup from '@/components/cateGroup'
+import forum from '@/components/forum'
+import recommendation from './../components/recommendation'
+import forumData from '@/mock/index.js'
+import projectList from '@/components/projectList'
+import tabBar from '@/components/tab-bar.vue'
+import { getTotalPage } from '@/util/util'
+import user1 from "./user1.vue"
+export default {
+  data() {
+    return {
+      indicatorDots: true,
+      indicatorColor: '#d1e5fb',
+      indicatorActiveColor: '#1b7dec',
+      autoplay: true,
+      interval: 2000,
+      duration: 1000,
+      list3: [
+        'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+        'https://cdn.uviewui.com/uview/swiper/swiper2.png',
+        'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+      ],
+
+      seq: 0,
+      news: [],
+      statusList: [
+        {
+          title: '关注/推荐',
+        },
+
+        {
+          title: '论坛',
+        },
+        {
+          title: '客户建议',
+        },
+        {
+          title: '项目发布',
+        },
+      ],
+      selectClassIndex: 0,
+
+      sts: 0,
+      scrollTop: '',
+      current: 1,
+      size: 10,
+      total: 0,
+      updata: true,
+      list: [],
+      prods: [],
+      currentForum: 1,
+      sizeForum: 10,
+      totalForum: 0,
+      more: 'more',
+      moreForum: 'more',
+      loading:false
+    }
+  },
+
+  components: {
+    tabs,
+    commSearch,
+    list,
+    cateGroup,
+    forum,
+    recommendation,
+    projectList,
+    tabBar,
+    user1
+  },
+  props: {},
+  computed: {
+    ...mapGetters(['cateAll', 'projectList']),
+    fileUrl() {
+      return this.$fileUrl
+    },
+  },
+  created() {
+   
+    uni.showLoading({
+      title: '加载中',
+    })
+    this.getAllCate()
+    this.getCommodityRecommend()
+    uni.hideLoading()
+  },
+  onLoad() {},
+  onReady() {},
+  onShow() {
+    // this.loading=true 
+    // setTimeout(()=>{
+    //   this.loading=false
+    // },1000)
+  },
+
+  options: {
+    styleIsolation: 'shared',
+  },
+  onPullDownRefresh() {
+    this.getAllCate()
+    this.resetPage()
+    setTimeout(function () {
+      uni.stopPullDownRefresh()
+    }, 1000)
+  },
+  onReachBottom: function () {
+    switch (this.selectClassIndex) {
+      case 0:
+        if (this.more == 'more') {
+          this.current++
+          this.getCommodityRecommend()
+        }
+        break
+      case 1:
+        if (this.moreForum == 'more') {
+          this.currentForum++
+          this.getForumList()
+        }
+        break
+      default:
+        if (this.more == 'more') {
+          this.current++
+          this.getCommodityRecommend()
+        }
+    }
+
+    if (this.selectClassIndex == 0) {
+    }
+  },
+  methods: {
+    ...mapMutations(['setCateAll', 'setCommodityInfo']),
+    resetPage() {
+      switch (this.selectClassIndex) {
+        case 0:
+          this.current = 1
+          this.getCommodityRecommend()
+          break
+        case 1:
+          this.currentForum = 1
+          this.getForumList()
+          break
+        default:
+          this.current = 1
+          this.getCommodityRecommend()
+      }
+    },
+    // 论坛列表
+    async getForumList() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await ForumPage({
+          current: this.currentForum,
+          size: this.sizeForum,
+          type: 'comm',
+        })
+
+        this.totalForum = res.total
+        let totalPage = getTotalPage(this.totalForum, this.sizeForum)
+
+        if (this.currentForum == 1) {
+          this.list = res.data
+        } else {
+          this.list = [...this.list, ...res.data]
+        }
+
+        if (totalPage > this.currentForum) {
+          this.moreForum = 'more'
+        } else {
+          this.moreForum = 'noMore'
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
+    goProjectList() {
+      uni.navigateTo({
+        url: '/pages/article/projectList',
+      })
+    },
+    changeIndex(e) {
+      this.selectClassIndex = e
+      this.resetPage()
+    },
+    async getCommodityRecommend() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await getCommodityPage({
+          current: this.current,
+          size: this.size,
+        })
+        this.total = res.total
+        let totalPage = getTotalPage(this.total, this.size)
+        if (this.current == 1) {
+          this.prods = res.data
+        } else {
+          this.prods = [...this.prods, ...res.data]
+        }
+        if (totalPage > this.current) {
+          this.more = 'more'
+        } else {
+          this.more = 'noMore'
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
+    //获取所有一级分类
+    async getAllCate() {
+      try {
+        let res = await mallShopTypeListByParentId(0)
+        this.setCateAll(res.data)
+      } catch (err) {
+        console.log('异常：', err)
+      }
+    },
+    changeStu(index) {
+      this.selectClassIndex = index
+    },
+
+    // 页面滚动到指定位置指定元素固定在顶部
+    onPageScroll: function (e) {
+      //监听页面滚动
+      // this.setData({
+      //   scrollTop: e.scrollTop
+      // });  
+    },
+    toProdPage(item) {
+      this.setCommodityInfo(item)
+
+      uni.navigateTo({
+        url: `/pages/mall/commodity/commodityDetail?Id=${item.id}&shopId=${item.shopId}`,
+      })
+    },
+
+    toCouponCenter(item) {
+      uni.navigateTo({
+        url: `/pages/mall/store/index?cateId=${item.id}&title=${item.name}`,
+      })
+    },
+  },
+}
+</script>
 <style>
   @import url('./user1.css');
 </style>

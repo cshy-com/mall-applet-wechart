@@ -31,7 +31,10 @@
     <view class="user-integral">
       <view @click="integralEvent" class="user-integral-item">
         <text>我的积分</text>
-        <text class="grid-text">{{ userInfo.totalScore || 0 }}</text>
+        <text class="grid-text" v-if="userInfo.userType == 1">{{
+          userInfo.totalScore || 0
+        }}</text>
+        <text class="grid-text" v-else>{{ shopTotal || 0 }}</text>
       </view>
     </view>
     <view class="u-m-t-20">
@@ -51,54 +54,52 @@
         <u-cell
           title="收款码"
           isLink
-          url="/pages/coupon/paymentCode"
+          url="/pages/coupon/shopCode"
           v-if="userInfo.userType == 2"
         ></u-cell>
         <!-- 用户扫一扫 付款给商家 -->
-        <u-cell
-          title="扫一扫"
-          @click="scanCode"
-          v-if="userInfo.userType == 1"
-        ></u-cell>
-        <u-cell
-          title="订单列表"
-          isLink
-          url="/pages/order/order-list/order-list"
-          v-if="userInfo.userType == 1"
-        ></u-cell>
+        <template v-if="userInfo.userType == 1">
+          <u-cell title="扫一扫" @click="scanCode"></u-cell>
+          <u-cell
+            title="订单列表"
+            isLink
+            url="/pages/order/order-list/order-list"
+          ></u-cell>
 
-        <u-cell
-          title="发布论坛"
-          isLink
-          url="/pages/article/forumAdd"
-          v-if="userInfo.userType == 1"
-        ></u-cell>
-        <u-cell
-          title="我的论坛"
-          isLink
-          url="/pages/article/forumList"
-          v-if="userInfo.userType == 1"
-        ></u-cell>
-        <u-cell
-          title="历史建议"
-          isLink
-          v-if="userInfo.userType == 1"
-          url="/pages/article/recommendationList"
-        ></u-cell>
-        <u-cell
+          <u-cell
+            title="发布论坛"
+            isLink
+            url="/pages/article/forumAdd"
+          ></u-cell>
+          <u-cell
+            title="我的论坛"
+            isLink
+            url="/pages/article/forumList"
+          ></u-cell>
+          <u-cell
+            title="历史建议"
+            isLink
+            url="/pages/article/recommendationList"
+          ></u-cell>
+          <!-- <u-cell
           title="领积分快捷入口"
           isLink
-          url="/pages/coupon/receive"
-        ></u-cell>
-        <!-- <u-cell
+          url="/pages/coupon/receive?code=1588e03c9b934a33927f39006578fe2d"
+        ></u-cell> -->
+          <u-cell
+            title="转赠"
+            isLink
+            url="/pages/coupon/transferAccounts"
+          ></u-cell>
+          <!-- <u-cell
           title="积分支付给商家"
           isLink
-          url="/pages/coupon/scanCode"
+          url="/pages/coupon/paymentCode?code=6"
         ></u-cell> -->
-        
+        </template>
       </u-cell-group>
     </view>
-    <view class="user-block-1">
+    <!-- <view class="user-block-1">
       <image
         :lazy-load="true"
         :lazy-load-margin="0"
@@ -124,7 +125,7 @@
         mode="aspectFit"
         src="/static/img/user3.png"
       ></image>
-    </view>
+    </view> -->
     <view class="foot-btn" @click="logOut">
       <button>退出登录</button>
     </view>
@@ -134,11 +135,12 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
-const { mapGetters, mapMutations } = createNamespacedHelpers('user')
+const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers('user')
 import { getUserInfo } from '@/api/index'
 import { getUrlParams } from '@/util/util'
 import tabBar from '@/components/tab-bar.vue'
 import { removeAuthorization } from '@/util/auth'
+import { shopCreditsTotal } from '@/api/integral'
 export default {
   data() {
     return {
@@ -150,6 +152,7 @@ export default {
       picDomain: '', // config.picDomain
       user: {},
       defaultAvatar: require('@/static/img/icon/head04.png'),
+      shopTotal: 0,
     }
   },
 
@@ -186,7 +189,7 @@ export default {
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh () {
+  onPullDownRefresh() {
     this.getUser()
     setTimeout(function () {
       uni.stopPullDownRefresh()
@@ -207,7 +210,16 @@ export default {
   },
   methods: {
     ...mapMutations(['setUserInfo']),
+    ...mapActions(['setUserInfoAction']),
+    goPage(url) {
+      // uni.$on('integralEvent', this.getUser())
+      uni.navigateTo({
+        url: url,
+      })
+    },
+
     scanCode() {
+      let that=this
       uni.scanCode({
         onlyFromCamera: true,
         scanType: 'qrCode',
@@ -215,11 +227,23 @@ export default {
           console.log('res' + JSON.stringify(res))
           let result = getUrlParams(res.result)
           console.log('code----' + JSON.stringify(result.code))
-          if (this.userInfo.userType == 1) {
-            uni.navigateTo({
-              url: '/pages/coupon/scanCode?code=' + result.code,
-            })
+          console.log(that.userInfo.userType,+'this.userInfo.userType')
+          if (that.userInfo.userType == 1) {
+            // 用户扫一扫
+            // 扫码领取积分
+            if (res.result.search('integral') > -1) {
+              uni.navigateTo({
+                url: '/pages/coupon/receive?code=' + result.code,
+              })
+            }
+            // 扫码付款
+            if (res.result.search('payment') > -1) {
+              uni.navigateTo({
+                url: '/pages/coupon/paymentCode?code=' + result.code,
+              })
+            }
           } else {
+            // 商家扫码核销订单
             uni.navigateTo({
               url:
                 '/pages/order/business-order-detail/business-order-detail?code=' +
@@ -236,14 +260,14 @@ export default {
       uni.redirectTo({ url: '/pages/public/login' })
     },
     async getUser() {
-      try {
-        let res = await getUserInfo()
-
-        this.setUserInfo(res.data)
-        uni.setStorageSync('user', res.data)
-        
-      } catch (e) {
-        console.log(e)
+      this.setUserInfoAction()
+      if (this.userInfo.userType == 2) {
+        try {
+          let res = await shopCreditsTotal()
+          this.shopTotal = res.data
+        } catch (e) {
+          console.log(e)
+        }
       }
     },
     integralEvent() {
@@ -251,12 +275,12 @@ export default {
         url: '/pages/coupon/integralList',
       })
     },
- 
+
     getUserInfo() {
       uni.navigateTo({
         url: '/pages/mine/updateUserInfo',
       })
-      //     
+      //
       //   let that=this
       //   wx.getUserProfile({
       //   desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写

@@ -239,7 +239,7 @@ export default {
 
         return false
       } else {
-        if (!util.regular().mobile.test(this.form.tel)) {
+        if (!uni.$u.test.mobile(this.form.tel)) {
           this.$tip.toast('请输入正确的手机号')
 
           return false

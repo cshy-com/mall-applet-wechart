@@ -11,12 +11,12 @@
     </view>
     <view class="contant-center">
       <!-- tab切换 -->
-      <tabs :list="statusList" :selectIndex="selectClassIndex"></tabs>
+      <!-- <tabs :list="statusList" :selectIndex="selectClassIndex"></tabs> -->
 
       <!-- 下拉筛选 -->
-      <view v-if="list">
+      <!-- <view v-if="list">
         <smh-select :list="list" @change="show"></smh-select>
-      </view>
+      </view> -->
 
       <!-- 标签筛选 -->
       <!-- <view class="tag-view">

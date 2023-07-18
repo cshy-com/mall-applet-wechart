@@ -300,12 +300,22 @@
                             }
                         }
                     }
-                }, {
+                },
+                {
+                    "path": "integralListReceive",
+                    "style": {
+                        "navigationBarTitleText": "积分详情",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
+                    }
+
+                },
+                {
                     "path": "integralList",
                     "style": {
-                        "navigationBarTitleText": "积分列表",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-
+                        "navigationBarTitleText": "积分收支",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
                     }
 
                 }, {
@@ -319,23 +329,25 @@
                 }, {
                     "path": "paymentCode",
                     "style": {
+                        "navigationBarTitleText": "扫码支付",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+
+                    }
+
+                },
+                {
+                    "path": "shopCode",
+                    "style": {
                         "navigationBarTitleText": "收款码",
                         "navigationBarBackgroundColor": "#FFFFFF"
 
                     }
 
-                }, {
+                },
+                {
                     "path": "transferAccounts",
                     "style": {
                         "navigationBarTitleText": "积分转赠",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-
-                    }
-
-                }, {
-                    "path": "scanCode",
-                    "style": {
-                        "navigationBarTitleText": "扫码支付",
                         "navigationBarBackgroundColor": "#FFFFFF"
 
                     }
