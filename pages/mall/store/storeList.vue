@@ -2,14 +2,30 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:31:56
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-30 16:33:37
+ * @LastEditTime: 2023-07-19 17:28:39
  * @FilePath: \mall-applet\pages\subPack\merchant\storeList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view>
     <commNav :title="title" ref="navs"></commNav>
-    <commSearch :placeholder="placeholder"></commSearch>
+
+    <view class="search">
+      <uni-search-bar
+        bgColor="#fff"
+        v-model="keyword"
+        :placeholder="placeholder"
+        :radius="200"
+        @confirm="search"
+        @cancel="cancel" 
+   
+      >
+        <template v-slot:searchIcon>
+          <text class="iconfont icon-sousuo"></text>
+        </template>
+      </uni-search-bar>
+    </view>
+
     <view class="shop-list-box">
       <shopRow :list="shopList"> </shopRow>
     </view>
@@ -46,6 +62,7 @@ export default {
       size: 10,
       current: 1,
       total: 0,
+      keyword: '',
     }
   },
   options: {
@@ -91,15 +108,26 @@ export default {
   computed: {},
   methods: {
     ...mapMutations(['setShopInfo']),
+    cancel(){
+      this.keyword=''
+      this.search()
+    },
+    search() {
+      this.current = 1
+      this.shopList = []
+      this.more = 'more'
+      this.getPageList()
+    },
     async getPageList() {
       uni.showLoading({
-      title: '加载中',
-    })
+        title: '加载中',
+      })
       try {
         let res = await mallShopPage({
           current: this.current,
           size: this.size,
           secondType: this.cateId,
+          condition: this.keyword,
         })
         this.total = res.total
         let totalPage = getTotalPage(this.total, this.size)
@@ -116,7 +144,7 @@ export default {
         }
       } catch (e) {
         console.log(e)
-      }finally{
+      } finally {
         uni.hideLoading()
       }
     },
@@ -133,5 +161,55 @@ page {
 .shop-list-box {
   margin-top: 42rpx;
   padding-bottom: 30rpx;
+}
+.search {
+  width: 698rpx;
+  height: 66rpx;
+  background: #ffffff;
+  box-shadow: inset 0px 0px 8rpx 0px #a67139;
+  border-radius: 200rpx;
+  border: 3rpx solid #a67139;
+  margin: 0 auto;
+  input::placeholder {  
+   color: #a67139;
+  }
+  .place{
+    color: #a67139;
+  }
+  /deep/ .uni-searchbar {
+    padding: 0;
+  }
+  /deep/ .uni-searchbar__box-icon-search {
+    padding: 0;
+  }
+  /deep/ .uni-searchbar__box {
+    border: none!important;
+    height: 29px!important;
+    background: none!important;
+  }
+  /deep/ .uni-searchbar__cancel {
+    position: relative;
+    left: -20rpx;
+    font-weight: 600;
+    color: #a67139;
+
+    line-height: 66rpx;
+  }
+  /deep/ .uni-searchbar__text-placeholder {
+    display: block;
+    color: #888;
+    font-size: 28rpx;
+    font-family: SourceHanSerifCN-Medium, SourceHanSerifCN;
+    font-weight: 600;
+    color: #a67139;
+    line-height: 40rpx;
+  }
+  .icon-sousuo {
+    margin-left: 20rpx;
+    margin-right: 8px;
+    font-size: 44rpx;
+    font-weight: 600;
+    color: #a67139;
+  }
 }
 </style>
