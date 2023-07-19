@@ -257,6 +257,7 @@ export default {
       this.setUserInfo(null)
       uni.setStorageSync('user', null)
       removeAuthorization('Authorization')
+      uni.removeStorageSync('recentSearch')
       uni.redirectTo({ url: '/pages/public/login' })
     },
     async getUser() {

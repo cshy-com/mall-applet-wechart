@@ -95,6 +95,13 @@
                         "navigationBarBackgroundColor": "#FFFFFF"
                     }
                 },
+                {
+                    "path": "search-prod/search-prod",
+                    "style": {
+                        "navigationBarTitleText": "搜索",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+                    }
+                },
 
 
 
