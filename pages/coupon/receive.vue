@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-25 11:13:04
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-18 17:09:29
+ * @LastEditTime: 2023-07-19 11:09:21
  * @FilePath: \mall-applet\pages\coupon\receive.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -32,6 +32,10 @@
       >
         <text>手机号领取积分</text>
       </button>
+      <view v-if="userInfo" @click="goHome" class="back">
+        <u-icon name="arrow-left"   size="28"></u-icon>
+        <text>返回首页</text>
+      </view>
     </view>
     <u-modal :show="show" :content="content" @confirm="confirm"></u-modal>
   </view>
@@ -75,6 +79,9 @@ export default {
     ...mapMutations(['setUserInfo']),
     ...mapActions(['setUserInfoAction']),
     confirm(e) {
+      this.goHome()
+    },
+    goHome() {
       uni.switchTab({
         url:
           this.userType == 1
@@ -99,20 +106,18 @@ export default {
         uni.showLoading({
           title: '加载中',
         })
-        let { code,msg } = await mallIntegralTicket({ code: this.code })
-    
+        let { code, msg } = await mallIntegralTicket({ code: this.code })
+
         if (code == 0) {
           this.show = true
           this.setUserInfoAction()
         } else {
-          
           this.content = msg + ',去其他地方逛逛吧'
           this.show = true
         }
       } catch (e) {
         console.log(e)
       } finally {
-        uni.hideLoading()
       }
     },
   },
@@ -121,22 +126,20 @@ export default {
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {},
   onLoad: function (options) {
-
     const { q } = options
-    
+
     if (q) {
       let urlStr = decodeURIComponent(q)
 
       let urlParams = getUrlParams(urlStr)
       this.code = urlParams.code
-    
+
       console.log('urlParams' + JSON.stringify(urlParams))
       console.log('code' + this.code)
     }
-    if(options?.code){
-      this.code=options.code
-    } 
-   
+    if (options?.code) {
+      this.code = options.code
+    }
   },
   onShow() {
     if (this.userInfo) {
@@ -153,6 +156,14 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+.back{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    text{
+      // color: #2979ff;
+    }
+}
 .btn-def {
   width: 40%;
   display: flex;
@@ -169,7 +180,7 @@ export default {
     width: 300rpx;
     font-size: 30rpx;
     margin-bottom: 30rpx;
-    border:none;
+    border: none;
     height: 85rpx;
   }
 }

@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-07 11:29:50
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-18 17:08:33
+ * @LastEditTime: 2023-07-19 11:13:13
  * @FilePath: \mall-admind:\work\mall-applet\pages\coupon\transferAccounts.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -88,7 +88,7 @@ export default {
       } catch (e) {
         console.log(e)
       } finally {
-        uni.hideLoading()
+       
       }
     },
   },

@@ -216,7 +216,6 @@ export default {
         return
       }
       console.log('e.detail.code'+e.detail.code)
-      debugger
       wxLogin(e.detail.code).then((res) => {
         if (res && res.code == 0) {
           setAuthorization(res.data.token)

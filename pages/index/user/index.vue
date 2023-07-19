@@ -84,7 +84,7 @@
           <!-- <u-cell
           title="领积分快捷入口"
           isLink
-          url="/pages/coupon/receive?code=1588e03c9b934a33927f39006578fe2d"
+          url="/pages/coupon/receive?code=8b058c3584d44b849362bb493b88d49b"
         ></u-cell> -->
           <u-cell
             title="转赠"
