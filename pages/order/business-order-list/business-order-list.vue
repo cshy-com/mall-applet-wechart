@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-21 09:14:51
+ * @LastEditTime: 2023-07-21 10:44:42
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -40,7 +40,7 @@
           <template v-slot:state>
             <view class="order-state">
               <text>{{
-                item.status == 20
+               item.statusName||( item.status == 20
                   ? '预约中'
                   : item.status == 10
                   ? '预约成功'
@@ -48,7 +48,9 @@
                   ? '已到店'
                   : item.status == 0
                   ? '已完成'
-                  : '已取消'
+                  : orderInfo.status == 40
+                  ? '已评论'
+                  : '已取消')
               }}</text>
             </view>
           </template>

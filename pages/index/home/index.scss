@@ -80,6 +80,15 @@ page {
     padding-bottom: 100rpx;
     .forum-content {
         padding-bottom: 120rpx;
+        .btn {
+            display: flex;
+            color: #fff;
+            font-size: 30rpx;
+            text {
+                margin-left: auto;
+                margin-right: 30rpx;
+            }
+        }
     }
     .project-box {
         padding-bottom: 120rpx;

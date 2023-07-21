@@ -40,6 +40,9 @@
             </block>
           </view>
           <view class="forum-content" v-if="selectClassIndex == 1">
+            <view class="btn">
+              <text @tap="goForumList">查看更多</text>
+            </view>
             <forum :list="list"></forum>
           </view>
           <view v-if="selectClassIndex == 2">
@@ -271,6 +274,11 @@ export default {
     goProjectList() {
       uni.navigateTo({
         url: '/pages/article/projectList',
+      })
+    },
+    goForumList(){
+      uni.navigateTo({
+        url: '/pages/article/forumPage',
       })
     },
     changeIndex(e) {

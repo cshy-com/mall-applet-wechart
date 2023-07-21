@@ -114,6 +114,11 @@ export default {
           id: 0,
           desc: '',
         },
+        {
+          title: '已评价',
+          id: 40,
+          desc: '',
+        },
       ],
       stepsListError: [
         {

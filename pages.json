@@ -394,6 +394,16 @@
 
                 },
                 {
+                    "path": "forumPage",
+                    "style": {
+                        "navigationBarTitleText": "论坛",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "enablePullDownRefresh": true
+
+                    }
+
+                },
+                {
                     "path": "forumDatail",
                     "style": {
                         "navigationBarTitleText": "详情",
