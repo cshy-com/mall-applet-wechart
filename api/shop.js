@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-24 16:20:08
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-29 14:11:34
+ * @LastEditTime: 2023-07-20 15:08:51
  * @FilePath: \mall-applet\api\shop.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -46,4 +46,17 @@ export function getCommodityPage(data) {
 // 获取商品详情
 export function getCommodityDetail(data) {
     return getString('/mallCommodity/obj/' + data)
+}
+
+// 店铺评论新增
+export function shopCommentsAdd(data) {
+    return postPayload('/shop/comments/add', data)
+}
+// 查询店铺评论
+export function shopCommentsPage(data) {
+    return postPayload('/shop/comments/page', data)
+}
+// 查看订单评论
+export function shopCommentsObj(data) {
+    return getString('/shop/comments/obj', data)
 }

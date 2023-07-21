@@ -13,7 +13,7 @@ import { createNamespacedHelpers } from 'vuex';
             ><text>{{ item.title }}</text></view
           >
           <view class="createTime">
-            <text> {{ item.time }} </text>
+            <text> {{ item.createTime }} </text>
           </view>
         </view>
       </view>
@@ -47,7 +47,7 @@ export default {
       this.seTenderDetails(item)
 
       uni.navigateTo({
-        url: '/pages/article/projectDetail',
+        url: '/pages/article/projectDetail?id='+item.id,
       })
     },
   },

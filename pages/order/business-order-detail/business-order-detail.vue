@@ -47,6 +47,7 @@ export default {
       let urlParams = getUrlParams(urlStr)
       this.orderCode = urlParams.code
     }
+    
   },
 
   /**

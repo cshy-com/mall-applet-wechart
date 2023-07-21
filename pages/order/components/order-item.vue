@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-07-07 09:46:51
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-07 10:07:47
+ * @LastEditTime: 2023-07-20 15:59:27
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\components\order-item.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -31,6 +31,11 @@
               <view class="price-nums">
                 <text class="prodcount"
                   >到店时间：{{ orderInfo.estimatedTime }}</text
+                >
+              </view>
+              <view class="price-nums">
+                <text class="prodcount"
+                  >是否需要专人到场：{{ orderInfo.needCompanion==1?'是':'否' }}</text
                 >
               </view>
             </view>
@@ -115,7 +120,7 @@ export default {
     font-size: 28rpx;
     width: 100%;
     position: relative;
-    height: 160rpx;
+    height: auto;
     -webkit-flex: 1;
     -ms-flex: 1;
     -webkit-box-flex: 1;

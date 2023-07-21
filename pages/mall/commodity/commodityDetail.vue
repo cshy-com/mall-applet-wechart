@@ -107,10 +107,11 @@
       <!--评价  -->
       <view class="comment-box">
         <view class="tab-header">
-          <text> 评价(10)</text>
+          <text> 评价({{ commentTotal }})</text>
         </view>
-        <comment></comment
-      ></view>
+        <comment :commentData="commentData"></comment>
+        <view @click="goCommentMore" class="comment-more" v-if="commentTotal>5">查看更多</view>
+      </view>
       <!-- 推荐 -->
       <view class="article-grid-box">
         <view class="tab-header">
@@ -120,7 +121,11 @@
       ></view>
       <commFootBtn :tel="tel" :shopId="shopId"></commFootBtn>
     </view>
-    <previewImage @cancel="previewVisible=false" :visible="previewVisible" :tempUrl="swiperList[previewIndex].url" ></previewImage>
+    <previewImage
+      @cancel="previewVisible = false"
+      :visible="previewVisible"
+      :tempUrl="swiperList[previewIndex].url"
+    ></previewImage>
   </view>
 </template>
 
@@ -132,13 +137,14 @@ import commFootBtn from './../components/commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import { getCommodityDetail, getCommodityPage } from '@/api/shop.js'
-import previewImage from "@/components/previewImage"
+import previewImage from '@/components/previewImage'
 export default {
   components: {
     articleGrid,
     comment,
     commodity,
-    commFootBtn,previewImage
+    commFootBtn,
+    previewImage,
   },
   data() {
     return {
@@ -166,8 +172,10 @@ export default {
       commodityInfo: null,
       size: 10,
       current: 1,
-      previewIndex:0,
-      previewVisible:false
+      previewIndex: 0,
+      previewVisible: false,
+      commentData: [],
+      commentTotal: 0,
     }
   },
   computed: {
@@ -178,6 +186,7 @@ export default {
     this.shopId = option.shopId
     this.commodityId = option.Id
     this.getCommodityInfo()
+    this.getCommentsList()
     this.getCommodityRecommend()
   },
   onReachBottom() {
@@ -186,11 +195,23 @@ export default {
   },
   methods: {
     ...mapMutations([['setCommodityInfo']]),
-    clickSwiper(index){
-      this.previewIndex=index
-      this.previewVisible=true
-     
-
+    goCommentMore() {
+      uni.navigateTo({
+        url: '/pages/mall/comment/comment?shopId=' + this.shopId,
+      })
+    },
+    async getCommentsList() {
+      let res = await shopCommentsPage({
+        shopId: this.shopId,
+        current: 1,
+        size: 5,
+      })
+      this.commentData = res.data
+      this.commentTotal = res.total
+    },
+    clickSwiper(index) {
+      this.previewIndex = index
+      this.previewVisible = true
     },
     // 查看推荐商品
     async getCommodityRecommend() {
@@ -209,10 +230,10 @@ export default {
       }
     },
 
-    async getCommodityInfo() {  
+    async getCommodityInfo() {
       uni.showLoading({
-      title: '加载中',
-    })
+        title: '加载中',
+      })
       try {
         let res = await getCommodityDetail(this.commodityId)
         if (res.data.images && res.data.images.length > 0) {
@@ -226,7 +247,7 @@ export default {
         this.commodityInfo = res.data
       } catch (e) {
         console.log(e)
-      }finally{
+      } finally {
         uni.hideLoading()
       }
     },
@@ -386,6 +407,11 @@ export default {
   margin: 20rpx 20rpx 20rpx 20rpx;
   line-height: 30rpx;
   font-weight: 600;
+}
+.comment-more {
+  background: #fff;
+  text-align: center;
+  padding: 20rpx;
 }
 .notes-block {
   .notes-title {

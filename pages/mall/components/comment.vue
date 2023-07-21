@@ -1,18 +1,31 @@
 <template>
   <view class="comment-box">
-    <view class="comment" v-for="(res, index) in commentList" :key="res.id">
+    <view class="empty" v-if="!commentData || commentData.length == 0">
+          <u-empty
+            mode="data"
+            marginTop="120"
+            iconSize="140"
+            textSize="32"
+            :text="'暂无数据'"
+          >
+          </u-empty>
+        </view>
+<view v-else>
+    <view class="comment" v-for="(item, index) in commentData" :key="res.id">
       <view class="left"
         ><image
           :lazy-load="true"
           :lazy-load-margin="0"
-          :src="res.url"
+          :src="
+            item.baseSysUserVo.avatar || require('@/static/img/icon/head04.png')
+          "
           mode="aspectFill"
         ></image
       ></view>
       <view class="right">
         <view class="top">
-          <view class="name">{{ res.name }}</view>
-          <view class="like" :class="{ highlight: res.isLike }">
+          <view class="name">{{ item.baseSysUserVo.nickName }}</view>
+          <!-- <view class="like" :class="{ highlight: res.isLike }">
             <view class="num">{{ res.likeNum }}</view>
             <u-icon
               v-if="!res.isLike"
@@ -27,10 +40,21 @@
               :size="30"
               @click="getLike(index)"
             ></u-icon>
-          </view>
+          </view> -->
         </view>
-        <view class="content">{{ res.contentText }}</view>
-        <view class="reply-box">
+        <view class="content">{{ item.comment }}</view>
+        <view class="comment-img-box" v-if="item.picturePathList">
+          <view class="comment-img-item" v-for="img in item.picturePathList">
+            <image
+              
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :src="img||require('@/static/img/test5.png')"
+              mode="aspectFill"
+            ></image
+          ></view>
+        </view>
+        <!-- <view class="reply-box">
           <view class="item" v-for="item in res.replyList" :key="item.index">
             <view class="username">{{ item.name }}</view>
             <view class="text">{{ item.contentStr }}</view>
@@ -43,13 +67,13 @@
             共{{ res.allReply }}条回复
             <u-icon class="more" name="arrow-right" :size="26"></u-icon>
           </view>
-        </view>
+        </view> -->
         <view class="bottom">
-          {{ res.date }}
-          <view class="reply">回复</view>
+          {{ item.createTime }}
+          <!-- <view class="reply">回复</view> -->
         </view>
       </view>
-    </view>
+    </view></view>
   </view>
 </template>
 
@@ -122,6 +146,12 @@ export default {
       ],
     }
   },
+  props: {
+    commentData: {
+      type: Array,
+      default: () => [],
+    },
+  },
   onLoad() {
     this.getComment()
   },
@@ -153,6 +183,7 @@ export default {
   margin: 20rpx;
   padding: 20rpx;
   border-radius: 15rpx;
+  margin-bottom: 0;
 }
 .comment {
   display: flex;
@@ -195,6 +226,20 @@ export default {
       }
     }
     .content {
+    }
+    .comment-img-box{display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+      .comment-img-item{
+        width: 200rpx;
+    height: 200rpx;
+    margin-right: 20rpx;
+    margin-bottom: 20rpx;
+    image{
+      width: 100%;
+      height: 100%;
+    }
+      }
     }
     .reply-box {
       background-color: rgb(242, 242, 242);

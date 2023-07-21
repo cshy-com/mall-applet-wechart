@@ -28,7 +28,7 @@
               src="/static/img/cate/tag.png"
             ></image>
           </view>
-          <view class="star" @click="getCollect" v-if="user.userType==1">
+          <view class="star" @click="getCollect" v-if="user.userType == 1">
             <u-icon
               :name="isCollect ? 'star-fill' : 'star'"
               :color="isCollect ? '#ff6a13' : '#333'"
@@ -117,10 +117,11 @@
       <!--评价  -->
       <view class="comment-box">
         <view class="tab-header">
-          <text> 评价(10)</text>
+          <text> 评价({{ commentTotal }})</text>
         </view>
-        <comment></comment
-      ></view>
+        <comment :commentData="commentData"></comment>
+        <view @click="goCommentMore" class="comment-more" v-if="commentTotal>5">查看更多</view>
+      </view>
       <!-- 推荐 -->
       <view class="article-grid-box">
         <view class="tab-header">
@@ -133,7 +134,11 @@
       <!-- 底部操作按钮 -->
       <commFootBtn :tel="shopInfo.tel" :shopId="shopId"></commFootBtn>
     </view>
-    <previewImage @cancel="previewVisible=false" :visible="previewVisible" :tempUrl="swiperList[previewIndex].url" ></previewImage>
+    <previewImage
+      @cancel="previewVisible = false"
+      :visible="previewVisible"
+      :tempUrl="swiperList[previewIndex].url"
+    ></previewImage>
   </view>
 </template>
 
@@ -149,15 +154,17 @@ import {
   mallShopCollectDel,
   getCommodityList,
   getCommodityPage,
+  shopCommentsPage,
 } from '@/api/shop.js'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import previewImage from "@/components/previewImage"
+import previewImage from '@/components/previewImage'
 export default {
   components: {
     articleGrid,
     comment,
     commodity,
-    commFootBtn,previewImage
+    commFootBtn,
+    previewImage,
   },
   data() {
     return {
@@ -181,9 +188,11 @@ export default {
       isCollect: false, //是否已收藏
       current: 1,
       size: 10,
-      user:{},
-      previewIndex:0,
-      previewVisible:false
+      user: {},
+      previewIndex: 0,
+      previewVisible: false,
+      commentData: [],
+      commentTotal: 0,
     }
   },
   computed: {
@@ -191,8 +200,9 @@ export default {
   },
   onLoad(option) {
     this.shopId = option.id
-    this.user=uni.getStorageSync('user')
+    this.user = uni.getStorageSync('user')
     this.getShopDetail()
+    this.getCommentsList()
     this.getCommodityList()
     this.getCommodityRecommend()
   },
@@ -205,11 +215,14 @@ export default {
   },
   methods: {
     ...mapMutations(['setCommodityInfo', 'setShopInfo']),
-    clickSwiper(index){
-      this.previewIndex=index
-      this.previewVisible=true
-     
-
+    goCommentMore() {
+      uni.navigateTo({
+        url: '/pages/mall/comment/comment?shopId=' + this.shopId,
+      })
+    },
+    clickSwiper(index) {
+      this.previewIndex = index
+      this.previewVisible = true
     },
     async getCollect() {
       let http = this.isCollect ? mallShopCollectDel : mallShopCollectAdd
@@ -221,10 +234,19 @@ export default {
         console.log(e)
       }
     },
+    async getCommentsList() {
+      let res = await shopCommentsPage({
+        shopId: this.shopId,
+        current: 1,
+        size: 5,
+      })
+      this.commentData = res.data
+      this.commentTotal = res.total
+    },
     async getShopDetail() {
       uni.showLoading({
-      title: '加载中',
-    })
+        title: '加载中',
+      })
       try {
         let res = await mallShopById(this.shopId)
         this.setShopInfo(res.data)
@@ -239,7 +261,7 @@ export default {
         }
       } catch (e) {
         console.log(e)
-      } finally{
+      } finally {
         uni.hideLoading()
       }
     },
@@ -468,6 +490,11 @@ export default {
   margin: 20rpx 20rpx 20rpx 20rpx;
   line-height: 30rpx;
   font-weight: 600;
+}
+.comment-more {
+  background: #fff;
+  text-align: center;
+  padding: 20rpx;
 }
 .star {
   margin-left: auto;

@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-07 10:24:00
+ * @LastEditTime: 2023-07-20 15:07:32
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -41,6 +41,7 @@
           <template v-slot:state>
             <view class="order-state">
               <text>{{
+                item.statusName||(
                 item.status == 20
                   ? '预约中'
                   : orderInfo.status == 10
@@ -49,7 +50,9 @@
                   ? '已到店'
                   : orderInfo.status == 0
                   ? '已完成'
-                  : '已取消'
+                  : orderInfo.status == 40
+                  ? '已评论'
+                  : '已取消')
               }}</text>
             </view>
           </template>
@@ -71,6 +74,15 @@
                   :data-ordernum="item.orderNumber"
                   hover-class="none"
                   >评价</text
+                >
+              </view>
+              <view class="btn" v-if="item.status == 40">
+                <text
+                  class="button"
+                  @click="createComment(item)"
+                  :data-ordernum="item.orderNumber"
+                  hover-class="none"
+                  >查看评价</text
                 >
               </view>
             </view></template
@@ -111,6 +123,10 @@ export default {
         {
           name: '已完成',
           id: 0,
+        },
+        {
+          name: '已评论',
+          id: 40,
         },
         {
           name: '已取消',
@@ -160,7 +176,13 @@ export default {
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {},
+  onShow: function () {
+    uni.$on('refresh',data=>{
+      if(data.refresh){
+        this.loadOrderData()
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -170,7 +192,9 @@ export default {
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {},
+  onUnload: function () {
+    uni.$off('refresh')
+  },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作

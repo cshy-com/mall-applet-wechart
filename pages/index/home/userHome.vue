@@ -2,62 +2,60 @@
   <!--index.wxml-->
   <user1 v-if="loading"></user1>
   <view v-else>
-  <view class="container">
-    <view class="container-top">
-      <view class="header-top"><text>私人银行服务平台</text></view>
-      <commSearch :placeholder="'输入关键字搜索'"></commSearch>
-      <view class="content">
-        <view class="swiper">
-          <u-swiper
-            :list="list3"
-            indicator
-            indicatorMode="line"
-            circular
-            height="200"
-          ></u-swiper>
+    <view class="container">
+      <view class="container-top">
+        <view class="header-top"><text>私人银行服务平台</text></view>
+        <commSearch :placeholder="'输入关键字搜索'"></commSearch>
+        <view class="content">
+          <view class="swiper">
+            <u-swiper
+              :list="list3"
+              indicator
+              indicatorMode="line"
+              circular
+              height="200"
+            ></u-swiper>
+          </view>
+          <cateGroup
+            :isSwiper="true"
+            :cateList="cateAll"
+            @CateEvent="toCouponCenter"
+          ></cateGroup>
         </view>
-        <cateGroup
-          :isSwiper="true"
-          :cateList="cateAll"
-          @CateEvent="toCouponCenter"
-        ></cateGroup>
       </view>
-    </view>
-    <view class="container-center">
-      <tabs
-        :list="statusList"
-        :selectIndex="selectClassIndex"
-        @changeIndex="changeIndex"
-      ></tabs>
-      <view class="home-content">
-        <!-- 推荐 -->
-        <view class="updata" v-if="selectClassIndex == 0">
-          <block>
-            <!-- 商城热卖 -->
-            <view>
-              <list :prods="prods" @eventParent="toProdPage"></list>
+      <view class="container-center">
+        <tabs
+          :list="statusList"
+          :selectIndex="selectClassIndex"
+          @changeIndex="changeIndex"
+        ></tabs>
+        <view class="home-content">
+          <!-- 推荐 -->
+          <view class="updata" v-if="selectClassIndex == 0">
+            <block>
+              <!-- 商城热卖 -->
+              <view>
+                <list :prods="prods" @eventParent="toProdPage"></list>
+              </view>
+            </block>
+          </view>
+          <view class="forum-content" v-if="selectClassIndex == 1">
+            <forum :list="list"></forum>
+          </view>
+          <view v-if="selectClassIndex == 2">
+            <recommendation></recommendation>
+          </view>
+          <view v-if="selectClassIndex == 3" class="project-box">
+            <projectList :list="projectDataList"></projectList>
+            <view class="btn">
+              <button @tap="goProjectList">查看更多</button>
             </view>
-          </block>
-        </view>
-        <view class="forum-content" v-if="selectClassIndex == 1">
-       
-            <forum :list="list" ></forum>
-         
-        </view>
-        <view v-if="selectClassIndex == 2">
-          <recommendation></recommendation>
-        </view>
-        <view v-if="selectClassIndex == 3" class="project-box">
-          <projectList :list="projectList"></projectList>
-          <view class="btn">
-            <button @tap="goProjectList">查看更多</button>
           </view>
         </view>
       </view>
+      <tab-bar :userIdentity="1" :selected="0"></tab-bar>
     </view>
-    <tab-bar :userIdentity="1" :selected="0"></tab-bar>
   </view>
-</view>
 </template>
 
 <script>
@@ -75,7 +73,8 @@ import forumData from '@/mock/index.js'
 import projectList from '@/components/projectList'
 import tabBar from '@/components/tab-bar.vue'
 import { getTotalPage } from '@/util/util'
-import user1 from "./user1.vue"
+import user1 from './user1.vue'
+import { projectPage } from '@/api/index'
 export default {
   data() {
     return {
@@ -123,7 +122,8 @@ export default {
       totalForum: 0,
       more: 'more',
       moreForum: 'more',
-      loading:false
+      loading: false,
+      projectDataList: [],
     }
   },
 
@@ -136,7 +136,7 @@ export default {
     recommendation,
     projectList,
     tabBar,
-    user1
+    user1,
   },
   props: {},
   computed: {
@@ -146,7 +146,6 @@ export default {
     },
   },
   created() {
-   
     uni.showLoading({
       title: '加载中',
     })
@@ -157,7 +156,7 @@ export default {
   onLoad() {},
   onReady() {},
   onShow() {
-    // this.loading=true 
+    // this.loading=true
     // setTimeout(()=>{
     //   this.loading=false
     // },1000)
@@ -187,6 +186,7 @@ export default {
           this.getForumList()
         }
         break
+     
       default:
         if (this.more == 'more') {
           this.current++
@@ -209,6 +209,9 @@ export default {
           this.currentForum = 1
           this.getForumList()
           break
+          case 3:
+        this.getProjectList()
+        break
         default:
           this.current = 1
           this.getCommodityRecommend()
@@ -246,6 +249,25 @@ export default {
         uni.hideLoading()
       }
     },
+
+    async getProjectList() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await projectPage({
+          current: 1,
+          size: 20,
+        })
+
+        this.projectDataList = res.data
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
+
     goProjectList() {
       uni.navigateTo({
         url: '/pages/article/projectList',

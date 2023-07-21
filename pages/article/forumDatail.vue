@@ -55,7 +55,7 @@
         </view>
       </view>
     </view>
-    <view class="fix-footer">
+    <!-- <view class="fix-footer">
       <view class="fix-content">
         <u-input
           placeholder="请输入内容"
@@ -66,7 +66,7 @@
           confirmType="send"
         ></u-input>
       </view>
-    </view>
+    </view> -->
   </view>
 </template>
 

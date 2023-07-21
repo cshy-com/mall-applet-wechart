@@ -3,13 +3,13 @@
     <view class="content-box">
       <view class="content-item">
         <view class="sub-title"
-          ><text>{{ tenderDetails.title }}</text></view
+          ><text>{{ dataInfo.title }}</text></view
         >
         <view class="createTime">
-          {{ tenderDetails.time }}
+          {{ dataInfo.createTime }}
         </view>
         <view class="content">
-          {{ tenderDetails.content }}
+          <rich-text :nodes="dataInfo.content"></rich-text>
         </view>
       </view>
     </view>
@@ -19,12 +19,16 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import { projectObj } from '@/api/index'
 export default {
   //import引入组件才能使用
   components: {},
   props: {},
   data() {
-    return {}
+    return {
+      projectId: null,
+      dataInfo: {},
+    }
   },
   // 计算属性
   computed: {
@@ -32,10 +36,28 @@ export default {
   },
   // 监听data中的数据变化
   watch: {},
-  onLoad: function () {},
+  onLoad(option) {
+    this.projectId = option.id
+    this.getDetail()
+  },
 
   // 方法集合
-  methods: {},
+  methods: {
+    async getDetail() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await projectObj(this.projectId)
+
+        this.dataInfo = res.data
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
+  },
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {},
   onShow() {},

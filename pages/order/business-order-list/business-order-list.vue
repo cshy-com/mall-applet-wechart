@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-07 16:40:11
+ * @LastEditTime: 2023-07-21 09:14:51
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -62,6 +62,14 @@
                   :data-ordernum="item.orderNumber"
                   hover-class="none"
                   >完成订单</text
+                >
+                <text
+                  class="button"
+                  v-if="item.status == 40"
+                  @click="createComment(item)"
+                  :data-ordernum="item.orderNumber"
+                  hover-class="none"
+                  >查看评价</text
                 >
               </view>
             </view>
@@ -182,6 +190,11 @@ export default {
    */
   onShareAppMessage: function () {},
   methods: {
+    createComment(e) {
+      uni.navigateTo({
+        url: '/pages/order/order-comment/order-comment-add?orderId=' + e.id,
+      })
+    },
     /**
      * 加载订单数据
      */

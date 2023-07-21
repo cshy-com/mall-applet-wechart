@@ -22,13 +22,13 @@
         ></u-image>
       </view>
       <!-- 商品信息 -->
-      <template  v-if="orderItemDtos">
-        
-      <orderItem :orderInfo="orderItemDtos" @toOrderDetailPage="toProdPage(orderItemDtos.shopId)">
-
-      </orderItem>
+      <template v-if="orderItemDtos">
+        <orderItem
+          :orderInfo="orderItemDtos"
+          @toOrderDetailPage="toProdPage(orderItemDtos.shopId)"
+        >
+        </orderItem>
       </template>
-      
 
       <!-- 订单信息 -->
       <view class="order-msg">
@@ -56,6 +56,10 @@
       <view class="order-detail-footer" v-if="orderItemDtos.status == 0">
         <text class="dele-order" @tap="createComment">评价</text>
       </view>
+      <view class="order-detail-footer" v-if="orderItemDtos.status == 40">
+        <text class="dele-order" @tap="createComment">查看评价</text>
+      </view>
+     
     </view>
   </view>
 </template>
@@ -115,6 +119,11 @@ export default {
           id: 0,
           desc: '',
         },
+        {
+          title: '已评论',
+          id: 40,
+          desc: '',
+        },
       ],
       stepsListError: [
         {
@@ -133,7 +142,7 @@ export default {
     }
   },
 
-  components: {orderItem},
+  components: { orderItem },
   props: {},
 
   /**
@@ -153,7 +162,13 @@ export default {
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {},
+  onShow: function () {
+    uni.$on('refresh', (data) => {
+      if (data.refresh) {
+        this.loadOrderDetail()
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面隐藏
@@ -163,7 +178,9 @@ export default {
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {},
+  onUnload: function () {
+    uni.$off('refresh')
+  },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
@@ -195,7 +212,9 @@ export default {
     },
     createComment(e) {
       uni.navigateTo({
-        url: '/pages/order/order-comment/order-comment-add?orderId=' + this.orderId,
+        url:
+          '/pages/order/order-comment/order-comment-add?orderId=' +
+          this.orderId,
       })
     },
     /**
@@ -237,7 +256,6 @@ export default {
         },
       })
     },
-    
   },
 }
 </script>

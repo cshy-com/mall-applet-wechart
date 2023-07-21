@@ -47,6 +47,13 @@
       >
         <text class="dele-order">到店核销</text>
       </view>
+      <view
+        class="order-detail-footer"
+        v-if="orderItemDtos.status == 40"
+        @tap="createComment"
+      >
+        <text class="dele-order">查看评价</text>
+      </view>
     </view>
   </view>
 </template>
@@ -180,6 +187,11 @@ export default {
    */
   onShareAppMessage: function () {},
   methods: {
+    createComment() {
+      uni.navigateTo({
+        url: '/pages/order/order-comment/order-comment-add?orderId=' + this.orderId,
+      })
+    },
     //确认到店核销
     async verificationUpon() {
       try {

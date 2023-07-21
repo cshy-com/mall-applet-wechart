@@ -35,6 +35,11 @@
                   >到店时间：{{ orderInfo.estimatedTime }}</text
                 >
               </view>
+              <view class="price-nums">
+                <text class="prodcount"
+                  >是否需要专人到场：{{ orderInfo.needCompanion==1?'是':'否' }}</text
+                >
+              </view>
             </view>
           </view>
         </view>
@@ -111,7 +116,7 @@ export default {
     font-size: 28rpx;
     width: 100%;
     position: relative;
-    height: 160rpx;
+    height: auto;
     -webkit-flex: 1;
     -ms-flex: 1;
     -webkit-box-flex: 1;

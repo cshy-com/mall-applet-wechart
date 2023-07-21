@@ -2,12 +2,11 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:40
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-07 15:08:07
+ * @LastEditTime: 2023-07-20 14:08:38
  * @FilePath: \mall-applet\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { postPayload, postFormdata, putPayload, deleteFormdata, getString } from '@/util/api.js'
-import { data } from 'uview-ui/libs/mixin/mixin'
+import { postPayload, postFormdata, putPayload, deleteFormdata, getString, getPayload } from '@/util/api.js'
 export function pageHome(data) {
     return getString('/index', data)
 }
@@ -80,10 +79,14 @@ export function customerSuggestObj(data) {
 }
 
 // 项目列表
-export function projectList(data) {
-    return postPayload("", data)
+export function projectPage(data) {
+    return postPayload("/projects/page", data)
 }
 //项目详情
 export function projectObj(data) {
-    return getString("" + data)
+    return getString("/projects/obj/" + data)
+}
+// 查询字典数据列表
+export function systemDictList(data) {
+    return getPayload('/system/dict/data/list/', data)
 }

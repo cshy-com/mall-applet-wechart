@@ -62,7 +62,7 @@
           placeholder="请输入"
         ></u-textarea>
       </u-form-item>
-      <!-- <u-form-item
+      <u-form-item
         label="是否需要专人到场"
         prop="remark"
         borderBottom
@@ -70,7 +70,7 @@
         labelWidth="180"
         >
       <u-radio-group
-        v-model="radiovalue1"
+        v-model="orderInfo.needCompanion"
         placement="row"
         @change="groupChange"
         
@@ -81,7 +81,7 @@
         activeColor="#000"
         labelSize="30"
           :customStyle="{ marginBottom: '8px' }"
-          v-for="(item, index) in radiolist1"
+          v-for="(item, index) in needCompanionOptions"
           :key="index"
           :label="item.name"
           :name="item.id"
@@ -89,7 +89,7 @@
         >
         </u-radio>
       </u-radio-group>
-      </u-form-item> -->
+      </u-form-item>
 
     </u-form>
 
@@ -113,6 +113,7 @@ export default {
         time: Number(new Date()),
         number: 1,
         remark: null,
+        needCompanion:1
       },
       show: false,
       minDate: Number(new Date().getTime()),
@@ -133,16 +134,16 @@ export default {
           trigger: ['blur', 'change'],
         },
       },
-      radiovalue1: 0,
-      radiolist1: [
+   
+      needCompanionOptions: [
         {
           name: '需要',
-          id: 0,
+          id: 1,
           disabled: false,
         },
         {
           name: '不需要',
-          id: 1,
+          id: 0,
           disabled: false,
         },
       ],
@@ -191,6 +192,7 @@ export default {
           numberOfPeople: this.orderInfo.number,
           remarks: this.orderInfo.remark,
           shopId: this.shopId,
+          needCompanion:this.orderInfo.needCompanion
         })
         uni.$u.toast('已预约，待客服确认')
         setTimeout(() => {
