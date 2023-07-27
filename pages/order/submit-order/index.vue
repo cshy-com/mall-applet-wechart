@@ -195,9 +195,9 @@ export default {
           needCompanion:this.orderInfo.needCompanion
         })
         uni.$u.toast('已预约，待客服确认')
-        setTimeout(() => {
+        // setTimeout(() => {
           uni.navigateBack()
-        }, 3000)
+        // }, 3000)
       } catch (e) {
         console.log(e)
       }

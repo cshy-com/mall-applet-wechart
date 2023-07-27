@@ -1,7 +1,6 @@
 <template>
-  <!--index.wxml-->
-  <user1 v-if="loading"></user1>
-  <view v-else>
+
+  <view>
     <view class="container">
       <view class="container-top">
         <view class="header-top"><text>私人银行服务平台</text></view>
@@ -72,11 +71,9 @@ import { ForumPage } from '@/api/index'
 import cateGroup from '@/components/cateGroup'
 import forum from '@/components/forum'
 import recommendation from './../components/recommendation'
-import forumData from '@/mock/index.js'
 import projectList from '@/components/projectList'
 import tabBar from '@/components/tab-bar.vue'
 import { getTotalPage } from '@/util/util'
-import user1 from './user1.vue'
 import { projectPage } from '@/api/index'
 export default {
   data() {
@@ -139,7 +136,6 @@ export default {
     recommendation,
     projectList,
     tabBar,
-    user1,
   },
   props: {},
   computed: {
@@ -159,10 +155,7 @@ export default {
   onLoad() {},
   onReady() {},
   onShow() {
-    // this.loading=true
-    // setTimeout(()=>{
-    //   this.loading=false
-    // },1000)
+  
   },
 
   options: {
@@ -189,7 +182,7 @@ export default {
           this.getForumList()
         }
         break
-     
+
       default:
         if (this.more == 'more') {
           this.current++
@@ -212,9 +205,9 @@ export default {
           this.currentForum = 1
           this.getForumList()
           break
-          case 3:
-        this.getProjectList()
-        break
+        case 3:
+          this.getProjectList()
+          break
         default:
           this.current = 1
           this.getCommodityRecommend()
@@ -276,7 +269,7 @@ export default {
         url: '/pages/article/projectList',
       })
     },
-    goForumList(){
+    goForumList() {
       uni.navigateTo({
         url: '/pages/article/forumPage',
       })
@@ -348,6 +341,7 @@ export default {
   },
 }
 </script>
+
 <style lang="scss" scoped>
 @import './index.scss';
 .swiper {
@@ -361,5 +355,10 @@ export default {
     margin: 0 auto;
     margin-top: 40rpx;
   }
+}
+</style>
+<style>
+page {
+  background: #000;
 }
 </style>

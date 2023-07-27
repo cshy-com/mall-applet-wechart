@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:40
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-20 14:08:38
+ * @LastEditTime: 2023-07-24 09:20:32
  * @FilePath: \mall-applet\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -66,16 +66,16 @@ export function forumView(data) {
     return getString('/mallForum/mallPageView/' + data)
 }
 //客户建议列表
-export function customerSuggestList(data) {
-    return postPayload("", data)
+export function advicesList(data) {
+    return postPayload("/advices/myList", data)
 }
 //新增客户建议
-export function customerSuggestAdd(data) {
-    return postPayload("", data)
+export function advicesAdd(data) {
+    return postPayload("/advices/add", data)
 }
 //客户建议详情
-export function customerSuggestObj(data) {
-    return getString("" + data)
+export function advicesInfo(data) {
+    return getString("/advices/details", data)
 }
 
 // 项目列表

@@ -4,16 +4,22 @@
       <view class="content-item">
         <view class="content-item-left">
           <view class="sub-title"
-            ><text>{{ opinionInfo.recommendation }}</text></view
+            ><text>问题和建议：{{ opinionInfo.title }}</text></view
+          >
+          <view class=""
+            ><text>建议内容：{{ opinionInfo.content }}</text></view
+          >
+          <view class=""
+            ><text>联系方式：{{ opinionInfo.contactInfo||'' }}</text></view
           >
           <view class="content-img">
             <image
-              v-for="img in opinionInfo.fileList"
+              v-for="img in opinionInfo.picturePathList"
               :key="img.id"
               :mode="'aspectFill'"
               :lazy-load="true"
               :lazy-load-margin="0"
-              :src="img.url"
+              :src="img"
             ></image>
           </view>
           <view class="createTime">
@@ -21,7 +27,7 @@
           </view>
           <view v-for="rep in opinionInfo.replyList" :key="rep.id">
             <view class="sub-title"
-              ><text>回复： {{ rep.title }}</text></view
+              ><text>回复： {{ rep.content }}</text></view
             >
 
             <view class="createTime">
@@ -37,23 +43,40 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import { advicesInfo } from '@/api/index'
 export default {
   //import引入组件才能使用
   components: {},
   props: {},
   data() {
-    return {}
+    return { opinionId: null, opinionInfo: {} }
   },
   // 计算属性
-  computed: {
-    ...mapGetters(['opinionInfo']),
-  },
+  computed: {},
   // 监听data中的数据变化
   watch: {},
-  onLoad: function () {},
+  onLoad(option) {
+    this.opinionId = option.id
+    this.getDetail()
+  },
 
   // 方法集合
-  methods: {},
+  methods: {
+    async getDetail() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await advicesInfo({ adviceId: this.opinionId })
+
+        this.opinionInfo = res.data
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
+  },
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {},
   onShow() {},

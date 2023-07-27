@@ -4,12 +4,15 @@
       class="content-box"
       v-for="item in opinionList"
       :key="item.id"
-      @tap="($event) => goDetail(item)"
+      @click="($event) => goDetail(item)"
     >
       <view class="content-item">
         <view class="content-item-left">
           <view class="sub-title over-ellipsis"
-            ><text>{{ item.recommendation }}</text></view
+            ><text v-if="item.replied == 1" class="status1">已回复</text>
+            <text v-if="item.replied == 0" class="status1 status2">未回复</text>
+
+            <text>{{ item.title }}</text></view
           >
           <view class="createTime">
             <text> 发布时间： {{ item.createTime }} </text>
@@ -23,29 +26,71 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import { advicesList } from '@/api/index'
+import { getTotalPage } from '@/util/util'
 export default {
   //import引入组件才能使用
   components: {},
   props: {},
   data() {
-    return {}
+    return { opinionList: [], more: 'noMore', size: 10, current: 1, total: 0 }
   },
   // 计算属性
-  computed: {
-    ...mapGetters(['opinionList']),
-  },
+  computed: {},
   // 监听data中的数据变化
   watch: {},
-  onLoad: function () {},
+  onPullDownRefresh() {
+    this.current = 1
+    this.getPageList()
+    setTimeout(function () {
+      uni.stopPullDownRefresh()
+    }, 1000)
+  },
+  // 上拉触底事件
+  onReachBottom: function () {
+    if (this.more == 'more') {
+      this.current++
+      this.getPageList()
+    }
+  },
+  onLoad: function () {
+    this.getPageList()
+  },
 
   // 方法集合
   methods: {
     ...mapMutations(['setOpinionInfo']),
-    goDetail(item) {
-      this.setOpinionInfo(item)
+    async getPageList() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await advicesList({
+          current: this.current,
+          size: this.size,
+        })
+        this.total = res.total
+        let totalPage = getTotalPage(this.total, this.size)
+        if (this.current == 1) {
+          this.opinionList = res.data.records
+        } else {
+          this.opinionList = [...this.opinionList, ...res.data.records]
+        }
 
+        if (totalPage > this.current) {
+          this.more = 'more'
+        } else {
+          this.more = 'noMore'
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
+    goDetail(item) {
       uni.navigateTo({
-        url: '/pages/subPack/recommendation/recommendationDetail',
+        url: '/pages/article/recommendationDetail?id=' + item.id,
       })
     },
   },
@@ -84,6 +129,16 @@ export default {
         line-height: 36rpx;
         margin-bottom: 20rpx;
         max-height: 72rpx;
+      }
+      .status1 {
+        background: #409eff;
+        padding: 5rpx 15rpx;
+        border-radius: 15rpx;
+        margin-right: 20rpx;
+        color: #fff;
+      }
+      .status2 {
+        background: #4caf50;
       }
       .over-ellipsis {
         overflow: hidden;

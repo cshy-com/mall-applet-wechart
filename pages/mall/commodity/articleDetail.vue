@@ -76,13 +76,13 @@
 
 <script>
 import comment from './../components/comment.vue'
-import articleGrid from './../components/articleGrid.vue'
+// import articleGrid from './../components/articleGrid.vue'
 import commodity from './../components/commodity.vue'
 import dataArr from './../store/index.js'
 
 export default {
   components: {
-    articleGrid,
+    // articleGrid,
     comment,
     commodity,
   },

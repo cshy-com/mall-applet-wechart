@@ -131,7 +131,7 @@
 
 <script>
 import comment from './../components/comment.vue'
-import articleGrid from './../components/articleGrid.vue'
+// import articleGrid from './../components/articleGrid.vue'
 import commodity from './../components/commodity.vue'
 import commFootBtn from './../components/commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
@@ -140,7 +140,7 @@ import { getCommodityDetail, getCommodityPage } from '@/api/shop.js'
 import previewImage from '@/components/previewImage'
 export default {
   components: {
-    articleGrid,
+    // articleGrid,
     comment,
     commodity,
     commFootBtn,

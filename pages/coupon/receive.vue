@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-25 11:13:04
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-19 11:09:21
+ * @LastEditTime: 2023-07-21 11:47:06
  * @FilePath: \mall-applet\pages\coupon\receive.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -93,6 +93,11 @@ export default {
     getPhoneNumber(e) {
       wxLogin(e.detail.code).then((res) => {
         if (res && res.code == 0) {
+          // 如果已经有用户登录 当前用户不同，清空搜索历史
+          if(this.userInfo&&(this.userInfo!=res.data.userId)){
+            uni.removeStorageSync('recentSearch')
+          }
+   
           setAuthorization(res.data.token)
           this.setUserInfo(res.data)
           uni.setStorageSync('user', res.data)
