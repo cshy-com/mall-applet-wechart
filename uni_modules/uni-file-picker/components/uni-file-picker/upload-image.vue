@@ -160,7 +160,7 @@
 
 				uni.previewImage({
 					urls: urls,
-					current: index
+					current: index,loop:true,
 				});
 			},
 			value2px(value) {

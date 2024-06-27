@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:41
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-29 17:02:57
+ * @LastEditTime: 2023-08-09 09:39:19
  * @FilePath: \mall-applet\main.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,6 +20,10 @@ Vue.prototype.$fileUrl = comUtils.fileUrl
 console.log('comUtils.fileUrl' + comUtils.fileUrl, comUtils)
 import nodata from './components/nodata.vue';
 Vue.component('nodata', nodata);
+import noMore from './components/noMore.vue';
+Vue.component('noMore', noMore);
+import defNav from "./components/defNav.vue"
+Vue.component('defNav', defNav)
 import store from './store/index.js'
 
 Vue.config.productionTip = false
@@ -33,6 +37,13 @@ import uView from 'uview-ui'
 Vue.use(uView)
     // 如此配置即可
 uni.$u.config.unit = 'rpx'
+Number.prototype.az = function(n = 2) {
+    let s = "";
+    for (let i = 1; i < n; i++) {
+        s += '0';
+    }
+    return (s + this).slice(-1 * n);
+}
 Vue.mixin({
     methods: {
         setData: function(obj) {

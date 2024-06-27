@@ -38,7 +38,8 @@
             "style": {
                 "navigationBarTitleText": "个人中心",
                 "navigationBarBackgroundColor": "#FFFFFF",
-                "enablePullDownRefresh": true
+                "enablePullDownRefresh": true,
+                "navigationStyle": "custom"
             }
         },
 
@@ -47,15 +48,8 @@
             "style": {
                 "navigationBarTitleText": "收藏",
                 "navigationBarBackgroundColor": "#FFFFFF",
-                "enablePullDownRefresh": true
-            }
-        },
-        {
-            "path": "pages/index/categroy/index",
-            "style": {
-                "navigationBarTitleText": "分类",
-                "navigationBarBackgroundColor": "#FFFFFF",
-                "enablePullDownRefresh": true
+                "enablePullDownRefresh": true,
+                "navigationStyle": "custom"
             }
         }
 
@@ -77,29 +71,36 @@
                     }
                 },
                 {
-                    "path": "cart/cart",
-                    "style": {
-                        "navigationBarTitleText": "购物车",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                }, {
                     "path": "commodity/commodityDetail",
                     "style": {
                         "navigationBarTitleText": "商品详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                }, {
-                    "path": "search-page/search-page",
-                    "style": {
-                        "navigationBarTitleText": "搜索",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 },
+                {
+                    "path": "commodity/commodityIllustrate",
+                    "style": {
+                        "navigationBarTitleText": "购买须知",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
+                    }
+                },
+                {
+                    "path": "search-page/search-page",
+                    "style": {
+                        "navigationBarTitleText": "搜索店铺",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
+                    }
+                },
+
                 {
                     "path": "search-prod/search-prod",
                     "style": {
                         "navigationBarTitleText": "搜索",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 },
 
@@ -109,7 +110,8 @@
                     "path": "store/storeDetails",
                     "style": {
                         "navigationBarTitleText": "店铺详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 }, {
                     "path": "store/storeList",
@@ -127,13 +129,6 @@
 
                         "enablePullDownRefresh": true
                     }
-                },
-                {
-                    "path": "commodity/articleDetail",
-                    "style": {
-                        "navigationBarTitleText": "文章详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
                 }
 
 
@@ -147,27 +142,17 @@
                     "path": "submit-order/index",
                     "style": {
                         "navigationBarTitleText": "平台预定",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 },
                 {
-                    "path": "editAddress/editAddress",
-                    "style": {
-                        "navigationBarTitleText": "地址信息",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                }, {
-                    "path": "delivery-address/delivery-address",
-                    "style": {
-                        "navigationBarTitleText": "收货地址",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                }, {
                     "path": "order-detail/order-detail",
                     "style": {
                         "navigationBarTitleText": "订单详情",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
                 },
                 {
@@ -175,14 +160,16 @@
                     "style": {
                         "navigationBarTitleText": "订单列表",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
                 }, {
                     "path": "business-order-detail/business-order-detail",
                     "style": {
                         "navigationBarTitleText": "订单详情",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
                 },
                 {
@@ -190,7 +177,8 @@
                     "style": {
                         "navigationBarTitleText": "订单详情",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
                 },
                 {
@@ -198,7 +186,8 @@
                     "style": {
                         "navigationBarTitleText": "订单列表",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
                 },
                 {
@@ -212,7 +201,16 @@
                     "path": "order-comment/order-comment-add",
                     "style": {
                         "navigationBarTitleText": "订单评论",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
+                    }
+                },
+                {
+                    "path": "orderPay",
+                    "style": {
+                        "navigationBarTitleText": "支付",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 }
 
@@ -237,10 +235,13 @@
                     }
                 },
                 {
-                    "path": "agreement",
+                    "path": "login2",
                     "style": {
-                        "navigationBarTitleText": "协议",
+                        "navigationBarTitleText": "登录",
                         "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom",
+
+                        "disableSwipeBack": true,
                         "app-plus": {
                             "bounce": "vertical",
                             "titleNView": {
@@ -250,10 +251,11 @@
                     }
                 },
                 {
-                    "path": "register",
+                    "path": "agreement",
                     "style": {
-                        "navigationBarTitleText": "注册",
+                        "navigationBarTitleText": "协议",
                         "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom",
                         "app-plus": {
                             "bounce": "vertical",
                             "titleNView": {
@@ -265,33 +267,14 @@
             ]
         }, {
             "root": "pages/mine",
-            "pages": [{
-                    "path": "personalData",
-                    "style": {
-                        "navigationBarTitleText": "个人中心",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                },
+            "pages": [
 
-                {
-                    "path": "helpCenter",
-                    "style": {
-                        "navigationBarTitleText": "帮助中心",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                },
-                {
-                    "path": "about",
-                    "style": {
-                        "navigationBarTitleText": "关于我们",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-                    }
-                },
                 {
                     "path": "updateUserInfo",
                     "style": {
                         "navigationBarTitleText": "修改信息",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 }
 
@@ -316,37 +299,53 @@
                         }
                     }
                 },
-                {
-                    "path": "integralListReceive",
-                    "style": {
-                        "navigationBarTitleText": "积分详情",
-                        "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
-                    }
 
-                },
                 {
                     "path": "integralList",
                     "style": {
                         "navigationBarTitleText": "积分收支",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
 
-                }, {
-                    "path": "integralDetail",
+                },
+                {
+                    "path": "card",
                     "style": {
-                        "navigationBarTitleText": "积分详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarTitleText": "卡券专区",
+                        "navigationBarBackgroundColor": "#FFFFFF",
 
+                        "navigationStyle": "custom"
                     }
 
-                }, {
+                },
+                {
+                    "path": "plan",
+                    "style": {
+                        "navigationBarTitleText": "客户营销活动",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+
+                        "navigationStyle": "custom"
+                    }
+
+                },
+                {
+                    "path": "planDetail",
+                    "style": {
+                        "navigationBarTitleText": "客户营销活动详情",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+
+                        "navigationStyle": "custom"
+                    }
+
+                },
+                {
                     "path": "paymentCode",
                     "style": {
                         "navigationBarTitleText": "扫码支付",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
 
                 },
@@ -354,8 +353,8 @@
                     "path": "shopCode",
                     "style": {
                         "navigationBarTitleText": "收款码",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
 
                 },
@@ -363,7 +362,18 @@
                     "path": "transferAccounts",
                     "style": {
                         "navigationBarTitleText": "积分转赠",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
+
+                    }
+
+                },
+                {
+                    "path": "transferQrcode",
+                    "style": {
+                        "navigationBarTitleText": "积分转赠二维码",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
 
                     }
 
@@ -372,12 +382,20 @@
                     "path": "scanCodeResult",
                     "style": {
                         "navigationBarTitleText": "支付结果",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
+                    }
 
+                },
+                {
+                    "path": "transferScanCode",
+                    "style": {
+                        "navigationBarTitleText": "积分转增扫码结果",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
 
                 }
-
 
 
             ]
@@ -388,33 +406,46 @@
                     "style": {
                         "navigationBarTitleText": "我的论坛",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
-
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
 
                 },
+
                 {
-                    "path": "forumPage",
+                    "path": "forumDraft",
                     "style": {
-                        "navigationBarTitleText": "论坛",
+                        "navigationBarTitleText": "论坛草稿",
                         "navigationBarBackgroundColor": "#FFFFFF",
-                        "enablePullDownRefresh": true
-
+                        "enablePullDownRefresh": true,
+                        "navigationStyle": "custom"
                     }
 
                 },
+
                 {
                     "path": "forumDatail",
                     "style": {
                         "navigationBarTitleText": "详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
                 }, {
                     "path": "forumAdd",
                     "style": {
                         "navigationBarTitleText": "发布",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
+                    }
 
+                },
+                {
+                    "path": "forumCommentsPage",
+                    "style": {
+                        "navigationBarTitleText": "论坛评论",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom",
+                        "enablePullDownRefresh": true
                     }
 
                 },
@@ -422,8 +453,17 @@
                     "path": "recommendationList",
                     "style": {
                         "navigationBarTitleText": "我的历史建议",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
 
+                    }
+
+                }, {
+                    "path": "recommendationAdd",
+                    "style": {
+                        "navigationBarTitleText": "产品建议",
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
 
                 },
@@ -431,26 +471,29 @@
                     "path": "recommendationDetail",
                     "style": {
                         "navigationBarTitleText": "建议详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
 
                 },
+
                 {
                     "path": "projectList",
                     "style": {
                         "navigationBarTitleText": "项目列表",
-                        "navigationBarBackgroundColor": "#FFFFFF"
+                        "navigationBarBackgroundColor": "#FFFFFF",
 
+                        "navigationStyle": "custom"
                     }
 
                 },
+
                 {
                     "path": "projectDetail",
                     "style": {
                         "navigationBarTitleText": "项目详情",
-                        "navigationBarBackgroundColor": "#FFFFFF"
-
+                        "navigationBarBackgroundColor": "#FFFFFF",
+                        "navigationStyle": "custom"
                     }
 
                 }
@@ -492,25 +535,25 @@
         "backgroundColor": "#F8F8F8",
         "list": [{
                 "pagePath": "pages/index/home/businessHome",
-                "iconPath": "static/img/tab_home_selected.png",
-                "selectedIconPath": "static/img/tab_home_selectedHl.png",
+                "iconPath": "static/tabbar/home.png",
+                "selectedIconPath": "static/tabbar/home_select.png",
                 "text": "首页"
             },
             {
                 "pagePath": "pages/index/home/userHome",
-                "iconPath": "static/img/tab_home_selected.png",
-                "selectedIconPath": "static/img/tab_home_selectedHl.png",
+                "iconPath": "static/tabbar/home.png",
+                "selectedIconPath": "static/tabbar/home_select.png",
                 "text": "首页"
             },
             {
                 "pagePath": "pages/index/collection/index",
-                "iconPath": "static/img/tab_lobby_selected.png",
-                "selectedIconPath": "static/img/tab_lobby_selectedHl.png",
+                "iconPath": "static/tabbar/star.png",
+                "selectedIconPath": "static/tabbar/star_select.png",
                 "text": "我的收藏"
             }, {
                 "pagePath": "pages/index/user/index",
-                "iconPath": "static/img/tab_user_selected.png",
-                "selectedIconPath": "static/img/tab_user_selectedHl.png",
+                "iconPath": "static/tabbar/user.png",
+                "selectedIconPath": "static/tabbar/user_select.png",
                 "text": "个人中心"
             }
         ]

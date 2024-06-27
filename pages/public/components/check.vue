@@ -2,18 +2,24 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-11 10:42:54
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-11 11:08:02
+ * @LastEditTime: 2023-08-07 09:26:22
  * @FilePath: \mall-applet\controls\check.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view class="check-view">
     <view @click="checked" class="check">
-      <u-icon
+      <!-- <u-icon
         :name="check ? 'checkmark-circle-fill' : 'checkmark-circle'"
         size="40"
         :color="check ? '#000' : '#ccc'"
-      ></u-icon>
+      ></u-icon> -->
+      <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :src="check?defaultSelectChecked:defaultChecked"
+            ></image>
+
     </view>
     <view class="content">
       <slot></slot>
@@ -40,6 +46,14 @@ export default {
       default: false,
     },
   },
+  computed:{
+    defaultChecked(){
+      return `${this.$fileUrl}/sysFile/ic_no_tongyixieyi.png`
+    },
+    defaultSelectChecked(){
+      return `${this.$fileUrl}/sysFile/ic_yes_tongyixieyi.png`
+    }
+  },
   data() {
     return {
       check: false,
@@ -62,7 +76,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .check-view {
   display: flex;
   align-items: center;
@@ -76,6 +90,10 @@ export default {
   align-items: center;
   justify-content: center;
   transition: all 0.1s;
+  image{
+width: 35rpx;
+height: 35rpx;
+  }
 }
 
 .content {

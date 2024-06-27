@@ -1,0 +1,181 @@
+ .order-detail {
+     margin-bottom: 120rpx;
+     padding-bottom: 160rpx;
+     .blue-bg-box {
+         background: #3B6DBB;
+         height: 182rpx;
+         width: 750rpx;
+         position: relative;
+         .blue-img {
+             width: 726rpx;
+             height: 30rpx;
+             background: #24549E;
+             border-radius: 20rpx;
+             margin-left: 12rpx;
+             position: absolute;
+             top: 30rpx;
+         }
+         .order-steps {
+             width: 690rpx;
+             height: 138rpx;
+             background: #fff;
+             position: absolute;
+             left: 30rpx;
+             top: 45rpx;
+             /deep/ .u-steps {
+                 margin-top: 30rpx;
+             }
+         }
+     }
+     .decoration {
+         width: 692rpx;
+         height: 32rpx;
+         margin-left: 30rpx;
+         position: relative;
+         top: -2px;
+         image {
+             width: 100%;
+             height: 100%;
+         }
+     }
+     .qr-code {
+         background: #fff;
+         margin: 0 30rpx;
+         padding-top: 30rpx;
+         font-size: 30rpx;
+         font-family: PingFangSC-Regular, PingFang SC;
+         font-weight: 400;
+         color: #333333;
+         line-height: 42rpx;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         padding-bottom: 43rpx;
+         position: relative;
+         top: -3rpx;
+         .qr-code-img {
+             width: 386rpx;
+             height: 386rpx;
+             background: #F5F5F5;
+             border-radius: 14rpx;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             image {
+                 width: 357rpx;
+                 height: 360rpx;
+                 background: #fff;
+             }
+         }
+         text {
+             margin-top: 38rpx;
+         }
+         .qr-code-left,
+         .qr-code-right {
+             position: absolute;
+             bottom: -47rpx;
+             left: 30rpx;
+             width: 17rpx;
+             height: 74rpx;
+         }
+         .qr-code-right {
+             right: 30rpx;
+             left: auto;
+         }
+     }
+     .order-box {
+         border-radius: 14rpx;
+         margin-top: 30rpx;
+         background: #fff;
+         margin-left: 30rpx;
+         margin-right: 30rpx;
+         /deep/ .prod-item {
+             margin: 0;
+         }
+         /deep/ .item-cont {
+             background: none;
+             padding-top: 35rpx;
+         }
+     }
+     .order-msg {
+         background: #fff;
+         margin-top: 15rpx;
+         font-size: 26rpx;
+         margin: 20rpx 30rpx;
+         border-radius: 14rpx;
+         color: #888888;
+         line-height: 37rpx;
+         .msg-item {
+             padding: 30rpx;
+             .msg-item-title {
+                 font-size: 30rpx;
+                 font-family: PingFangSC-Medium, PingFang SC;
+                 font-weight: 500;
+                 color: #333333;
+                 line-height: 41rpx;
+             }
+             .item {
+                 display: flex;
+                 align-items: center;
+                 margin-top: 14rpx;
+             }
+         }
+     }
+ }
+ /* 
+ 
+ /* 底部栏 */
+ 
+ .order-detail-footer {
+     position: fixed;
+     bottom: 0;
+     width: 100%;
+     max-width: 750rpx;
+     background: #fff;
+     margin: auto;
+     display: -webkit-flex;
+     display: -webkit-box;
+     display: -moz-box;
+     display: -ms-flexbox;
+     display: flex;
+     padding: 22rpx 0;
+     font-size: 26rpx;
+     padding-bottom: env(safe-area-inset-bottom);
+     box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+     display: flex;
+     justify-content: flex-end;
+     align-items: center;
+ }
+ 
+ .order-detail-footer {
+     .dele-order {
+         display: block;
+         margin-right: 30rpx;
+         width: 150rpx;
+         text-align: center;
+         color: #fff;
+         border-radius: 30rpx;
+         border: 2rpx solid #e1e1e1;
+         font-size: 28rpx;
+         font-family: PingFangSC-Regular, PingFang SC;
+         font-weight: 400;
+         color: #888888;
+         line-height: 40rpx;
+         padding: 9rpx 22rpx 8rpx 20rpx;
+     }
+     .blue-btn {
+         color: #3b6dbb;
+         border: 2rpx solid #3b6dbb;
+     }
+     .blue-btn-def {
+         background: #3B6DBB;
+         color: #fff;
+         border: none
+     }
+ }
+ 
+ .clearfix:after {
+     content: " ";
+     display: table;
+     clear: both;
+ }

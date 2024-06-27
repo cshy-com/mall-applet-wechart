@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-21 10:44:42
+ * @LastEditTime: 2023-08-31 16:10:18
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,6 +10,7 @@
   <!--pages/orderList/orderList.wxml-->
 
   <view class="container">
+    <defNav title="我的订单"></defNav>
     <!-- 头部菜单 -->
     <view class="order-tit">
       <view class="order-tab">
@@ -21,7 +22,10 @@
           :activeStyle="{
             color: '#3b6dbb',
             fontWeight: 'bold',
-            transform: 'scale(1.05)',
+          }"
+          :inactiveStyle="{
+            fontSize: '30rpx',
+            color: '#888888',
           }"
           lineHeight="5"
           lineWidth="45"
@@ -30,54 +34,81 @@
     </view>
     <!-- end 头部菜单 -->
     <view class="main">
-      <view class="empty" v-if="list.length == 0"> 还没有任何相关订单 </view>
-      <!-- 订单列表 -->
-      <block v-for="(item, index) in list" :key="index">
-        <businessOrderList
-          :orderInfo="item"
-          @toOrderDetailPage="toOrderDetailPage(item)"
-        >
-          <template v-slot:state>
-            <view class="order-state">
-              <text>{{
-               item.statusName||( item.status == 20
-                  ? '预约中'
-                  : item.status == 10
-                  ? '预约成功'
-                  : item.status == 30
-                  ? '已到店'
-                  : item.status == 0
-                  ? '已完成'
-                  : orderInfo.status == 40
-                  ? '已评论'
-                  : '已取消')
-              }}</text>
-            </view>
-          </template>
-          <template v-slot:footer>
-            <view class="prod-foot">
-              <view class="btn">
-                <text
-                  v-if="item.status == 30"
-                  class="button"
-                  @tap="orderListComplete(item)"
-                  :data-ordernum="item.orderNumber"
-                  hover-class="none"
-                  >完成订单</text
-                >
-                <text
-                  class="button"
-                  v-if="item.status == 40"
-                  @click="createComment(item)"
-                  :data-ordernum="item.orderNumber"
-                  hover-class="none"
-                  >查看评价</text
-                >
+      <nodata
+        v-if="noDate"
+        :config="{
+          content: '暂无订单数据',
+          imgUrl: defaultImg,
+        }"
+      ></nodata>
+      <template v-else>
+        <!-- 订单列表 -->
+        <block v-for="(item, index) in list" :key="index">
+          <businessOrderList
+            :orderInfo="item"
+            @toOrderDetailPage="toOrderDetailPage(item)"
+          >
+            <template v-slot:state>
+              <view class="order-num">
+                <text class="order-id">订单编号：{{ item.id }}</text>
+                <view class="order-state">
+                  <text
+                    :class="{
+                      red: item.status == 20,
+                      green: item.status == 10,
+                      blue: item.status == 30,
+                      grey: item.status == -10,
+                      orange: item.status == 40,
+                    }"
+                    >{{
+                      item.statusName ||
+                      (item.status == 20
+                        ? '预约中'
+                        : item.status == 10
+                        ? '预约成功'
+                        : item.status == 30
+                        ? '已到店'
+                        : item.status == 0
+                        ? '已完成'
+                        : orderInfo.status == 40
+                        ? '已评论'
+                        : '已取消')
+                    }}</text
+                  >
+                </view>
               </view>
-            </view>
-          </template>
-        </businessOrderList>
-      </block>
+            </template>
+            <template v-slot:decoration>
+              <view class="decoration">
+                <image :src="defDecoration"></image>
+              </view>
+            </template>
+            <template v-slot:footer>
+              <view class="prod-foot">
+                <!-- <view class="btn" v-if="item.status == 30">
+                  <text
+                    class="button"
+                    @tap="orderListComplete(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >完成订单</text
+                  >
+                </view> -->
+                <view class="btn" v-if="item.status == 40">
+                  <text
+                    class="button blue-btn"
+                    @click="createComment(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >查看评价</text
+                  >
+                </view>
+              </view>
+            </template>
+          </businessOrderList>
+        </block>
+        <noMore v-if="more == 'noMore' && current > 1"></noMore>
+      </template>
     </view>
   </view>
   <!-- end 订单列表 -->
@@ -104,13 +135,17 @@ export default {
           name: '预约成功',
           id: 10,
         },
-        {
-          name: '已到店',
-          id: 30,
-        },
+        // {
+        //   name: '已到店',
+        //   id: 30,
+        // },
         {
           name: '已完成',
           id: 0,
+        },
+        {
+          name: '已评论',
+          id: 40,
         },
         {
           name: '已取消',
@@ -123,7 +158,7 @@ export default {
       size: 10,
       current: 1,
       currentIndex: 0,
-      defaultAvatar: require('@/static/img/icon/head04.png'),
+      noDate: false,
     }
   },
 
@@ -138,11 +173,24 @@ export default {
         (status == 5 || status == 6 ? 'gray' : '')
       )
     },
+    defDecoration() {
+      return `${this.$fileUrl}/sysFile/img_dingd_zhuangs.png`
+    },
+    defaultImg() {
+      return this.$fileUrl + '/sysFile/img_dingdan.png'
+    },
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    if (options.status && Number(options.status) > -1) {
+      this.currentIndex = this.tabList.findIndex(
+        (val) => val.id == options.status
+      )
+    } else {
+      this.currentIndex = 0
+    }
     this.loadOrderData()
   },
 
@@ -216,6 +264,7 @@ export default {
 
         if (this.current == 1) {
           this.list = res.data
+          this.noDate = res.total == 0
         } else {
           this.list = [...this.list, ...res.data]
         }

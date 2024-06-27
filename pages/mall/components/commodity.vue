@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-12 11:00:49
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-05 17:08:59
+ * @LastEditTime: 2023-08-30 09:32:23
  * @FilePath: \mall-applet\pages\components\articleGrid.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,14 +12,14 @@
       <!-- 商城热卖 -->
       <view class="article-block">
         <view class="empty" v-if="!prods || prods.length == 0">
-          <u-empty
-            mode="data"
-            marginTop="120"
-            iconSize="140"
-            textSize="32"
-            :text="'暂无数据'"
-          >
-          </u-empty>
+          <nodata
+      :config="{
+                  content: '暂无数据',
+                  height:'400rpx',
+                  background:'#fff'
+                }"
+      >
+      </nodata>
         </view>
 
         <view class="article-item-cont" v-else>
@@ -42,26 +42,17 @@
               </view>
               <view class="hot-text">
                 <view class="hotprod-text">{{ prod.name }}</view>
-                <!-- <view class="prod-info">{{prod.brief}}</view> -->
+                <view class="discount-sale"> 销量 {{ prod.salesVolume }} </view>
                 <view class="prod-text-info">
                   <view class="price">
-                    <text class="price-value">{{ prod.discountedPrice }}</text>
-                    <text class="price-org">{{ prod.originalPrice }}</text>
-                    <view class="btn">
-                      <u-button
-                        class="btn-value"
-                        text="抢购"
-                        size="small"
-                      ></u-button>
-                    </view>
-                  </view>
-                  <view class="discount">
+                    <text class="price-value">¥ {{ prod.discountedPrice }}</text>
                     <text class="discount-text" v-if="prod.discountRatio"
                       >{{ prod.discountRatio }}折</text
                     >
-                    <text class="discount-sale"
-                      >销量 {{ prod.salesVolume }} +</text
-                    >
+                    <text class="price-org">原价 ¥ {{ prod.originalPrice }}</text>
+                  </view>
+                  <view class="btn" v-if="showBtn" >
+                    <button class="btn-value" text="" size="small">预定</button>
                   </view>
                 </view>
               </view>
@@ -85,6 +76,11 @@ export default {
       type: Array,
       default: () => [],
     },
+    showBtn:{
+      type:Boolean,
+      default:true
+    }
+    
   },
   methods: {
     ...mapMutations(['setCommodityInfo']),
@@ -99,109 +95,113 @@ export default {
 </script>
 
 <style lang="scss">
-.article-block .prod-items {
-  display: inline-block;
+.article-item-cont {
+  padding: 30rpx;
   background: #fff;
+  padding-bottom: 0;
+ 
+}
+.article-block .prod-items {
   box-sizing: border-box;
-  width: 342rpx;
-  padding-bottom: 20rpx;
-  background: #ffffff;
-  border-radius: 12rpx;
+
+  display: flex;
+  justify-content: flex-start;
+
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 30rpx;
+  margin-bottom: 30rpx;
+
   .hot-imagecont {
-    font-size: 0;
-    text-align: center;
-    width: 341rpx;
-    height: 260rpx;
+    margin-right: 20rpx;
+    width: 144rpx;
+    height: 144rpx;
     image {
       width: 100%;
       height: 100%;
+      border-radius: 14rpx;
     }
   }
   .hot-text {
-    font-size: 28rpx;
+    font-size: 32rpx;
     font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-weight: 500;
     color: #333333;
-    line-height: 40rpx;
-    margin-top: 16rpx;
-    margin-left: 14rpx;
+    line-height: 45rpx;
+    flex: 1;
+
     .hotprod-text {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       margin-bottom: 10rpx;
+      width: 500rpx;
+    }
+    .discount-sale {
+      font-size: 26rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      line-height: 37rpx;
     }
     .prod-text-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
       .price {
         display: flex;
         justify-content: flex-start;
-        align-content: center;
+        align-items: center;
         .price-value {
-          color: #ff6a13;
+          font-size: 36rpx;
+          font-family: DINAlternate-Bold, DINAlternate;
+          font-weight: bold;
+          color: #ea531c;
+          line-height: 42rpx;
+          margin-right: 10rpx;
+        }
+        .discount-text {
+          margin-right: 10rpx;
+          width: 64rpx;
+          height: 32rpx;
+          background: #ea531c;
+          border-radius: 5rpx;
+          background: rgba(251, 221, 210, 1);
+          font-size: 20rpx;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #ea531c;
+          line-height: 32rpx;
+          text-align: center;
         }
         .price-org {
-          font-size: 24rpx;
-          color: #a2a2a2;
-          line-height: 34rpx;
-          margin: 0 60rpx 0 15rpx;
-          text-decoration: line-through;
+          font-size: 26rpx;
+          font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
-        }
-        .btn {
-          button {
-            background: #ff6a13;
-            border-radius: 30rpx;
-            color: #fff;
-            width: 30rpx;
-            height: 46rpx;
-          }
+          color: #c0c0c0;
+          line-height: 37rpx;
+          text-decoration: line-through;
         }
       }
-      .zan-num {
-        font-size: 24rpx;
-        font-weight: 400;
-        color: #000000;
-        line-height: 34rpx;
-        margin-left: 4rpx;
-        margin-right: 20rpx;
-      }
-      .discount {
-        display: flex;
-        align-items: center;
-        font-size: 20rpx;
-        color: #999;
-        font-weight: 400;
-        display: flex;
-        justify-content: space-between;
-        .discount-text {
-          background: #ffe6c7;
-          color: #ff6a13;
-          padding: 5rpx 10rpx;
-          border-radius: 10rpx;
-          line-height: 20rpx;
-        }
-        .discount-sale {
-          margin-right: 20rpx;
+
+      .btn {
+        button {
+          width: 110rpx;
+          height: 56rpx;
+          background: #3b6dbb;
+          border-radius: 40rpx;
+          font-size: 30rpx;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #ffffff;
+          line-height: 56rpx;
+          padding: 0;
+          margin: 0;
         }
       }
     }
   }
 }
-
-.article-block .prod-items:nth-child(2n-1) {
-  margin: 0rpx 20rpx 20rpx 24rpx;
-}
-.prod-items .hot-text .prod-info,
-.more-prod .prod-text-right .prod-info {
-  font-size: 22rpx;
-  color: #999;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.zan-icon {
-  width: 50rpx;
-  height: 50rpx;
+.article-block .prod-items:nth-last-child(1) {
+  border-bottom: none;
 }
 </style>

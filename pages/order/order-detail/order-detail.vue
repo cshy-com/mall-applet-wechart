@@ -2,37 +2,39 @@
   <!--pages/order-detail/order-detail.wxml-->
 
   <view class="container">
+    <defNav title="订单详情"></defNav>
     <view class="order-detail">
-      <view class="order-steps">
-        <u-steps :current="current">
-          <u-steps-item
-            v-for="item in stepsList"
-            :key="item.id"
-            :title="item.title"
-            :desc="item.desc"
-          ></u-steps-item>
-        </u-steps>
+      <view class="blue-bg-box">
+        <view class="blue-img"> </view>
+        <view class="order-steps">
+          <steps :step="current" :stepList="stepsList"  
+          :activeCheckedImg="defStepsOrange"
+          :checkedImg="defStepBlue" :unCheckedImg="defStepGrey"></steps>
+        </view>
+      </view>
+      <view class="decoration">
+        <image :src="defDecoration"></image>
       </view>
       <view class="qr-code">
-        <u-image
-          :showLoading="true"
-          :src="qrCodesrc"
-          width="200px"
-          height="200px"
-        ></u-image>
+        <view class="qr-code-img"> <image :src="qrCodesrc"></image></view>
+        <text>到店亮码核销</text>
+        <image class="qr-code-left" :src="defDecoration1"></image>
+        <image class="qr-code-right" :src="defDecoration1"></image>
       </view>
       <!-- 商品信息 -->
-      <template v-if="orderItemDtos">
-        <orderItem
-          :orderInfo="orderItemDtos"
-          @toOrderDetailPage="toProdPage(orderItemDtos.shopId)"
-        >
-        </orderItem>
-      </template>
-
+      <view class="order-box">
+        <template v-if="orderItemDtos">
+          <orderItem
+            :orderInfo="orderItemDtos"
+            @toOrderDetailPage="toProdPage(orderItemDtos.shopId)"
+          >
+          </orderItem>
+        </template>
+      </view>
       <!-- 订单信息 -->
       <view class="order-msg">
         <view class="msg-item">
+          <view class="msg-item-title">订单详情</view>
           <view class="item">
             <text class="item-tit">订单编号：</text>
             <text class="item-txt">{{ orderItemDtos.id }}</text>
@@ -41,25 +43,26 @@
             <text class="item-tit">下单时间：</text>
             <text class="item-txt">{{ orderItemDtos.createTime }}</text>
           </view>
-        </view>
-        <view class="msg-item">
           <view class="item">
             <text class="item-tit">订单备注：</text>
             <text class="item-txt remarks">{{ orderItemDtos.remarks }}</text>
           </view>
         </view>
+        
       </view>
       <!-- 底部栏 -->
       <view class="order-detail-footer" v-if="orderItemDtos.status == 20">
-        <text class="dele-order" @tap="delOrderList">取消订单</text>
+        <text class="dele-order" @tap="delOrderList">取消预约</text>
       </view>
       <view class="order-detail-footer" v-if="orderItemDtos.status == 0">
-        <text class="dele-order" @tap="createComment">评价</text>
+        <text class="dele-order blue-btn" @tap="createComment">评价</text>
+      </view>
+      <view class="order-detail-footer" v-if="orderItemDtos.status == 10">
+        <text class="dele-order blue-btn-def" @tap="payOrder">积分付款</text>
       </view>
       <view class="order-detail-footer" v-if="orderItemDtos.status == 40">
-        <text class="dele-order" @tap="createComment">查看评价</text>
+        <text class="dele-order blue-btn" @tap="createComment">查看评价</text>
       </view>
-     
     </view>
   </view>
 </template>
@@ -68,7 +71,9 @@
 // pages/order-detail/order-detail.js
 import orderItem from './../components/order-item'
 import { orderDatail, orderQrCode } from '@/api/order'
+import steps from "./../components/steps"
 export default {
+  options: { styleIsolation: 'shared' }  ,
   data() {
     return {
       orderItemDtos: {
@@ -100,39 +105,39 @@ export default {
         //   id:-10
         // },
         {
-          title: '预约中',
+          name: '预约中',
           id: 20,
           desc: '',
         },
         {
-          title: '预约成功',
+          name: '预约成功',
           id: 10,
           desc: '',
         },
+        // {
+        //   name: '已到店',
+        //   id: 30,
+        //   desc: '',
+        // },
         {
-          title: '已到店',
-          id: 30,
-          desc: '',
-        },
-        {
-          title: '已完成',
+          name: '已完成',
           id: 0,
           desc: '',
         },
         {
-          title: '已评论',
+          name: '已评论',
           id: 40,
           desc: '',
         },
       ],
       stepsListError: [
         {
-          title: '预约中',
+          name: '预约中',
           id: 20,
           desc: '',
         },
         {
-          title: '已取消',
+          name: '已取消',
           id: -10,
           desc: '',
         },
@@ -142,8 +147,25 @@ export default {
     }
   },
 
-  components: { orderItem },
+  components: { orderItem ,steps},
   props: {},
+  computed: {
+    defDecoration1() {
+      return `${this.$fileUrl}/sysFile/img_dingd_zhuangs_1.png`
+    },
+    defDecoration() {
+      return `${this.$fileUrl}/sysFile/img_dingd_yuan.png`
+    },
+    defStepBlue() {
+      return `${this.$fileUrl}/sysFile/ic_xq_jiedian_lans.png`
+    },
+    defStepGrey() {
+      return `${this.$fileUrl}/sysFile/ic_xq_jiedian_huise.png`
+    },
+    defStepsOrange() {
+      return `${this.$fileUrl}/sysFile/ic_xq_jiedian_huangs.png`
+    },
+  },
 
   /**
    * 生命周期函数--监听页面加载
@@ -217,6 +239,11 @@ export default {
           this.orderId,
       })
     },
+    payOrder(e){
+      uni.navigateTo({
+        url: '/pages/order/orderPay?orderId=' + this.orderId,
+      })
+    },
     /**
      * 加载订单数据
      */
@@ -259,6 +286,9 @@ export default {
   },
 }
 </script>
-<style>
-@import './order-detail.css';
+<style lang="scss" scoped>
+/deep/ .hx-navbar{
+  z-index: 9999
+}
+@import './order-detail.scss';
 </style>

@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:40
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-24 09:20:32
+ * @LastEditTime: 2023-08-30 17:56:20
  * @FilePath: \mall-applet\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -65,9 +65,13 @@ export function forumDel(data) {
 export function forumView(data) {
     return getString('/mallForum/mallPageView/' + data)
 }
+// 列表论坛发布 
+export function mallForumListAdd(data) {
+    return putPayload('/mallForum/listAdd/' + data)
+}
 //客户建议列表
 export function advicesList(data) {
-    return postPayload("/advices/myList", data)
+    return postPayload("/advices/page", data)
 }
 //新增客户建议
 export function advicesAdd(data) {
@@ -88,5 +92,18 @@ export function projectObj(data) {
 }
 // 查询字典数据列表
 export function systemDictList(data) {
-    return getPayload('/system/dict/data/list/', data)
+    return getPayload('/system/dict/data/list', data)
+}
+//根据id查询用户信息
+export function getUserInfoById(data) {
+
+    return getString("/mallUser/mallGetInfoById", data)
+}
+
+// 论坛评论
+export function mallForumCommentsAdd(data) {
+    return postPayload("/mallForumComments/add", data)
+}
+export function mallForumCommentsPage(data) {
+    return postPayload("/mallForumComments/page", data)
 }

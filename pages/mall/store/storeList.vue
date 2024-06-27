@@ -2,50 +2,49 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:31:56
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-19 17:28:39
+ * @LastEditTime: 2023-08-16 11:41:19
  * @FilePath: \mall-applet\pages\subPack\merchant\storeList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view>
-    <commNav :title="title" ref="navs"></commNav>
+    <defNav :title="title" ref="navs"></defNav>
 
     <view class="search">
-      <uni-search-bar
-        bgColor="#fff"
-        v-model="keyword"
-        :placeholder="placeholder"
-        :radius="200"
-        @confirm="search"
-        @cancel="cancel" 
-   
-      >
-        <template v-slot:searchIcon>
-          <text class="iconfont icon-sousuo"></text>
-        </template>
-      </uni-search-bar>
+      <search @confirm="search"></search>
     </view>
 
     <view class="shop-list-box">
-      <shopRow :list="shopList"> </shopRow>
+      <nodata
+        v-if="noDate"
+        :config="{
+          content: '暂无店铺数据',
+          imgUrl: defaultImg,
+        }"
+      ></nodata>
+      <view v-else>
+        <shopRow :list="shopList"> </shopRow>
+        <noMore v-if="more == 'noMore' && current > 1"></noMore>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
+import search from '@/components/search.vue'
 import dataArr from './index.js'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import shopRow from '@/components/shopRow.vue'
-import commSearch from '@/components/commSearch'
-import commNav from '@/components/commNav'
+
+
 import { mallShopPage } from '@/api/shop.js'
 import { getTotalPage } from '@/util/util'
 export default {
   components: {
     shopRow,
-    commSearch,
-    commNav,
+    search,
+  
   },
   data() {
     return {
@@ -63,6 +62,7 @@ export default {
       current: 1,
       total: 0,
       keyword: '',
+      noDate: false,
     }
   },
   options: {
@@ -105,14 +105,19 @@ export default {
     // this.shopList = dataArr.mockJson.filter((val) => val.cateId == option.pid)
   },
 
-  computed: {},
+  computed: {
+    defaultImg() {
+      return this.$fileUrl + '/sysFile/img_zanwu_tuijian.png'
+    },
+  },
   methods: {
     ...mapMutations(['setShopInfo']),
-    cancel(){
-      this.keyword=''
+    cancel() {
+      this.keyword = ''
       this.search()
     },
-    search() {
+    search(e) {
+      this.keyword = e
       this.current = 1
       this.shopList = []
       this.more = 'more'
@@ -132,6 +137,7 @@ export default {
         this.total = res.total
         let totalPage = getTotalPage(this.total, this.size)
         if (this.current == 1) {
+          this.noDate = res.total == 0
           this.shopList = res.data
         } else {
           this.shopList = [...this.shopList, ...res.data]
@@ -151,65 +157,14 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-page {
-  background: $base-bg-blue;
-}
-</style>
+
 <style lang="scss" scoped>
-@import './index.scss';
 .shop-list-box {
-  margin-top: 42rpx;
+  margin-top: 12rpx;
   padding-bottom: 30rpx;
 }
 .search {
-  width: 698rpx;
-  height: 66rpx;
+  padding: 15rpx 0;
   background: #ffffff;
-  box-shadow: inset 0px 0px 8rpx 0px #a67139;
-  border-radius: 200rpx;
-  border: 3rpx solid #a67139;
-  margin: 0 auto;
-  input::placeholder {  
-   color: #a67139;
-  }
-  .place{
-    color: #a67139;
-  }
-  /deep/ .uni-searchbar {
-    padding: 0;
-  }
-  /deep/ .uni-searchbar__box-icon-search {
-    padding: 0;
-  }
-  /deep/ .uni-searchbar__box {
-    border: none!important;
-    height: 29px!important;
-    background: none!important;
-  }
-  /deep/ .uni-searchbar__cancel {
-    position: relative;
-    left: -20rpx;
-    font-weight: 600;
-    color: #a67139;
-
-    line-height: 66rpx;
-  }
-  /deep/ .uni-searchbar__text-placeholder {
-    display: block;
-    color: #888;
-    font-size: 28rpx;
-    font-family: SourceHanSerifCN-Medium, SourceHanSerifCN;
-    font-weight: 600;
-    color: #a67139;
-    line-height: 40rpx;
-  }
-  .icon-sousuo {
-    margin-left: 20rpx;
-    margin-right: 8px;
-    font-size: 44rpx;
-    font-weight: 600;
-    color: #a67139;
-  }
 }
 </style>

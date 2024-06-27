@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:41
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-29 14:54:25
+ * @LastEditTime: 2023-08-21 15:04:25
  * @FilePath: \mall-applet\util\util.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -62,7 +62,8 @@ const regular = () => {
     }
     //获取列表一共多少页 totalCount：总条数，pageSize：一页多少条
 const getTotalPage = (totalCount, pageSize) => {
-    return (totalCount + pageSize - 1) / pageSize
+    return Math.ceil(totalCount / pageSize)
+        // return (totalCount + pageSize - 1) / pageSize
 }
 
 const getUrlParams = (url) => {
@@ -78,6 +79,31 @@ const getUrlParams = (url) => {
     }
     return o
 }
+const handleHtmlImage = (html = '', resetClass) => {
+    var newHtml = html.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/ig, function(match, src) {
+        let result = match
+            //返回每个匹配的字符串
+        if (resetClass) result = result.replace(/class=\"(.*)editor--/gi, 'class="');
+        result = result.replace(/\<img/gi, '<img style="max-width:100%;height:auto"');
+        return result;
+    });
+    return newHtml;
+}
+const formatRichText = (html) => {
+    let newContent = html.replace(/<img[^>]*>/gi, function(match, capture) {
+        match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+        match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+        match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+        return match;
+    });
+    newContent = newContent.replace(/style="[^"]+"/gi, function(match, capture) {
+        match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
+        return match;
+    });
+    newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+    newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0;"');
+    return newContent;
+}
 
 module.exports = {
     wxuuid,
@@ -85,5 +111,7 @@ module.exports = {
     formatDate: formatDate,
     regular,
     getTotalPage,
-    getUrlParams
+    getUrlParams,
+    handleHtmlImage,
+    formatRichText
 }

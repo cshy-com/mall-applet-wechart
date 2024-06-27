@@ -1,144 +1,112 @@
 <template>
   <view>
-    <view class="store-block">
-      <!-- #ifndef APP-NVUE || MP-TOUTIAO -->
+    <view
+      class="back-box"
+      :style="{
+        top: navInfo.menuTop + 'px',
+        height: navInfo.menuHeight + 'px',
+      }"
+    >
+      <image
+        @click="navBack"
+        :lazy-load="true"
+        :lazy-load-margin="0"
+        :src="defBack"
+        class="back-img"
+      ></image>
+    </view>
+    <view class="swiper-block">
       <u-swiper
         :list="swiperList"
-        previousMargin="5"
-        nextMargin="5"
+      
         circular
         :autoplay="false"
         radius="5"
         bgColor="#ffffff"
         keyName="url"
-        height="220"
+        :height="'750rpx'"
+        @change="(e) => (current = e.current)"
         @click="clickSwiper($event)"
-        :displayMultipleItems="swiperList.length > 3 ? 2.5 : 1"
-      ></u-swiper>
-      <!-- #endif -->
-      <!-- 店铺文字信息部分 -->
-      <view class="store-content-box">
-        <!-- 第一行 -->
-        <view class="title">
-          <text class="name">{{ shopInfo.name }}</text>
-          <view class="tag">
-            <image
-              :lazy-load="true"
-              :lazy-load-margin="0"
-              src="/static/img/cate/tag.png"
-            ></image>
-          </view>
-          <view class="star" @click="getCollect" v-if="user.userType == 1">
-            <u-icon
-              :name="isCollect ? 'star-fill' : 'star'"
-              :color="isCollect ? '#ff6a13' : '#333'"
-              size="28"
-            ></u-icon>
-            <text class="star-text">{{ isCollect ? '取消收藏' : '收藏' }}</text>
-          </view>
-        </view>
-        <view class="score">
-          <view class="rate-left"
-            ><u-rate
-              activeColor="#FFC64F"
-              readonly
-              :count="count"
-              :value="shopInfo.score"
-              size="32"
-            ></u-rate
-            ><text class="rate">{{ shopInfo.score | toRate }}</text>
-          </view>
-          <text class="value">{{ shopInfo.totalComent || 123 }}条</text>
-          <text class="value">¥{{ shopInfo.perCapitaConsumption }}/人</text>
-        </view>
-        <view class="type">
-          <text class="type-value"
-            >口味{{ shopInfo.tasteRating | toRate }}
-          </text>
-          <text class="type-value"
-            >环境{{ shopInfo.environmentalRating | toRate }}</text
+        :displayMultipleItems="1"
+      >
+        <view slot="indicator" class="indicator">
+          <view
+            class="indicator__dot"
+            v-for="(item, index) in swiperList"
+            :key="index"
+            :class="[index === current && 'indicator__dot--active']"
           >
-          <text class="type-value"
-            >服务{{ shopInfo.serviceRating | toRate }}</text
-          >
-          <text class="type-name">{{ shopInfo.characteristic }}</text>
-          <text class="type-name">{{ shopInfo.areaName }}</text>
+          </view>
         </view>
+      </u-swiper>
+    </view>
+    <view class="store-block">
+      <storeBox
+        :shopInfo="shopInfo"
+        @collectChange="collectChange"
+        :isCollect="isCollect"
+        :userType="user.userType"
+      >
+      </storeBox>
 
-        <view class="comment">
-          <!-- <view class="icon">
-            <image
-              :lazy-load="true"
-              :lazy-load-margin="0"
-              src="/static/img/cate/comment.png"
-            ></image>
-          </view>
-          <text class="number"> {{ shopInfo.ranking }} </text> -->
-          <text class="identifying"> 可用积分 </text>
-        </view>
-        <view class="shop-time">
-          <view class="status-time">
-            <text class="lable">营业中</text>
-            <text class="value"
-              >{{ shopInfo.businessHoursStart }}-{{
-                shopInfo.businessHoursEnd
-              }}</text
+      <u-gap height="12" bgColor="#F5F5F5"></u-gap>
+
+      <view class="wrap">
+        <!-- 店铺商品 -->
+        <view class="commodity-box">
+          <!-- <view class="tab-header">
+          <text> 推荐菜({{ prods.length }})</text>
+        </view> -->
+          <view class="tab-header" :class="{'tab-header-bottom-30':prods.length == 0}">
+            <text> 店铺商品 </text>
+            <text class="tab-header-tip" v-if="prods.length == 0"
+              >店铺暂未上传商品</text
             >
           </view>
-          <!-- <view class="tag">
-            <text class="tag-value" v-for="item in tags" :key="item.id">{{
-              item
-            }}</text>
-          </view> -->
+
+          <commodity v-if="prods.length > 0" :prods="prods" :showBtn="userInfo.userType==1" > </commodity>
         </view>
-        <view class="address">
-          <text class="text">{{ shopInfo.address }}</text>
+        <u-gap height="12" bgColor="#F5F5F5"></u-gap>
+        <!--评价  -->
+        <view class="comment-box">
+          <view class="tab-header" :class="{'tab-header-bottom-30':commentTotal== 0}">
+            <text> 用户评价({{ commentTotal }})</text>
+            <view
+              class="right-more"
+              v-if="commentTotal > 0"
+              @click="goCommentMore"
+            >
+              <text>查看更多</text>
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="defaultRight"
+                class="right-icon"
+              ></image>
+            </view>
+            <text class="tab-header-tip" v-if="commentTotal == 0"
+              >暂无评价</text
+            >
+          </view>
+          <comment v-if="commentTotal > 0" :commentData="commentData"></comment>
         </view>
-        <view class="platform-tip">
-          <text> * 增加折扣率不高于其他平台</text>
+        <u-gap height="12" bgColor="#F5F5F5"></u-gap>
+        <!-- 推荐 -->
+        <view class="article-grid-box">
+          <view class="tab-header" :class="{'tab-header-bottom-30':shopList.length== 0}">
+            <text> 推荐({{ shopList.length }})</text>
+            <text class="tab-header-tip" v-if="shopList.length == 0"
+              >暂无推荐</text
+            >
+          </view>
+          <shopTopItem v-if="shopList.length > 0" :list="shopList">
+          </shopTopItem>
+          <!-- <articleGrid :prods="prods2"> </articleGrid -->
         </view>
+        <!-- 底部操作按钮 -->
+        <commFootBtn :tel="sysTel" :shopId="shopId"></commFootBtn>
       </view>
     </view>
-    <u-gap height="40" bgColor="#f1f1f1"></u-gap>
-    <!-- tab切换 -->
-    <view class="shop-tab">
-      <text class="shop-tab-text" @tap="tab(0)">菜品</text>
-      <text class="shop-tab-text" @tap="tab(1)">评价</text>
-      <text class="shop-tab-text" @tap="tab(2)">推荐</text>
-    </view>
-    <view class="wrap">
-      <!-- 店铺商品 -->
-      <view class="commodity-box">
-        <view class="tab-header">
-          <text> 推荐菜({{ prods.length }})</text>
-        </view>
-        <commodity :prods="prods"> </commodity>
-      </view>
-      <!--评价  -->
-      <view class="comment-box">
-        <view class="tab-header">
-          <text> 评价({{ commentTotal }})</text>
-        </view>
-        <comment :commentData="commentData"></comment>
-        <view @click="goCommentMore" class="comment-more" v-if="commentTotal>5">查看更多</view>
-      </view>
-      <!-- 推荐 -->
-      <view class="article-grid-box">
-        <view class="tab-header">
-          <text> 推荐({{ prods2.length }})</text>
-        </view>
-        <commodity :prods="prods2"> </commodity>
-        <!-- <articleGrid :prods="prods2"> </articleGrid -->
-        ></view
-      >
-      <!-- 底部操作按钮 -->
-      <commFootBtn :tel="shopInfo.tel" :shopId="shopId"></commFootBtn>
-    </view>
-    <previewImage
-      @cancel="previewVisible = false"
-      :visible="previewVisible"
-      :tempUrl="swiperList[previewIndex].url"
-    ></previewImage>
   </view>
 </template>
 
@@ -147,24 +115,28 @@ import comment from './../components/comment.vue'
 // import articleGrid from './../components/articleGrid.vue'
 import commodity from './../components/commodity.vue'
 import commFootBtn from './../components/commFootBtn'
+import shopTopItem from './../components/shopTopItem.vue'
+
+import storeBox from './../components/storeBox'
 import { createNamespacedHelpers } from 'vuex'
 import {
   mallShopById,
-  mallShopCollectAdd,
-  mallShopCollectDel,
   getCommodityList,
   getCommodityPage,
   shopCommentsPage,
+  mallShopPage,
 } from '@/api/shop.js'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import previewImage from '@/components/previewImage'
+
 export default {
   components: {
     // articleGrid,
     comment,
+    shopTopItem,
     commodity,
     commFootBtn,
-    previewImage,
+
+    storeBox,
   },
   data() {
     return {
@@ -189,14 +161,31 @@ export default {
       current: 1,
       size: 10,
       user: {},
-      previewIndex: 0,
-      previewVisible: false,
+
+      shopList: [],
       commentData: [],
       commentTotal: 0,
+      current: 0,
     }
   },
   computed: {
     ...mapGetters(['shopInfo']),
+    navInfo() {
+      return this.$store.state.comm.navInfo
+    },
+    userInfo() {
+      return this.$store.state.user.userInfo
+    },
+    sysTel(){
+      return '027-123456'
+    },
+    defBack() {
+      return this.$fileUrl + '/sysFile/ic_nav_arrow.png'
+    },
+
+    defaultRight() {
+      return `${this.$fileUrl}/sysFile/ic_bian_arrow.png`
+    },
   },
   onLoad(option) {
     this.shopId = option.id
@@ -206,6 +195,7 @@ export default {
     this.getCommodityList()
     this.getCommodityRecommend()
   },
+  created() {},
   onShow() {
     // this.swiperList = this.shopInfo?.shopList || this.swiperList
   },
@@ -215,25 +205,25 @@ export default {
   },
   methods: {
     ...mapMutations(['setCommodityInfo', 'setShopInfo']),
+    collectChange(e) {
+      this.isCollect = !this.isCollect
+    },
+    navBack() {
+      uni.navigateBack()
+    },
     goCommentMore() {
       uni.navigateTo({
         url: '/pages/mall/comment/comment?shopId=' + this.shopId,
       })
     },
     clickSwiper(index) {
-      this.previewIndex = index
-      this.previewVisible = true
+      uni.previewImage({
+        urls: this.swiperList.map((val) => val.url),
+        current: index,
+        loop: true,
+      })
     },
-    async getCollect() {
-      let http = this.isCollect ? mallShopCollectDel : mallShopCollectAdd
-      try {
-        await http(this.shopId)
-        this.isCollect = !this.isCollect
-        this.$tip.toast(this.isCollect ? '收藏成功' : '已取消收藏')
-      } catch (e) {
-        console.log(e)
-      }
-    },
+
     async getCommentsList() {
       let res = await shopCommentsPage({
         shopId: this.shopId,
@@ -276,17 +266,21 @@ export default {
         console.log(e)
       }
     },
-    // 查看推荐商品
+    // 查看推荐店铺
     async getCommodityRecommend() {
+      debugger
       try {
-        let res = await getCommodityPage({
+        let res = await mallShopPage({
           current: this.current,
           size: this.size,
+          isRecommend: true,
+          firstType: this.shopInfo.firstType,
+          excludeId: this.shopId,
         })
         if (this.current == 1) {
-          this.prods2 = res.data
+          this.shopList = res.data
         } else {
-          this.prods2 = [...this.prods2, ...res.data]
+          this.shopList = [...this.shopList, ...res.data]
         }
       } catch (e) {
         console.log(e)
@@ -332,169 +326,105 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.store-block {
-  padding: 20rpx;
-}
-.store-content-box {
-  padding-bottom: 20rpx;
-  line-height: 34rpx;
-
-  .title {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin: 20rpx 0;
-    .name {
-      max-width: 356rpx;
-      font-size: 36rpx;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: #000;
-      margin-right: 20rpx;
-    }
-    .tag {
-      width: 40rpx;
-      height: 40rpx;
-      image {
-        width: 100%;
-        height: 100%;
-        will-change: transform;
-      }
-    }
-  }
-  .score {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin-bottom: 10rpx;
-    .rate-left {
-      display: flex;
-    }
-    .rate {
-      color: #ffc64f;
-      font-size: 30rpx;
-      margin-left: 10rpx;
-    }
-    .value {
-      margin-left: 20rpx;
-      font-size: 24rpx;
-    }
-  }
-  .type {
-    color: #333;
-    font-size: 24rpx;
-    display: flex;
-    align-content: center;
-    justify-content: flex-start;
-    margin-bottom: 10rpx;
-    .type-value {
-      margin-right: 20rpx;
-    }
-    .type-name {
-      margin-left: 50rpx;
-    }
-  }
-  .comment {
-    display: flex;
-    align-items: center;
-    border-bottom: 1rpx solid #f5f2f2;
-    margin-bottom: 10rpx;
-    .icon {
-      width: 116rpx;
-      height: 40rpx;
-      image {
-        width: 100%;
-        height: 100%;
-        will-change: transform;
-      }
-    }
-    .number {
-      background: rgb(256, 236, 223);
-      padding: 4rpx;
-      font-size: 20rpx;
-      color: rgb(181, 149, 125);
-    }
-    .identifying {
-      font-size: 20rpx;
-      background: rgb(245, 245, 245);
-      padding: 4rpx;
-    }
-  }
-  .shop-time {
-    border-bottom: 1rpx solid #f5f2f2;
-    margin-bottom: 10rpx;
-    .status-time {
-      display: flex;
-      justify-content: flex-start;
-      align-content: center;
-      .lable {
-        font-size: 28rpx;
-        color: #000;
-        font-weight: 600;
-      }
-      .value {
-        font-size: 24rpx;
-        color: #000;
-        margin-left: 10rpx;
-      }
-    }
-    .tag {
-      display: flex;
-      justify-content: flex-start;
-      align-content: center;
-      flex-wrap: wrap;
-      .tag-value {
-        font-size: 24rpx;
-        color: #545454;
-        padding: 5rpx;
-        background: #eaeaea;
-        border-radius: 5rpx;
-        margin-right: 10rpx;
-        margin-bottom: 10rpx;
-      }
-    }
-  }
-  .address {
-    margin-top: 10rpx;
-    .text {
-      font-size: 28rpx;
-      color: #000;
-      font-weight: 600;
-    }
-  }
-}
-
-.shop-tab {
+.back-box {
+  padding-left: 30rpx;
   display: flex;
-  justify-content: space-between;
-
-  border-bottom: 1px solid #e6e6e6;
-  padding-bottom: 20rpx;
-  padding: 20rpx 100rpx;
-  .shop-tab-text {
-    font-size: 28rpx;
-    color: #000;
-    font-weight: 600;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 999;
+  top: 50rpx;
+  .back-img {
+    width: 62rpx;
+    height: 62rpx;
+    border-radius: 50%;
   }
 }
+/deep/ .u-swiper__indicator {
+  bottom: 70rpx !important;
+}
+.indicator {
+  @include flex(row);
+  justify-content: center;
+
+  &__dot {
+    width: 16rpx;
+    height: 8rpx;
+    background: #ffffff;
+    border-radius: 5rpx;
+    opacity: 0.3;
+    margin: 0 8rpx;
+    transition: background-color 0.3s;
+
+    &--active {
+      width: 26rpx;
+
+      background: #ffffff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      opacity: 0.8;
+    }
+  }
+}
+.comment-box {
+  background: #fff;
+}
+.commodity-box {
+  background: #fff;
+}
+.article-grid-box {
+  background: #fff;
+}
+.commodity-box {
+  /deep/ .article-item-cont {
+    padding-top: 30rpx;
+  }
+}
+.store-block {
+  position: relative;
+  top: -50rpx;
+}
+
 .article-grid-box {
   padding-bottom: 80rpx;
 }
 
 .tab-header {
+  padding: 30rpx;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 30rpx;
-  border-left: 6rpx solid #ff6a13;
-  padding-left: 14rpx;
-  margin: 20rpx 20rpx 20rpx 20rpx;
-  line-height: 30rpx;
-  font-weight: 600;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #333333;
+  line-height: 42rpx;
+  padding-bottom: 0;
+  .right-more {
+    font-size: 26rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #cccccc;
+    line-height: 37rpx;
+    display: flex;
+    align-items: center;
+  }
+  .right-icon {
+    width: 16rpx;
+    height: 24rpx;
+    margin-left: 10rpx;
+  }
+  .tab-header-tip {
+    font-size: 26rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #cccccc;
+    line-height: 37rpx;
+  }
 }
-.comment-more {
-  background: #fff;
-  text-align: center;
-  padding: 20rpx;
+.tab-header-bottom-30{
+  padding-bottom: 30rpx;
 }
 .star {
   margin-left: auto;
@@ -508,12 +438,5 @@ export default {
   .star-text {
     font-size: 20rpx;
   }
-}
-.platform-tip {
-  font-size: 24rpx;
-  color: #000;
-  border-top: 1px solid #e6e6e6;
-  padding-top: 10rpx;
-  margin-top: 10rpx;
 }
 </style>

@@ -1,0 +1,69 @@
+/* pages/search-page/search-page.wxss */
+
+
+/* 搜索栏 */
+
+.search {
+    padding: 15rpx 0;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /deep/ .uni-stat__select {
+        width: 120rpx;
+        .uni-select {
+            border: none
+        }
+    }
+    /deep/ .search-box {
+        .search-input-box {
+            width: 445rpx;
+        }
+    }
+}
+
+
+/* 热门搜索&搜索历史 */
+
+.search-display {
+    background: #fff;
+    padding: 30rpx;
+    margin: 12rpx;
+    border-radius: 14rpx;
+    .history-search {
+        .title-text {
+            font-size: 30rpx;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #333333;
+            line-height: 42rpx;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .clear-history {
+                width: 32rpx;
+                height: 32rpx;
+                image {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+        .history-search-tags {
+            margin-top: 30rpx;
+            .tags {
+                background: #F5F5F5;
+                border-radius: 33px;
+                padding: 11rpx 30rpx;
+                margin-right: 30rpx;
+                margin-bottom: 20rpx;
+                font-size: 26rpx;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: #666666;
+                line-height: 37rpx;
+                display: inline-block;
+            }
+        }
+    }
+}

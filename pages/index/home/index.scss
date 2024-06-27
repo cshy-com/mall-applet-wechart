@@ -1,99 +1,212 @@
-page {
-    background: #CDCDCD;
-    height: auto;
-}
-
-.header-top {
-    padding-top: 120rpx;
-    font-size: 36rpx;
-    font-weight: 600;
-    color: $base-bg-blue;
-    line-height: 52rpx;
-    text-align: center;
-    text {
-        font-family: Source Han Sans CN;
-    }
-}
-
-.container {
-    .bg-sear {
-        width: 698rpx;
-        height: 66rpx;
-        background: #FFFFFF;
-        box-shadow: inset 0px 0px 8rpx 0px #A67139;
-        border-radius: 200rpx;
-        border: 3rpx solid #A67139;
-    }
-    .container-top {
-        width: 100%;
-        min-height: 918rpx;
-        background-image: url('./../../../static/img/bg1.png');
-        background-size: 100%;
-    }
-}
-
-.container-center {
-    background: $base-bg-blue;
-    /deep/ .wrap {
-        background: none;
-    }
-    /deep/ .homeBox {
-        background: none;
-        .tabBox {
-            background: none;
-            .tab-item {
-                color: #fff;
-            }
-            .tab-choice {
-                color: #fff;
-            }
-            .tab-choice::before {
-                background: #fff;
-            }
-        }
-    }
-}
-
-
-/* 分类栏目 */
-
-.content {}
-
-.cat-row {
-    padding-top: 50rpx;
-}
-
-.arrow {
-    width: 15rpx;
-    height: 15rpx;
-    border-top: 3rpx solid #686868;
-    border-right: 3rpx solid #686868;
-    transform: rotate(45deg);
-    position: absolute;
-    right: 30rpx;
-    top: 34rpx;
-}
-
-.home-content {
-    min-height: 1200rpx;
-    margin-top: 30rpx;
-    padding-bottom: 100rpx;
-    .updata {
-        padding-bottom: 120rpx;
-    }
-    .forum-content {
-        padding-bottom: 120rpx;
-        .btn {
-            display: flex;
-            color: #fff;
-            font-size: 30rpx;
-            text {
-                margin-left: auto;
-                margin-right: 30rpx;
-            }
-        }
-    }
-    .project-box {
-        padding-bottom: 120rpx;
-    }
-}
+ .home-content {
+     min-height: 1200rpx;
+     margin-top: 30rpx;
+     padding-bottom: 100rpx;
+     .updata {
+         padding-bottom: 120rpx;
+     }
+     .tab-content {
+         min-height: 600rpx;
+     }
+     .forum-content {
+         padding-bottom: 120rpx;
+         .btn {
+             display: flex;
+             color: #fff;
+             font-size: 30rpx;
+             text {
+                 margin-left: auto;
+                 margin-right: 30rpx;
+             }
+         }
+     }
+     .project-box {
+         padding-bottom: 120rpx;
+     }
+ }
+ 
+ .wrap {
+     /deep/ .u-back-top {
+         background: none;
+     }
+ }
+ 
+ .home-bg {
+     width: 100vw;
+     background-size: 750rpx 523rpx;
+     background-position: 0 0;
+     background-repeat: no-repeat;
+     overflow-y: scroll;
+     height: 100vh;
+     position: fixed;
+     left: 0;
+     top: 0;
+ }
+ 
+ .home-content-bg {
+     position: relative;
+     width: 100vw;
+     height: 100vh;
+ }
+ 
+ .home-content {
+     position: absolute;
+     width: 100%;
+     left: 0;
+     top: 0;
+     z-index: 0;
+     // height: 100000rpx;
+     .search-box-top {
+         display: flex;
+         align-items: center;
+         justify-content: flex-start;
+         width: 670rpx;
+         height: 70rpx;
+         background: #FFFFFF;
+         border-radius: 35rpx;
+         margin-left: 40rpx;
+         margin-top: 25rpx;
+         .qr-img {
+             width: 39rpx;
+             height: 39rpx;
+             margin: 15rpx 30rpx;
+         }
+         .qr-right {
+             display: flex;
+             align-items: center;
+             width: 100%;
+         }
+         .line {
+             border-left: 1rpx solid #A9AAAC;
+             height: 30rpx;
+         }
+         .top-text {
+             margin-left: 30rpx;
+             color: #999999;
+             font-size: 30rpx;
+         }
+         .line-right {
+             border-left: 1rpx solid #333333;
+             margin-left: 218rpx;
+         }
+         .top-text-search {
+             margin-right: 30rpx;
+             margin-left: auto;
+         }
+     }
+     .search-box-top-opacity-0 {
+         opacity: 0;
+     }
+     .illustrate {
+         display: flex;
+         flex-direction: column;
+         margin-bottom: 25rpx;
+         color: #FFFFFF;
+         .logo-sub-title {
+             line-height: 48rpx;
+         }
+         .logo-title {
+             line-height: 28rpx;
+         }
+     }
+     .sticky-title {
+         background: #3B6DBB;
+         padding: 20rpx 30rpx;
+         padding-top: 40rpx;
+         align-items: center;
+         opacity: 0;
+         padding-top: 86rpx;
+         .sticky-search {
+             color: #FFFFFF;
+             line-height: 42rpx;
+             margin-right: 105rpx;
+             image {
+                 width: 34rpx;
+                 height: 34rpx;
+                 margin-right: 10rpx;
+             }
+         }
+         .logo-text {
+             flex-direction: column;
+         }
+     }
+     .sticky-title-opacity {
+         opacity: 1;
+     }
+ }
+ 
+ .sticky-content {
+     background: #F5F5F5;
+     padding-top: 70rpx;
+     border-radius: 30rpx 30rpx 0px 0px;
+     width: 100%;
+     background-image: none;
+     padding-bottom: 20rpx;
+     min-height: 1000rpx;
+     /deep/ .u-sticky {
+         background: #f5f5f5;
+     }
+ }
+ 
+ // 论坛
+ .home-add-btn {
+     width: 726rpx;
+     height: 153rpx;
+     background: #ffffff;
+     margin-left: 12rpx;
+     border-radius: 14rpx;
+     .home-add-btn-left {
+         color: #888888;
+         line-height: 37rpx;
+         margin-left: 30rpx;
+         margin-top: 30rpx;
+         margin-bottom: 30rpx;
+         .title {
+             color: #333333;
+             line-height: 42rpx;
+             margin-bottom: 14rpx;
+         }
+     }
+     .home-add-btn-right {
+         width: 140rpx;
+         height: 58rpx;
+         color: #3b6dbb;
+         line-height: 58rpx;
+         margin-right: 30rpx;
+         background: #e1e8f3;
+         border-radius: 30rpx;
+         text-align: center;
+     }
+ }
+ 
+ .home-add-btn-right-icon {
+     width: 21rpx;
+     height: 38rpx;
+     margin-right: 30rpx;
+     image {
+         width: 100%;
+         height: 100%;
+     }
+ }
+ 
+ .tab-active {
+     position: relative;
+     height: 79rpx;
+     .tab-active-content {
+         margin: 0 30rpx;
+         display: flex;
+         justify-content: space-between;
+         position: absolute;
+         height: 149rpx;
+         top: 0;
+         z-index: 99;
+         width: 690rpx;
+     }
+     .tab-icon {
+         width: 435rpx;
+         height: 149rpx;
+     }
+     .icon-right {
+         width: 243rpx;
+     }
+ }

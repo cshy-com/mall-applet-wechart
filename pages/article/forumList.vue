@@ -2,34 +2,46 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-02 16:23:27
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-28 17:56:56
+ * @LastEditTime: 2023-08-31 10:33:23
  * @FilePath: \mall-applet\pages\subPack\forum\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <view>
+    <defNav title="我的论坛"></defNav>
     <view class="tab-subsection">
-      <u-subsection
-        :list="list"
-        :current="currentIndex"
-        :activeColor="'#3b6dbb'"
-        mode="subsection"
-        fontSize="28"
-        :keyName="'name'"
-        @change="sectionChange"
-      ></u-subsection>
+      <view
+        class="tab-subsection-item"
+        v-for="(item, index) in list"
+        :key="item.id"
+        :class="{ active: index == currentIndex }"
+        @click="sectionChange(index)"
+      >
+        {{ item.name }}
+      </view>
+
+     
     </view>
-    <forum
-      :list="forumList"
-      :current="currentIndex"
-      @getPage="getPageList"
-    ></forum>
+    <nodata
+      v-if="noDate"
+      :config="{
+        content: '暂无论坛数据',
+        imgUrl: defaultImg,
+      }"
+    ></nodata>
+    <template v-else>
+      <forum
+        :list="forumList"
+        :current="currentIndex"
+        @getPage="getPageList"
+      ></forum>
+      <noMore v-if="more == 'noMore' && current > 1"></noMore
+    ></template>
   </view>
 </template>
 
 <script>
 import forum from '@/components/forum'
-import forumData from '@/mock/index.js'
 import { ForumPage } from '@/api/index'
 import { getTotalPage } from '@/util/util'
 export default {
@@ -48,26 +60,28 @@ export default {
           name: '待审核',
           id: 10,
         },
-        {
-          name: '未通过',
-          id: 20,
-        },
-        {
-          name: '草稿',
-          id: 0,
-        },
+        // {
+        //   name: '未通过',
+        //   id: 20,
+        // },
+        // {
+        //   name: '草稿',
+        //   id: 0,
+        // },
       ],
 
       currentIndex: 0,
-      forumList: forumData.forumList,
+      forumList: [],
       current: 1,
       total: 0,
       more: 'noMore',
-      size: 10,
+      size: 10, noDate: false,
     }
   },
   // 计算属性
-  computed: {},
+  computed: { defaultImg() {
+      return this.$fileUrl + '/sysFile/img_zanwu_tuijian.png'
+    },},
   // 监听data中的数据变化
   watch: {},
   // 方法集合
@@ -76,7 +90,7 @@ export default {
       this.currentIndex = index
       this.current = 1
       this.more = 'more'
-      this.forumList=[]
+      this.forumList = []
       this.getPageList()
     },
     async getPageList() {
@@ -91,11 +105,12 @@ export default {
           type: 'user',
         })
         uni.hideLoading()
-       
+
         this.total = res.total
         let totalPage = getTotalPage(this.total, this.size)
         if (this.current == 1) {
           this.forumList = res.data
+          this.noDate = res.total == 0
         } else {
           this.forumList = [...this.forumList, ...res.data]
         }
@@ -106,17 +121,14 @@ export default {
           this.more = 'noMore'
         }
       } catch (e) {
-     
       } finally {
         uni.hideLoading()
       }
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
-  created() {
-   
-  },
-  onShow(){
+  created() {},
+  onShow() {
     this.getPageList()
   },
   // 生命周期：挂载完成时（可以访问DOM元素）
@@ -147,6 +159,29 @@ export default {
 <style scoped lang="scss">
 .tab-subsection {
   background: #fff;
-  padding: 20rpx;
+  padding: 30rpx;
+  font-size: 30rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #888888;
+  line-height: 42rpx;
+  display: flex;
+  align-items: center;
+  .tab-subsection-item {
+    margin-right: 70rpx;
+    position: relative;
+  }
+  .active {
+    color: #3b6dbb;
+  }
+  .tab-subsection-item:nth-child(n + 2)::after {
+    position: absolute;
+    content: '';
+    width: 1px;
+    height: 28rpx;
+    background: #888888;
+    left: -36rpx;
+    top: 10rpx;
+  }
 }
 </style>

@@ -1,46 +1,72 @@
 <template>
   <view>
+    <view
+      class="back-box"
+      :style="{
+        top: navInfo.menuTop + 'px',
+        height: navInfo.menuHeight + 'px',
+      }"
+    >
+      <image
+        @click="navBack"
+        :lazy-load="true"
+        :lazy-load-margin="0"
+        :src="defBack"
+        class="back-img"
+      ></image>
+    </view>
     <view class="store-block">
-      <!-- #ifndef APP-NVUE || MP-TOUTIAO -->
+       
       <u-swiper
         :list="swiperList"
         @change="(e) => (currentNum = e.current)"
         @click="clickSwiper($event)"
         :autoplay="false"
-        indicatorStyle="right: 20px"
-        height="320"
+    
+        indicatorStyle="bottom: 20rpx"
+        :height="'739rpx'"
       >
-        <view slot="indicator" class="indicator-num">
-          <text class="indicator-num__text"
-            >{{ currentNum + 1 }}/{{ swiperList.length }}</text
+      <view slot="indicator" class="indicator">
+          <view
+            class="indicator__dot"
+            v-for="(item, index) in swiperList"
+            :key="index"
+            :class="[index === currentNum && 'indicator__dot--active']"
           >
+          </view>
         </view>
       </u-swiper>
-      <!-- #endif -->
+    
+
       <!-- 店铺文字信息部分 -->
-      <view class="store-content-box">
+      <view class="store-content-box" v-if="commodityInfo">
+        <view class="tig-img" v-if="commodityInfo.discountedPrice > 500">
+          <image :lazy-load="true" :lazy-load-margin="0" :src="defTag"></image>
+        </view>
         <!-- 第一行 -->
         <view class="title">
           <text class="name">{{ commodityInfo.name }}</text>
-          <text class="tag"> 新品 </text>
+          <!-- <text class="tag"> 新品 </text> -->
         </view>
         <view class="hot-text">
           <view class="prod-text-info">
             <view class="price">
-              <text class="price-value">{{
-                commodityInfo.discountedPrice
-              }}</text>
+              <text class="price-value" v-if="commodityInfo.discountedPrice"
+                >¥ {{ commodityInfo.discountedPrice }}</text
+              >
               <text class="discount-text" v-if="commodityInfo.discountRatio"
                 >{{ commodityInfo.discountRatio }}折</text
               >
-              <text class="price-org"> {{ commodityInfo.originalPrice }}</text>
-              <text class="discount-sale"
-                >销量 {{ commodityInfo.salesVolume }} +</text
+              <text class="price-org"
+                >原价 ¥ {{ commodityInfo.originalPrice }}</text
+              >
+              <text class="discount-sale" v-if="commodityInfo.salesVolume"
+                >热销 {{ commodityInfo.salesVolume|handleNum }}</text
               >
             </view>
           </view>
         </view>
-
+        <view class="line"></view>
         <view class="hot-sale-info">
           <view class="hot-sale-row">
             <text class="lable">限制 </text>
@@ -54,78 +80,102 @@
             <text class="lable">保障 </text>
             <text class="value">{{ commodityInfo.guarantee }}</text>
           </view>
+          <view class="hot-sale-row">
+            <text class="lable">购买须知 </text>
+            <view class="more value" @click="goMore">
+              <text>查看更多</text>
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="defaultRight"
+                class="right-icon"
+              ></image>
+            </view>
+          </view>
         </view>
+      </view>
+      <u-gap height="12" bgColor="#F5F5F5"></u-gap>
+
+      <storeBox
+        @goShop="goShop"
+        :shopInfo="shopInfo"
+        @collectChange="collectChange"
+        :isCollect="isCollect"
+        :userType="user.userType"
+      >
+      </storeBox>
+      <u-gap height="12" bgColor="#F5F5F5"></u-gap>
+      <view class="comment-box">
+        <view class="tab-header">
+          <text> 用户评价({{ commentTotal }})</text>
+          <text class="tab-header-tip" v-if="commentTotal == 0"
+              >暂无评价</text
+            >
+          <view
+            class="right-more"
+            v-if="commentTotal > 0"
+            @click="goCommentMore"
+          >
+            <text>查看更多</text>
+            <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :src="defaultRight"
+              class="right-icon"
+            ></image>
+          </view>
+        </view>
+        <comment v-if="commentTotal>0" :commentData="commentData"></comment>
+      </view>
+      <u-gap height="12" bgColor="#F5F5F5"></u-gap>
+      <view class="article-grid-box">
+        <view class="tab-header">
+          <text> 推荐({{ prods2.length }})</text>
+          <text class="tab-header-tip" v-if="prods2.length == 0"
+              >暂无推荐</text
+            >
+        </view>
+        <commodity :showBtn="false" v-if="prods2.length>0" :prods="prods2"> </commodity>
+        <!-- <articleGrid :prods="prods2"> </articleGrid -->
       </view>
     </view>
     <!-- 购买须知 -->
-    <view class="notes-block">
+    <!-- <view class="notes-block">
       <view class="notes-title">购买须知</view>
       <view class="notes-content">
         <rich-text
           :nodes="commodityInfo.purchaseNotes"
           class="content"
         ></rich-text>
-        <!-- <view class="notes-row">
-          <text class="lable">有效期</text>
-          <text class="value">2023.4.10至2026.4.10 23:59</text>
-        </view>
-        <view class="notes-row">
-          <text class="lable">使用时间</text>
-          <text class="value">营业时间内可用</text>
-        </view>
-        <view class="notes-row">
-          <text class="lable">使用规则</text> -->
-
-        <!-- <text class="value"> · 可使用包间</text>
-          <text class="value"> · 本单发票由商家提供，详情请咨询商家</text>
-          <text class="value"> · 仅限堂食</text>
-          <text class="value"> · 团购用户不可同时享受商家的其他优惠</text>
-          <text class="value">
-            · 饮料酒水等问题，请致电商家咨询，以商家反馈为准</text
-          >
-          <text class="value">
-            ·如部分菜品因时令或其他不可抗拒因素导致无法提供，商家会用等价菜品替换，具体事宜请与商家协商</text
-          >
-          <text class="value">
-            · 使用团购券购买团单，有效期以优惠券规则为准</text
-          >
-          <text class="value"> · 每桌最多使用1张美团券</text>
-          <text class="value"> · 无需预约，消费高峰期可能需要等位</text>
-        </view>
-        <view class="notes-row">
-          <text class="lable">价格和销量说明</text>
-          <text class="value"
-            >价格公开透明价格公开透明价格公开透明价格公开透明价格公开透明价格公开透明</text
-          >
-        </view> -->
       </view>
-    </view>
-    <u-gap height="40" bgColor="#f1f1f1"></u-gap>
+    </view> -->
+    <!-- <u-gap height="40" bgColor="#f1f1f1"></u-gap> -->
     <!-- tab切换 -->
 
     <view class="wrap">
       <!--评价  -->
-      <view class="comment-box">
+      <!-- <view class="comment-box">
         <view class="tab-header">
           <text> 评价({{ commentTotal }})</text>
         </view>
         <comment :commentData="commentData"></comment>
-        <view @click="goCommentMore" class="comment-more" v-if="commentTotal>5">查看更多</view>
-      </view>
+        <view
+          @click="goCommentMore"
+          class="comment-more"
+          v-if="commentTotal > 5"
+          >查看更多</view
+        >
+      </view> -->
       <!-- 推荐 -->
-      <view class="article-grid-box">
+      <!-- <view class="article-grid-box">
         <view class="tab-header">
           <text> 推荐({{ prods2.length }})</text>
         </view>
         <commodity :prods="prods2"> </commodity
-      ></view>
-      <commFootBtn :tel="tel" :shopId="shopId"></commFootBtn>
+      ></view> -->
+      <commFootBtn :tel="sysTel" :shopId="shopId"></commFootBtn>
     </view>
-    <previewImage
-      @cancel="previewVisible = false"
-      :visible="previewVisible"
-      :tempUrl="swiperList[previewIndex].url"
-    ></previewImage>
+
   </view>
 </template>
 
@@ -136,15 +186,22 @@ import commodity from './../components/commodity.vue'
 import commFootBtn from './../components/commFootBtn.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import { getCommodityDetail, getCommodityPage } from '@/api/shop.js'
-import previewImage from '@/components/previewImage'
+import {
+  getCommodityDetail,
+  getCommodityPage,
+  mallShopById,
+  shopCommentsPage,
+} from '@/api/shop.js'
+ 
+import storeBox from './../components/storeBox'
 export default {
   components: {
     // articleGrid,
     comment,
     commodity,
     commFootBtn,
-    previewImage,
+ 
+    storeBox,
   },
   data() {
     return {
@@ -172,19 +229,43 @@ export default {
       commodityInfo: null,
       size: 10,
       current: 1,
-      previewIndex: 0,
-      previewVisible: false,
+  
       commentData: [],
       commentTotal: 0,
+      isCollect: false,
+      user: {},
     }
   },
   computed: {
-    // ...mapGetters(['commodityInfo']),
+    ...mapGetters(['shopInfo']),
+    navInfo() {
+      return this.$store.state.comm.navInfo
+    },
+    sysTel(){
+      return '027-123456'
+    },
+    defBack() {
+      return this.$fileUrl + '/sysFile/ic_nav_arrow.png'
+    },
+    defStar() {
+      return this.$fileUrl + '/sysFile/ic_xihuan_no.png'
+    },
+    defStarSelect() {
+      return this.$fileUrl + '/sysFile/ic_xihuan_yes.png'
+    },
+    defaultRight() {
+      return `${this.$fileUrl}/sysFile/ic_bian_arrow.png`
+    },
+    defTag() {
+      return `${this.$fileUrl}/sysFile/img_xq_zhunxiang.png`
+    },
   },
   onShow() {},
   onLoad(option) {
+    this.user = uni.getStorageSync('user')
     this.shopId = option.shopId
     this.commodityId = option.Id
+    this.getShopDetail()
     this.getCommodityInfo()
     this.getCommentsList()
     this.getCommodityRecommend()
@@ -194,7 +275,37 @@ export default {
     this.getCommodityRecommend()
   },
   methods: {
-    ...mapMutations([['setCommodityInfo']]),
+    ...mapMutations(['setCommodityInfo', 'setShopInfo']),
+    goMore(){
+      uni.navigateTo({
+        url: '/pages/mall/commodity/commodityIllustrate'
+      })
+    },
+    goShop() {
+      uni.navigateTo({
+        url: '/pages/mall/store/storeDetails?id=' + this.shopId,
+      })
+    },
+    navBack() {
+      uni.navigateBack()
+    },
+    collectChange(e) {
+      this.isCollect = !this.isCollect
+    },
+    async getShopDetail() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        let res = await mallShopById(this.shopId)
+        this.setShopInfo(res.data)
+        this.isCollect = res.data.ifCollect
+      } catch (e) {
+        console.log(e)
+      } finally {
+        uni.hideLoading()
+      }
+    },
     goCommentMore() {
       uni.navigateTo({
         url: '/pages/mall/comment/comment?shopId=' + this.shopId,
@@ -210,8 +321,10 @@ export default {
       this.commentTotal = res.total
     },
     clickSwiper(index) {
-      this.previewIndex = index
-      this.previewVisible = true
+      uni.previewImage({
+			urls: this.swiperList.map(val=>val.url),
+      current:index,loop:true,
+		});
     },
     // 查看推荐商品
     async getCommodityRecommend() {
@@ -287,14 +400,66 @@ export default {
         .exec()
     },
   },
+  options: {
+    styleIsolation: 'shared',
+  },
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .store-content {
+  border-radius: 0 !important;
+}
+.comment-box {
+  background: #fff;
+}
+.article-grid-box {
+  background: #fff;
+}
+
+.back-box {
+  padding-left: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 999;
+  top: 50rpx;
+  .back-img {
+    width: 62rpx;
+    height: 62rpx;
+    border-radius: 50%;
+  }
+}
+ 
+.indicator {
+  @include flex(row);
+  justify-content: center;
+
+  &__dot {
+    width: 16rpx;
+    height: 8rpx;
+    background: #ffffff;
+    border-radius: 5rpx;
+    opacity: 0.3;
+    margin: 0 8rpx;
+    transition: background-color 0.3s;
+
+    &--active {
+      width: 26rpx;
+
+      background: #ffffff;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      opacity: 0.8;
+    }
+  }
+}
 .article-grid-box {
   padding-bottom: 120rpx;
 }
 .store-block {
-  padding: 20rpx;
+  width: 750rpx;
+  // height: 739rpx;
 }
 .indicator-num {
   padding: 2px 0;
@@ -309,24 +474,44 @@ export default {
     font-size: 12px;
   }
 }
+
 .store-content-box {
   padding-bottom: 20rpx;
   line-height: 34rpx;
+  background: #fff;
+  position: relative;
+  .tig-img {
+    position: absolute;
+    right: 30rpx;
+    top: -34rpx;
+    image {
+      width: 92rpx;
+      height: 108rpx;
+    }
+  }
 
   .title {
     display: flex;
     justify-content: start;
     align-items: center;
-    margin: 20rpx 0;
+    align-items: center;
+    padding: 30rpx 30rpx 25rpx 30rpx;
     .name {
-      max-width: 356rpx;
-      font-size: 36rpx;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      max-width: 576rpx;
+
       color: #000;
       margin-right: 20rpx;
+
+      font-size: 30rpx;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #333333;
+      line-height: 42rpx;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
     .tag {
       font-size: 20rpx;
@@ -337,109 +522,127 @@ export default {
     }
   }
   .hot-text {
-    font-size: 28rpx;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 600;
+    font-size: 36rpx;
+    font-family: DINAlternate-Bold, DINAlternate;
+    font-weight: bold;
     color: #333333;
-    line-height: 40rpx;
-    margin-top: 16rpx;
-    margin-left: 14rpx;
-
+    line-height: 42rpx;
+    margin-left: 30rpx;
+    margin-bottom: 25rpx;
+    margin-right: 30rpx;
     .prod-text-info {
       .price {
         display: flex;
         justify-content: flex-start;
         align-content: center;
+        align-items: center;
         .price-value {
           color: #ff6a13;
         }
         .price-org {
-          font-size: 24rpx;
-          color: #a2a2a2;
-          line-height: 34rpx;
-          margin: 0 60rpx 0 15rpx;
           text-decoration: line-through;
+
+          font-size: 26rpx;
+          font-family: PingFangSC-Regular, PingFang SC;
           font-weight: 400;
+          color: #c0c0c0;
+          line-height: 37rpx;
+          margin-left: 18rpx;
         }
       }
 
       .discount-text {
-        background: #ffe6c7;
-        color: #ff6a13;
-        padding: 5rpx 10rpx;
-        border-radius: 10rpx;
-        line-height: 30rpx;
+        margin-left: 5rpx;
+
+        width: 64rpx;
+        height: 32rpx;
+        background: #ea531c;
+        border-radius: 5rpx;
         font-size: 20rpx;
-        margin-left: 20rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 28rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .discount-sale {
-        margin-right: 20rpx;
-        font-size: 24rpx;
-        color: #a2a2a2;
-        line-height: 34rpx;
-        margin: 0 60rpx 0 15rpx;
+        margin-left: auto;
 
+        font-size: 26rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
+        color: #888888;
+        line-height: 37rpx;
       }
     }
   }
+  .line {
+    width: 750rpx;
+    height: 1rpx;
+    border-top: 2rpx solid #eeeeee;
+  }
+
   .hot-sale-info {
     margin-top: 20rpx;
+    margin-left: 30rpx;
     .hot-sale-row {
-      font-size: 24rpx;
+      font-size: 26rpx;
       margin-bottom: 10rpx;
+      line-height: 37rpx;display: flex;
+    align-items: center;
       .lable {
-        font-size: 26rpx;
         font-weight: 600;
-        margin-right: 20rpx;
+        color: #333333;
+        margin-right: 30rpx;
       }
       .value {
-        color: #333;
+        color: #888888;
+      }
+      .more {
+        image {
+          width: 16rpx;
+          height: 24rpx;
+          margin-left: 10rpx;
+        }
       }
     }
   }
 }
 
 .tab-header {
+  padding: 30rpx;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 30rpx;
-  border-left: 6rpx solid #ff6a13;
-  padding-left: 14rpx;
-  margin: 20rpx 20rpx 20rpx 20rpx;
-  line-height: 30rpx;
-  font-weight: 600;
-}
-.comment-more {
-  background: #fff;
-  text-align: center;
-  padding: 20rpx;
-}
-.notes-block {
-  .notes-title {
-    font-size: 32rpx;
-    font-weight: 600;
-    color: #000;
-    margin: 20rpx;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #333333;
+  line-height: 42rpx;
+ 
+  .right-more {
+    font-size: 26rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #cccccc;
+    line-height: 37rpx;
+    display: flex;
+    align-items: center;
   }
-  .notes-content {
-    margin: 20rpx;
-    background: #fff;
-    border-radius: 15rpx;
-    padding: 20rpx;
-    .notes-row {
-      display: flex;
-      flex-direction: column;
-      border-bottom: 1px solid #f1f1f1;
-      .lable {
-        font-size: 24rpx;
-        font-weight: 600;
-        margin-top: 10rpx;
-      }
-      .value {
-        font-size: 24rpx;
-        color: #333;
-        margin-bottom: 10rpx;
-      }
-    }
+  .right-icon {
+    width: 16rpx;
+    height: 24rpx;
+    margin-left: 10rpx;
+  }
+  .tab-header-tip {
+    font-size: 26rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #cccccc;
+    line-height: 37rpx;
   }
 }
 </style>

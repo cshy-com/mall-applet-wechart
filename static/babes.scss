@@ -1,0 +1,109 @@
+ .font-34 {
+     font-size: 34rpx;
+     font-family: PingFangSC-Medium, PingFang SC;
+     font-weight: 500;
+ }
+ 
+ .font-22 {
+     font-size: 22rpx;
+ }
+ 
+ .font-26 {
+     font-size: 26rpx;
+     font-family: PingFangSC-Light, PingFang SC;
+     font-weight: 400;
+ }
+ 
+ .font-28 {
+     font-size: 26rpx;
+     font-family: PingFangSC-Light, PingFang SC;
+     font-weight: 400;
+ }
+ 
+ .font-24 {
+     font-size: 24rpx;
+     font-family: PingFangSC-Light, PingFang SC;
+     font-weight: 400;
+ }
+ 
+ .font-32-500 {
+     font-size: 32rpx;
+     font-family: PingFangSC-Medium, PingFang SC;
+     font-weight: 500;
+ }
+ 
+ .font-20 {
+     font-size: 20rpx;
+     font-family: PingFangSC-Light, PingFang SC;
+     font-weight: 300;
+ }
+ 
+ .font-30 {
+     font-size: 30rpx;
+     font-weight: 300;
+ }
+ 
+ .font-30-400 {
+     font-size: 30rpx;
+     font-family: PingFangSC-Medium, PingFang SC;
+     font-weight: 400;
+ }
+ 
+ .font-30-500 {
+     font-size: 30rpx;
+     font-family: PingFangSC-Medium, PingFang SC;
+     font-weight: 500;
+ }
+ 
+ .flex-start {
+     display: flex;
+     justify-content: flex-start;
+ }
+ 
+ .flex-start-center {
+     display: flex;
+     justify-content: start;
+     align-items: center;
+ }
+ 
+ .flex-center {
+     display: flex;
+     align-items: center;
+ }
+ 
+ .flex-between-center {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+ }
+ 
+ .over-ellipsis-1 {
+     word-break: break-all;
+     -webkit-box-orient: vertical;
+     -webkit-line-clamp: 1;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
+ 
+ .over-ellipsis-2 {
+     //  overflow: hidden;
+     //  text-overflow: ellipsis;
+     //  word-break: break-all;
+     //  -webkit-box-orient: vertical;
+     //  -webkit-line-clamp: 2;
+     //  white-space: nowrap;
+     overflow: hidden;
+     display: -webkit-box;
+     -webkit-line-clamp: 2;
+     /* 设置最大显示行数 */
+     -webkit-box-orient: vertical;
+     text-overflow: ellipsis;
+ }
+ 
+ .bachground-def-img {
+     background-size: 100%;
+     background-position: center;
+     background-repeat: no-repeat;
+     background-image: $app-load-gif;
+ }

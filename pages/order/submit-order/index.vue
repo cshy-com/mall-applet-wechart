@@ -1,26 +1,144 @@
 <template>
   <view class="order-box">
-    <u-form labelPosition="left" :model="orderInfo" :rules="rules" ref="uForm">
+    <defNav title="平台预定"></defNav>
+    <u-form :model="orderInfo" :rules="rules" ref="uForm">
+      <view class="caption"> 时间人数设置 </view>
       <u-form-item
         label="到店日期"
         prop="time"
         borderBottom
         ref="item1"
-        labelWidth="180"
+        labelWidth="200"
+        :leftIcon="defIconDate"
       >
-        <text @click="pickerShow">{{
-          $u.timeFormat(orderInfo.time, 'yyyy-mm-dd hh:MM')
-        }}</text>
+        <template slot="right">
+          <view class="form-right" @click="dateShow">
+            <text v-if="orderInfo.date">{{
+              $u.timeFormat(orderInfo.date, 'yyyy-mm-dd')
+            }}</text>
+            <text v-else style="color: #c0c0c0" class="tip">请选择日期</text>
+            <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :src="defaultRight"
+              class="right-icon"
+            ></image
+          ></view>
+        </template>
+
+        <u-calendar
+          @close="isDateShow = false"
+          :show="isDateShow"
+          :mode="'single'"
+          :color="'#3B6DBB'"
+          :showMark="false"
+          :rowHeight="130"
+          startText="今天"
+          ref="calendar"
+          title="选择日期"
+					:monthNum="12"
+          @confirm="dateConfirm"
+        ></u-calendar>
+      </u-form-item>
+      <u-form-item
+        label="到店时间"
+        prop="time"
+        borderBottom
+        ref="item1"
+        labelWidth="200"
+        :leftIcon="defIconTime"
+      >
+        <template slot="right">
+          <view class="form-right" @click="pickerShow">
+            <text v-if="orderInfo.time">{{ orderInfo.time }}</text>
+            <text v-else style="color: #c0c0c0" class="tip"
+              >请选择到店时间</text
+            >
+            <image
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :src="defaultRight"
+              class="right-icon"
+            ></image
+          ></view>
+        </template>
+        <!-- <u-popup :show="show" @close="close" round="15rpx">
+          <view class="picker-box">
+            <view class="picker-header">
+              <view>选择时间</view>
+
+              <image
+                @click="show = false"
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="defaultDel"
+              ></image>
+            </view>
+            <view class="time-piker">
+              <u-number-box
+                v-model="hour"
+                @change="hourChange"
+                :step="1"
+                :min="0"
+              >
+                <view slot="minus" class="minus">
+                  <image
+                    style="width: 68rpx; height: 68rpx"
+                    class=""
+                    :src="defIconReduce"
+                    mode="aspectFill"
+                    lazy-load="false"
+                    binderror=""
+                    bindload=""
+                  >
+                  </image>
+                </view>
+                <text slot="input" class="time-input">{{ hour.az() }}点</text>
+                <view slot="plus" class="plus">
+                  <image
+                    style="width: 68rpx; height: 68rpx"
+                    class=""
+                    :src="defIconAdd"
+                    mode="aspectFill"
+                    lazy-load="false"
+                    binderror=""
+                    bindload=""
+                  >
+                  </image>
+                </view>
+              </u-number-box>
+
+            
+            </view>
+            <view class="s-piker">
+              <view
+                class="s-picker-item"
+                @click="changeMinute(item, index)"
+                v-for="(item, index) in minutePicker"
+                :key="item.id"
+                :class="{ active: selectIndex == index }"
+              >
+                {{ item }}
+              </view>
+            </view>
+            <view class="picker-value">
+              {{ hour.az() }}:{{ minute.az() }}
+            </view>
+            <view class="picker-btn" @click="saveTime">
+              <button>确定</button>
+            </view>
+          </view>
+        </u-popup> -->
         <u-datetime-picker
           @close="show = false"
           @cancel="show = false"
           :show="show"
-          :minDate="minDate"
+        
           ref="datetimePicker"
           v-model="time"
-          mode="datetime"
+          mode="time"
           @confirm="confirm"
-          :formatter="formatter"
+        
         ></u-datetime-picker>
       </u-form-item>
 
@@ -29,75 +147,88 @@
         prop="number"
         borderBottom
         ref="item1"
-        labelWidth="180"
+        labelWidth="200"
+        :leftIcon="defIconProple"
       >
-        <!-- button-size="36"
-    color="#ffffff"
-    bgColor="#2979ff"
-    iconStyle="color: #fff"
-    integer -->
-        <u-number-box v-model="orderInfo.number" @change="valChange">
-          <view slot="minus" class="minus">
-            <u-icon name="minus" size="12"></u-icon>
+        <template slot="right">
+          <view class="form-right">
+            <u-number-box
+              :step="1"
+              v-model="orderInfo.number"
+              @change="valChange"
+            >
+              <view slot="minus" class="minus">
+                <image
+                  style="width: 56rpx; height: 56rpx"
+                  class=""
+                  :src="defIconReduce"
+                  mode="aspectFill"
+                  lazy-load="false"
+                  binderror=""
+                  bindload=""
+                >
+                </image>
+              </view>
+              <text slot="input" class="input">{{ orderInfo.number }}</text>
+              <view slot="plus" class="plus">
+                <image
+                  style="width: 56rpx; height: 56rpx"
+                  class=""
+                  :src="defIconAdd"
+                  mode="aspectFill"
+                  lazy-load="false"
+                  binderror=""
+                  bindload=""
+                >
+                </image>
+              </view>
+            </u-number-box>
           </view>
-          <text
-            slot="input"
-            style="width: 50px; text-align: center"
-            class="input"
-            >{{ orderInfo.number }}</text
-          >
-          <view slot="plus" class="plus">
-            <u-icon name="plus" color="#FFFFFF" size="12"></u-icon>
-          </view>
-        </u-number-box>
+        </template>
       </u-form-item>
+      <view class="caption"> 其他服务设置 </view>
       <u-form-item
-        label="特殊服务"
-        prop="remark"
-        borderBottom
-        ref="item1"
-        labelWidth="180"
-        ><u-textarea
-          v-model="orderInfo.remark"
-          placeholder="请输入"
-        ></u-textarea>
-      </u-form-item>
-      <u-form-item
+        :leftIcon="defIconSp"
         label="是否需要专人到场"
         prop="remark"
         borderBottom
         ref="item1"
-        labelWidth="180"
-        >
-      <u-radio-group
-        v-model="orderInfo.needCompanion"
-        placement="row"
-        @change="groupChange"
-        
+        labelWidth="340"
       >
-        <u-radio
-        iconSize="30"
-        size="30"
-        activeColor="#000"
-        labelSize="30"
-          :customStyle="{ marginBottom: '8px' }"
-          v-for="(item, index) in needCompanionOptions"
-          :key="index"
-          :label="item.name"
-          :name="item.id"
-          @change="radioChange"
-        >
-        </u-radio>
-      </u-radio-group>
+        <template slot="right">
+          <view class="form-right" @click="groupChange">
+            <image
+              style="width: 102rpx; height: 56rpx"
+              class=""
+              :src="orderInfo.needCompanion ? defaultOpen : defaultClose"
+              mode="aspectFill"
+              lazy-load="false"
+              binderror=""
+              bindload=""
+            ></image>
+          </view>
+        </template>
       </u-form-item>
-
+      <u-form-item
+        :leftIcon="defIconText"
+        label="专属服务"
+        prop="remark"
+        ref="item1"
+        labelPosition="top"
+        labelWidth="200"
+        class="last-item"
+        ><u-textarea
+          v-model="orderInfo.remark"
+          placeholder="请输入"
+          class="textarea-class"
+          placeholderClass="placeholder-class"
+        ></u-textarea>
+      </u-form-item>
     </u-form>
 
     <view class="form-btn" @click="submitOrder">
-      <button>下单</button>
+      <button :disabled="!orderInfo.time || !orderInfo.date">下单</button>
     </view>
-
-
   </view>
 </template>
 
@@ -110,15 +241,22 @@ export default {
   data() {
     return {
       orderInfo: {
-        time: Number(new Date()),
+        time: null,
         number: 1,
         remark: null,
-        needCompanion:1
+        needCompanion: true,
+        date: null,
       },
       show: false,
-      minDate: Number(new Date().getTime()),
-      time: Number(new Date()),
+
+      time: null,
       rules: {
+        'orderInfo.date': {
+          type: 'string',
+          required: true,
+          message: '请选择到店日期',
+          trigger: ['blur', 'change'],
+        },
         'orderInfo.time': {
           type: 'string',
           required: true,
@@ -134,7 +272,7 @@ export default {
           trigger: ['blur', 'change'],
         },
       },
-   
+
       needCompanionOptions: [
         {
           name: '需要',
@@ -148,25 +286,92 @@ export default {
         },
       ],
       shopId: '',
+      isDateShow: false,
+      isDisabled: true,
+      minutePicker: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55],
+      hour: 0,
+      selectIndex: -1,
+      minute: 0,
     }
   },
   // 计算属性
-  computed: {},
+  computed: {
+    defIconDate() {
+      return `${this.$fileUrl}/sysFile/ic_yud_daodian.png`
+    },
+    defIconTime() {
+      return `${this.$fileUrl}/sysFile/ic_yud_shijian.png`
+    },
+    defIconProple() {
+      return `${this.$fileUrl}/sysFile/ic_yud_renshu.png`
+    },
+    defIconSp() {
+      return `${this.$fileUrl}/sysFile/ic_yud_zhunren.png`
+    },
+    defIconText() {
+      return `${this.$fileUrl}/sysFile/ic_yud_fuwu.png`
+    },
+    defIconAdd() {
+      return `${this.$fileUrl}/sysFile/ic_yud_jia.png`
+    },
+    defIconReduce() {
+      return `${this.$fileUrl}/sysFile/ic_yud_jian_no.png`
+    },
+
+    defaultRight() {
+      return `${this.$fileUrl}/sysFile/ic_bian_arrow.png`
+    },
+
+    defaultOpen() {
+      return `${this.$fileUrl}/sysFile/ic_yud_xuanze_shi.png`
+    },
+    defaultClose() {
+      return `${this.$fileUrl}/sysFile/ic_yud_xuanze_no.png`
+    },
+    defaultDel() {
+      return `${this.$fileUrl}/sysFile/ic_yud_sanchu.png`
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   // 方法集合
   methods: {
+    formatter(day) {
+      const d = new Date()
+      let month = d.getMonth() + 1
+      const date = d.getDate()
+      if (day.month == month && day.day == date ) {
+        day.bottomInfo = '今天'
+      }
+      if (day.month == month && day.day == date + 1) {
+        day.bottomInfo = '明天'
+      }
+      return day
+    },
+    changeMinute(item, index) {
+      this.selectIndex = index
+      this.minute = this.minutePicker[index]
+    },
+    saveTime() {
+      this.orderInfo.time = `${this.hour.az()}:${this.minute.az()}`
+      this.show = false
+    },
+    dateShow() {
+      this.isDateShow = true
+    },
+    dateConfirm(e) {
+      this.orderInfo.date = e[0]
+      this.isDateShow = false
+    },
     groupChange(n) {
-      console.log('groupChange', n)
+      this.orderInfo.needCompanion = !this.orderInfo.needCompanion
     },
-    radioChange(n) {
-      console.log('radioChange', n)
-    },
+
     pickerShow() {
       this.show = true
-      this.orderInfo.time = this.time
     },
     confirm(e) {
+  
       this.show = false
       this.orderInfo.time = e.value
     },
@@ -184,20 +389,18 @@ export default {
     //发起订单请求
     async savaData() {
       try {
+        let date = uni.$u.timeFormat(this.orderInfo.date, 'yyyy-mm-dd')
         await orderAdd({
-          estimatedTime: uni.$u.timeFormat(
-            this.orderInfo.time,
-            'yyyy-mm-dd hh:MM:ss'
-          ),
+          estimatedTime: `${date} ${this.orderInfo.time}:00`,
           numberOfPeople: this.orderInfo.number,
           remarks: this.orderInfo.remark,
           shopId: this.shopId,
-          needCompanion:this.orderInfo.needCompanion
+          needCompanion: this.orderInfo.needCompanion ? 1 : 0,
         })
-        uni.$u.toast('已预约，待客服确认')
-        // setTimeout(() => {
-          uni.navigateBack()
-        // }, 3000)
+        this.$tip.toast('已预约，待客服确认')
+        setTimeout(() => {
+        uni.navigateBack()
+        }, 1500)
       } catch (e) {
         console.log(e)
       }
@@ -205,28 +408,32 @@ export default {
     valChange(e) {
       console.log('当前值为: ' + e.value)
     },
-    formatter(type, value) {
-      if (type === 'year') {
-        return `${value}年`
-      }
-      if (type === 'month') {
-        return `${value}月`
-      }
-      if (type === 'day') {
-        return `${value}日`
-      }
-      if (type === 'hour') {
-        return `${value}时`
-      }
-      if (type === 'minute') {
-        return `${value}分`
-      }
-      return value
+    hourChange(e) {
+      console.log('当前值为: ' + e.value)
     },
+    // formatter(type, value) {
+    //   if (type === 'year') {
+    //     return `${value}年`
+    //   }
+    //   if (type === 'month') {
+    //     return `${value}月`
+    //   }
+    //   if (type === 'day') {
+    //     return `${value}日`
+    //   }
+    //   if (type === 'hour') {
+    //     return `${value}时`
+    //   }
+    //   if (type === 'minute') {
+    //     return `${value}分`
+    //   }
+    //   return value
+    // },
   },
   onReady() {
-    this.$refs.datetimePicker.setFormatter(this.formatter)
+    // this.$refs.datetimePicker.setFormatter(this.formatter)
     this.$refs.uForm.setRules(this.rules)
+    this.$refs.calendar.setFormatter(this.formatter)
   },
   onLoad(option) {
     this.shopId = option.shopId
@@ -245,57 +452,218 @@ export default {
 }
 </script>
 <style>
-page {
-  background: #fff;
+.placeholder-class {
+  font-size: 30rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #c0c0c0;
+  line-height: 42rpx;
 }
 </style>
 <style scoped lang="scss">
+.caption {
+  margin: 30rpx 0 30rpx 42rpx;
+  font-size: 28rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #888888;
+  line-height: 40rpx;
+}
+.right-icon {
+  width: 16rpx;
+  height: 24rpx;
+  margin-left: 10rpx;
+}
 .order-box {
-  padding: 30rpx;
-  .form-btn {
-    width: 200rpx;
-    height: 85rpx;
-    margin: 200rpx auto;
-    button {
-      height: 85rpx;
-      background: $Gradual-color;
-      border-radius: 10rpx;
-      font-size: 30rpx;
-      font-weight: 400;
-      text-align: center;
-      color: #ffffff;
-      line-height: 85rpx;
+  /deep/ .u-form-item {
+    margin: 0 12rpx;
+    background: #fff;
+    border-radius: 14rpx;
+    padding: 30rpx 30rpx 0rpx 30rpx;
+  }
+  /deep/ .u-form-item__body {
+    padding: 0 0 27rpx 0 !important;
+  }
+  /deep/ .u-icon__img {
+    width: 42rpx !important;
+    height: 42rpx !important;
+    margin-right: 10rpx !important;
+  }
+  /deep/ .u-calendar-header__title,
+  /deep/ .u-calendar-month__title,
+  /deep/ .u-calendar-header__subtitle {
+    font-size: 32rpx !important;
+    font-family: PingFangSC-Medium, PingFang SC !important;
+    font-weight: 500 !important;
+    color: #333333 !important;
+    line-height: 45rpx !important;
+    text-align: left !important;
+    text-indent: 30rpx !important;
+  }
+  /deep/ .u-calendar-header__title {
+    padding-top: 30rpx !important;
+  }
+  /deep/ .u-calendar-month__title,
+  /deep/ .u-calendar-header__subtitle {
+    color: #000000 !important;
+  }
+  /deep/ .u-popup__content__close {
+    .u-icon {
+      border-radius: 50%;
+      width: 44rpx;
+      height: 44rpx;
+      background: #e9e9ea;
+
+      text {
+        left: 8rpx;
+        font-size: 26rpx !important;
+      }
     }
   }
-  .minus {
-    width: 22px;
-    height: 22px;
-    border-width: 1px;
-    border-color: #e6e6e6;
-    border-style: solid;
-    border-top-left-radius: 100px;
-    border-top-right-radius: 100px;
-    border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
-    @include flex;
-    justify-content: center;
-    align-items: center;
+  .form-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 750rpx;
+    height: 99rpx; padding-bottom: env(safe-area-inset-bottom); 
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    button {
+      width: 630rpx;
+      height: 70rpx;
+      background: #3b6dbb;
+      border-radius: 40rpx;
+
+      font-size: 30rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 70rpx;
+      margin: 14rpx auto;
+
+      
+    }
+    button[disabled] {
+      opacity: 0.3;
+    }
+  }
+  .minus,
+  .plus {
+    height: 56rpx;
   }
 
   .input {
     padding: 0 10px;
+    font-size: 28rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+    line-height: 40rpx;
+    width: 75rpx;
+    text-align: center;
   }
 
-  .plus {
-    width: 22px;
-    height: 22px;
-    background-color: $Gradual-color;
-    border-radius: 50%;
-    /* #ifndef APP-NVUE */
+  .textarea-class {
+  }
+  /deep/ .u-textarea {
+    margin-top: 20rpx;
+    background: #f5f5f5;
+    border-radius: 14rpx;
+    border: none;
+    padding: 30rpx 24rpx;
+    font-size: 30rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+  }
+}
+.picker-box {
+  .picker-header {
+    margin: 38rpx 30rpx;
     display: flex;
-    /* #endif */
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    font-size: 32rpx;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #333333;
+    line-height: 45rpx;
+    image {
+      width: 44rpx;
+      height: 44rpx;
+    }
+  }
+  .time-piker {
+    font-size: 32rpx;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #000000;
+    line-height: 42rpx;
+    margin: 62rpx 30rpx 52rpx 30rpx;
+    /deep/ .u-number-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  .s-piker {
+    margin-left: 30rpx;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-bottom: 120rpx;
+    .s-picker-item {
+      width: 162rpx;
+      height: 88rpx;
+      background: #f5f5f5;
+      border-radius: 14rpx;
+      margin-right: 14rpx;
+      line-height: 88rpx;
+      text-align: center;
+      margin-bottom: 15rpx;
+    }
+    .active {
+      background: #3b6dbb;
+      color: #ffffff;
+    }
+    .s-picker-item:nth-child(4n) {
+      margin-right: 0;
+    }
+  }
+  .picker-value {
+    width: 750rpx;
+    height: 80rpx;
+    background: #e9e9ea;
+    text-align: center;
+    font-size: 28rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+    line-height: 80rpx;
+  }
+  .picker-btn {
+    width: 750rpx;
+    height: 99rpx;
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    button {
+      margin: 15rpx auto;
+      width: 630rpx;
+      height: 70rpx;
+      background: #3b6dbb;
+      border-radius: 40rpx;
+      font-size: 30rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 70rpx;
+    }
   }
 }
 </style>

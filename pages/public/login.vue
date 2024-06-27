@@ -1,190 +1,154 @@
 <template>
   <view>
-    <view class="nav">
-      <hx-navbar :config="config" ref="hxnb">
-        <view slot="center">
-          <view class="center" style="">
-            <text class="color" style="font-size: 18px">{{
-              config.title
-            }}</text>
-          </view>
-        </view>
-      </hx-navbar>
+    <view
+      class="home-bg"
+      :style="{
+        'background-image': defHomeBg,
+      }"
+    >
     </view>
+    <view
+      class="back-box"
+      :style="{
+        top: navInfo.menuTop + 'px',
+        height: navInfo.menuHeight + 'px',
+      }"
+    >
+      <image
+        @click="goBack"
+        :lazy-load="true"
+        :lazy-load-margin="0"
+        :src="defBack"
+        class="back-img"
+      ></image>
+    </view>
+    <view class="login-box">
+      <view class="logo">
+        <image
+          :lazy-load="true"
+          :lazy-load-margin="0"
+          :src="defaultLogo"
+        ></image>
+        <text class="title">清云私享</text>
+        <text class="sub-title">便捷生活每一天</text>
+      </view>
 
-    <view class="page">
-      <view class="form">
-        <u-form
-          :model="form"
-          ref="uForm"
-          :label-width="0"
-          :error-type="errorType"
-        >
-          <u-form-item class="form-item" prop="tel"
-            ><u-input
-              prefixIconStyle="font-size: 22px;color:#abacad"
-              prefixIcon="account"
-              v-model="form.tel"
-              type="number"
-              :maxlength="11"
-              placeholder="请输入您的手机号"
-          /></u-form-item>
+      <view class="page">
+        <view class="submit" @click="submit">
+          <image
+            :lazy-load="true"
+            :lazy-load-margin="0"
+            :src="defaultPhone"
+          ></image>
+          <view>手机号码登录</view>
+        </view>
+        <view class="weixin-btn">
+          <button
+            type="text"
+            @click="wechatLogin"
+            v-if="!selected"
+            :plain="true"
+          >
+            <view class="weixin-btn-content">
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="defLoginIcon"
+              ></image>
 
-          <u-form-item class="form-item" prop="code">
-            <view class="code-item">
-              <u-input
-                prefixIcon="chat"
-                placeholder="请输入验证码"
-                v-model="form.code"
-                prefixIconStyle="font-size: 22px;color:#abacad"
-              >
-                <template slot="suffix">
-                  <view class="view-code">
-                    <u-code
-                      ref="uCode"
-                      @change="codeChange"
-                      seconds="60"
-                      changeText="X秒重新获取"
-                    ></u-code>
-                  </view>
-                  <view class="btn">
-                    <u-button
-                      @tap="getCode"
-                      :text="tips"
-                      color="#000"
-                      type="success"
-                      size="mini"
-                    ></u-button>
-                  </view>
-                </template>
-              </u-input>
+              <view>快捷方式登录</view>
             </view>
-          </u-form-item>
-        </u-form>
-      </view>
-      <view class="login-options">
-        <check :selected="selected" @result="checkResult"
-          ><view class="agreement" @click="watchAgreement"
-            >勾选即同意隐私协议</view
-          ></check
-        >
-      </view>
-      <view class="submit">
-        <button @click="submit">登录</button>
-      </view>
-      <view class="weixin-btn">
-        <button
-          type="text"
-          open-type="getPhoneNumber"
-          @getphonenumber="getPhoneNumber"
-          :plain="true"
-        >
-          <view class="weixin-btn-content">
-            <!-- <u-icon name="weixin-circle-fill" size="80"></u-icon> -->
-            
-            <u-icon name="chat-fill" size="80"></u-icon>
-            <text>手机号快捷登录</text>
-          </view>
-        </button>
-      </view>
+          </button>
 
-      <u-toast ref="uToast"></u-toast>
-      <popup
-        :visible="open"
-        :allowClickShadowClose="false"
-        @closeCallBack="closeCallBack"
-      >
-        <view>
-          <view class="dialog-header">
-            <text>协议及隐私说明</text>
-          </view>
-          <view class="dialog-bodys">
-            <view> 这里是说明 </view>
-          </view>
-          <view class="dialog-footer">
-            <view class="dialog-btn" @click="closeDialog">{{ dialogBtn }}</view>
-          </view>
+          <button
+            v-else
+            type="text"
+            open-type="getPhoneNumber"
+            @getphonenumber="getPhoneNumber"
+            :plain="true"
+            ref="loginBtn"
+          >
+            <view class="weixin-btn-content">
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="defLoginIcon"
+              ></image>
+
+              <view>快捷方式登录</view>
+            </view>
+          </button>
         </view>
-      </popup>
+
+        <view class="login-options">
+          <check :selected="selected" @result="checkResult"
+            ><view class="agreement"
+              ><text>我已阅读并同意</text
+              ><text class="tip" @click="watchAgreement"
+                >《清云私享隐私协议》</text
+              ></view
+            ></check
+          >
+        </view>
+        <view class="visit-login">
+          <button class="visit-login-btn" @click="goBack">跳过登录</button>
+        </view>
+        <u-toast ref="uToast"></u-toast>
+      </view>
     </view>
+    <checkPopup
+      @closeCheckPopup="closeCheckPopup"
+      :show="checkPopShow"
+    ></checkPopup>
   </view>
 </template>
 
 <script>
-import util from '@/util/util.js'
-import { setAuthorization, getAuthorization } from '@/util/auth.js'
+import {
+  setAuthorization,
+  getAuthorization,
+  removeAuthorization,
+} from '@/util/auth.js'
 import { sendCode, login, wxLogin } from '@/api/index.js'
 import check from '@/pages/public/components/check.vue'
-import popup from '@/pages/public/components/popup.vue'
+const { mapGetters } = createNamespacedHelpers('comm')
+
 import { createNamespacedHelpers } from 'vuex'
 const { mapMutations } = createNamespacedHelpers('user')
-import commNav from '@/components/commNav'
+
+import checkPopup from './components/checkPopup.vue'
 export default {
-  components: { check, popup, commNav },
+  components: { check, checkPopup },
   data() {
     return {
-      seconds: 60,
-
-      tips: '获取验证码',
-
-      form: {
-        tel: '',
-
-        code: '',
-      },
-
-      rules: {
-        tel: [
-          {
-            required: true,
-            message: '手机号不能为空',
-            trigger: ['blur'],
-          },
-          {
-            pattern:
-              /^(13[0-9]|14[4579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[1589])\d{8}$/,
-            // 正则检验前先将值转为字符串
-            transform(value) {
-              return String(value)
-            },
-            message: '手机号格式不正确',
-          },
-        ],
-        code: [
-          {
-            required: true,
-            message: '验证码不能为空',
-            trigger: ['blur'],
-          },
-        ],
-      },
-      errorType: ['toast'],
-      type: 'text',
-      border: true,
-      tips: '',
-      value: '',
       selected: false,
-      code: '',
-      open: false,
-      dialogBtn: '',
-      config: {
-        color: ['#000', '#000'],
-        title: '登录',
-        // centerSlot: true,
-        // leftSlot: true,
-        back: false,
-        fixed: true,
-        centerSlot: true,
-        // backgroundColor: [0, ['#3a6cba']],
-        // // 滑动屏幕后切换颜色，注意颜色为数组时长度必须一样，还有使用滑动切换必须监听 onPageScroll 事件
-        // slideBackgroundColor: [1, ['#3b6dbb']],
-      },
+      checkPopShow: false,
+      type: null, //phone wechat
     }
   },
+  computed: {
+    ...mapGetters(['navInfo']),
+    defHomeBg() {
+      return `url(${this.$fileUrl}/sysFile/img_home_bg.png)`
+    },
+    defaultLogo() {
+      return `${this.$fileUrl}/sysFile/img_logo.png`
+    },
+    defaultPhone() {
+      return `${this.$fileUrl}/sysFile/ic_denl_shoujihao.png`
+    },
+    defLoginIcon() {
+      return `${this.$fileUrl}/sysFile/ic_denl_weixin.png`
+    },
+    defBack() {
+      return this.$fileUrl + '/sysFile/ic_nav_arrow_wud_bai.png'
+    },
+  },
+
   onLoad() {
-    wx.enableAlertBeforeUnload({
-      message: '请先登录',
-    })
+    // wx.enableAlertBeforeUnload({
+    //   message: '请先登录',
+    // })
     var that = this
     uni.login({
       provider: 'weixin',
@@ -192,97 +156,61 @@ export default {
         that.code = res.code
       },
     })
+    uni.$on('isChecked', (data) => {
+      this.selected = data.data
+      // console.log('监听到事件来自 update ，携带参数 msg 为：' + data.data)
+    })
   },
 
-  onReady() {
-    this.$refs.uForm.setRules(this.rules)
-  },
+  onReady() {},
   onShow() {
+    this.setUserInfo(null)
+    uni.setStorageSync('user', null)
+    this.setOrderNumber(null)
+    this.setIntegralTotal(null)
+    removeAuthorization('Authorization')
+    uni.removeStorageSync('recentSearch')
     // #ifdef MP-WEIXIN
     if (wx.hideHomeButton) {
       wx.hideHomeButton()
     }
     // #endif
   },
+  beforeDestroy() {
+    uni.$off('isChecked')
+  },
   methods: {
-    ...mapMutations(['setUserInfo']),
-
-    codeChange(text) {
-      this.tips = text
+    ...mapMutations(['setUserInfo','setOrderNumber','setIntegralTotal']),
+    goBack() {
+      uni.navigateBack()
     },
-    getPhoneNumber(e) {
-      if (!this.selected) {
-        this.$tip.toast('请先勾选隐私协议')
-        return
-      }
-      console.log('e.detail.code'+e.detail.code)
-      wxLogin(e.detail.code).then((res) => {
-        if (res && res.code == 0) {
-          setAuthorization(res.data.token)
-          this.setUserInfo(res.data)
-          uni.setStorageSync('user', res.data)
-          uni.switchTab({
-            url:
-              res.data.userType == 1
-                ? '/pages/index/home/userHome'
-                : '/pages/index/home/businessHome',
-          })
-        } else {
-          this.$u.toast(msg)
-        }
-      })
+    closeCheckPopup(e) {
+      // 0 不同意  1 同意
+      this.checkPopShow = false
+      this.selected = e == 1 ? true : false
     },
-    getCode() {
-      if (!this.form.tel) {
-        this.$tip.toast('手机号不能为空')
+    submit() {
 
-        return false
-      } else {
-        if (!uni.$u.test.mobile(this.form.tel)) {
-          this.$tip.toast('请输入正确的手机号')
-
-          return false
-        }
-      }
-      if (this.$refs.uCode.canGetCode) {
-        this.$tip.tipLoading('正在获取验证码').then(() => {
-          this.getCodeHttp()
+   
+      this.type = 'phone'
+      if (this.selected) {
+        uni.navigateTo({
+          url: '/pages/public/login2?select=' + this.selected,
         })
       } else {
-        this.$tip.toast('倒计时结束后再发送')
+        this.checkPopShow = true
       }
     },
-    checkResult(e) {
-      this.selected = e
+    wechatLogin() {
+      this.type = 'wechat'
+      if (!this.selected) {
+        this.checkPopShow = true
+      }
     },
-    //关闭弹窗
-    closeCallBack() {
-      this.open = false
-    },
-    watchAgreement(e) {
-      this.open = true
-      // if (!this.selected) {
-      //   this.timeCount(5)
-      //   this.dialogBtn = `关闭`
-      // } else {
-      this.dialogBtn = `关闭`
-      // }
-    },
-    closeDialog() {
-      // if (this.selected) {
-      this.closeCallBack()
-      // }
-    },
-    wechartLogin() {
-      this.$tip.toast('正在开发，敬请期待')
-    },
-    loginSubmit() {
-      login({
-        code: this.form.code,
-
-        phoneNumber: this.form.tel,
-      })
-        .then((res) => {
+    getPhoneNumber(e) {
+      console.log('e.detail.code' + e.detail.code)
+      if (e.detail.code) {
+        wxLogin(e.detail.code).then((res) => {
           if (res && res.code == 0) {
             setAuthorization(res.data.token)
             this.setUserInfo(res.data)
@@ -297,59 +225,88 @@ export default {
             this.$u.toast(msg)
           }
         })
-        .catch(() => {
-          uni.hideLoading()
-        })
-    },
-
-    submit() {
-      if (!this.selected) {
-        this.$tip.toast('请先勾选隐私协议')
-        return
+      } else {
+        this.$u.toast('已取消授权')
       }
+    },
 
-      this.$refs.uForm.validate().then(() => {
-        this.$tip.tipLoading('正在登录').then(() => {
-          this.loginSubmit()
-        })
+    checkResult(e) {
+      this.selected = e
+    },
+
+    watchAgreement(e) {
+      uni.navigateTo({
+        url: '/pages/public/agreement',
       })
-    },
-    codeChange(text) {
-      this.tips = text
-    },
-
-    getCodeHttp() {
-      // 短信验证码
-      sendCode(this.form.tel)
-        .then((res) => {
-          if (res.code == 0) {
-            this.$tip.toast('验证码已发送')
-            this.$refs.uCode.start()
-          } else {
-            this.$tip.toast(res.msg)
-          }
-        })
-        .catch(() => {
-          uni.hideLoading()
-        })
-    },
-    end() {
-      this.$tip.toast('倒计时结束')
-    },
-    start() {
-      this.$tip.toast('倒计时开始')
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.home-bg {
+  width: 100vw;
+  background-size: 100%;
+  background-position: 0 0;
+  background-repeat: repeat;
+  overflow-y: scroll;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+.back-box {
+  padding-left: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 999;
+  top: 50rpx;
+  .back-img {
+    width: 62rpx;
+    height: 62rpx;
+    border-radius: 50%;
+  }
+}
+.login-box {
+  top: 319rpx;
+  position: relative;
+  z-index: 99;
+  width: 100vw;
+  //  height: 100vh;
+}
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  image {
+    width: 158rpx;
+    height: 158rpx;
+  }
+  .title {
+    margin-top: 30rpx;
+    margin-bottom: 10rpx;
+    font-size: 38rpx;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #333333;
+    line-height: 53rpx;
+  }
+  .sub-title {
+    font-size: 30rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #888888;
+    line-height: 42rpx;
+  }
+}
 .page {
   display: flex;
   flex-direction: column;
   align-items: center;
   align-content: center;
-  padding: 50rpx;
 
   .form {
     width: 100%;
@@ -385,18 +342,24 @@ export default {
     }
   }
   .submit {
-    width: 90%;
     margin: auto;
-    margin-top: 123rpx;
-    button {
-      height: 85rpx;
-      background: $Gradual-color;
-      border-radius: 10rpx;
-      font-size: 30rpx;
-      font-weight: 400;
-      text-align: center;
-      color: #ffffff;
-      line-height: 85rpx;
+    margin-top: 270rpx;
+    width: 690rpx;
+    height: 88rpx;
+    background: #3b6dbb;
+    border-radius: 14rpx;
+    font-size: 32rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 88rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    image {
+      width: 42rpx;
+      height: 42rpx;
+      margin-right: 10rpx;
     }
   }
 
@@ -423,8 +386,20 @@ export default {
   }
 
   .login-options {
-    width: 90%;
-    margin: 58rpx auto 123rpx;
+    margin-top: 80rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .agreement {
+      font-size: 26rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #888888;
+      line-height: 37rpx;
+      .tip {
+        color: #3b6dbb;
+      }
+    }
 
     .address {
       padding: 30rpx 0;
@@ -518,24 +493,54 @@ export default {
   padding: 0 10%;
 }
 .weixin-btn {
-  margin-top: 80rpx;
+  margin-top: 30rpx;
+  width: 690rpx;
+  height: 88rpx;
+  background: #61ac7f;
+  border-radius: 14rpx;
 
   button::after {
     border: 0; // 或者 border: none;
     background: none;
   }
   button {
+    width: 100%;
     border: none;
+    margin: 0;
+    padding: 0;
   }
   .weixin-btn-content {
     display: flex;
     align-content: center;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-
-    text {
-      font-size: 24rpx;
+    font-size: 32rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 88rpx;
+    image {
+      width: 42rpx;
+      height: 42rpx;
+      margin-right: 10rpx;
     }
+  }
+}
+.visit-login {
+  button {
+    width: 230rpx;
+    height: 78rpx;
+    background: #eeeeee;
+    border-radius: 14px;
+    font-size: 30rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+    line-height: 78rpx;
+    border: none;
+  }
+  button:after {
+    border: none;
   }
 }
 .nav /deep/ .hx-navbar__content__main_center {
@@ -556,7 +561,7 @@ export default {
   font-weight: 400;
   color: #000;
 }
-/deep/ .u-icon--right{
+/deep/ .u-icon--right {
   justify-content: center;
 }
 </style>

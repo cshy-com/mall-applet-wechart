@@ -2,12 +2,12 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-08 17:00:41
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-19 11:14:16
+ * @LastEditTime: 2023-08-22 10:09:11
  * @FilePath: \mall-applet\util\request.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import comUtils from './comUtils.js'
-import { getAuthorization } from '@/util/auth'
+import { getAuthorization, removeAuthorization } from '@/util/auth'
 import store from '../store/index.js'
 export const request = (options) => {
     const token = getAuthorization()
@@ -34,9 +34,19 @@ export const request = (options) => {
                         if (requestCode === 200) {
                             resolve(res.data)
                         } else if (requestCode === 401) {
-                            uni.redirectTo({
-                                url: '/pages/public/login'
+                            uni.showToast({
+                                title: '登陆过期，即将重新登陆',
+                                icon: "none",
+                                duration: 2500
+
                             })
+
+                            setTimeout(() => {
+                                uni.navigateTo({
+                                    url: '/pages/public/login'
+                                })
+                            }, 1500)
+
                         } else if (requestCode === 5001) {
                             uni.showModal({
                                 title: '提示',

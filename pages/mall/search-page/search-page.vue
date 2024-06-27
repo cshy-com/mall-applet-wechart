@@ -1,36 +1,39 @@
 <template>
   <!--pages/search-page/search-page.wxml-->
   <view class="container">
+    <defNav title="搜索" ref="navs"></defNav>
     <!-- 搜索框 -->
-    <view class="search-bar">
-      <view class="search-box">
-        <input
-          placeholder="输入关键字搜索"
-          class="sear-input"
-          confirm-type="search"
-          @confirm="toSearchProdPage"
-          v-model="title"
-        />
-        <image src="/static/img/icon/search.png" class="search-img"></image>
-      </view>
-      <text class="search-hint" @tap="toSearchProdPage">搜素</text>
+    <view class="search">
+      <uni-data-select
+        v-model="value"
+        :localdata="range"
+        @change="change"
+        :clear="false"
+      ></uni-data-select>
+      <search @confirm="toSearchProdPage"></search>
     </view>
 
     <view class="search-display" v-if="recentSearch && recentSearch.length">
       <!-- 搜索历史 -->
       <view class="history-search">
         <view class="title-text history-line">
-          搜索历史
-          <view class="clear-history">
-            <u-icon name="trash" size="28" @tap="clearSearch"></u-icon>
+          <text>搜索历史</text>
+
+          <view class="clear-history" @tap="clearSearch">
+            <image :src="delIcon" mode="aspectFit"> </image>
           </view>
         </view>
 
-        <block v-for="(item, index) in recentSearch" :key="index">
-          <view class="his-search-tags">
-            <text class="tags" @click="onHistSearch(item)" :data-name="item">{{
-              item
-            }}</text>
+        <block>
+          <view class="history-search-tags">
+            <text
+              class="tags"
+              v-for="(item, index) in recentSearch"
+              :key="index"
+              @click="onHistSearch(item)"
+              :data-name="item"
+              >{{ item }}</text
+            >
           </view>
         </block>
       </view>
@@ -39,15 +42,29 @@
 </template>
 
 <script>
+import search from '@/components/search.vue'
 export default {
   data() {
     return {
       title: '',
       recentSearch: [],
+      value: 0,
+      rangeUser: [
+        { value: 0, text: '店铺' },
+        { value: 1, text: '商品' },
+        { value: 2, text: '论坛' },
+        { value: 3, text: '建议' },
+      ],
+      rangeShop: [
+        { value: 0, text: '店铺' },
+        { value: 1, text: '商品' },
+        { value: 4, text: '项目' },
+         
+      ],
     }
   },
 
-  components: {},
+  components: { search },
   props: {},
 
   /**
@@ -73,6 +90,19 @@ export default {
   onHide: function () {
     this.title = ''
   },
+  computed: {
+    delIcon() {
+      return this.$fileUrl + '/sysFile/ic_sousuo_shanchu.png'
+    },
+    userInfo() {
+      return this.$store.state.user.userInfo
+    },
+    range(){
+      return this.$store.state.user.userInfo.userType==1?this.rangeUser:this.rangeShop
+      
+      
+    }
+  },
 
   /**
    * 生命周期函数--监听页面卸载
@@ -94,6 +124,9 @@ export default {
    */
   onShareAppMessage: function () {},
   methods: {
+    change(e) {
+      console.log('e:', e)
+    },
     /**
      * 获取历史搜索
      */
@@ -104,8 +137,9 @@ export default {
     /**
      * 搜索提交
      */
-    toSearchProdPage: function () {
-      if (this.title.trim()) {
+    toSearchProdPage(e) {
+      this.title = e.trim()
+      if (this.title) {
         // 记录最近搜索
         let recentSearch = uni.getStorageSync('recentSearch') || []
         recentSearch = recentSearch.filter((item) => item !== this.title)
@@ -115,8 +149,10 @@ export default {
         }
         uni.setStorageSync('recentSearch', recentSearch)
         uni.navigateTo({
-          url: '/pages/mall/search-prod/search-prod?title=' + this.title,
-        })
+              url: `/pages/mall/search-prod/search-prod?type=${this.value}&title=${this.title}`
+            })
+        
+         
       }
     },
 
@@ -130,12 +166,11 @@ export default {
 
     //点击搜素历史
     onHistSearch(e) {
-      this.title = e
-      this.toSearchProdPage()
+      this.toSearchProdPage(e)
     },
   },
 }
 </script>
-<style>
-@import './search-page.css';
+<style lang="scss" scoped>
+@import './search-page.scss';
 </style>

@@ -1,42 +1,54 @@
+<!--
+ * @Author: zxs 774004514@qq.com
+ * @Date: 2023-07-27 10:20:46
+ * @LastEditors: zxs 774004514@qq.com
+ * @LastEditTime: 2023-08-30 11:04:25
+ * @FilePath: \mall-admind:\work\mall-applet\pages\article\recommendationList.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <view class="content">
-    <view
-      class="content-box"
-      v-for="item in opinionList"
-      :key="item.id"
-      @click="($event) => goDetail(item)"
-    >
-      <view class="content-item">
-        <view class="content-item-left">
-          <view class="sub-title over-ellipsis"
-            ><text v-if="item.replied == 1" class="status1">已回复</text>
-            <text v-if="item.replied == 0" class="status1 status2">未回复</text>
-
-            <text>{{ item.title }}</text></view
-          >
-          <view class="createTime">
-            <text> 发布时间： {{ item.createTime }} </text>
-          </view>
-        </view>
-      </view>
-    </view>
+    <defNav title="我的建议"></defNav>
+    <nodata
+      v-if="noDate"
+      :config="{
+        content: '暂无建议数据',
+        imgUrl: defaultImg,
+      }"
+    ></nodata>
+    <template v-else>
+      <recommenList :opinionList="opinionList"></recommenList>
+      <noMore v-if="more == 'noMore' && current > 1"></noMore>
+    </template>
   </view>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
+import recommenList from '@/components/recommenList'
 import { advicesList } from '@/api/index'
 import { getTotalPage } from '@/util/util'
 export default {
   //import引入组件才能使用
-  components: {},
+  components: { recommenList },
   props: {},
   data() {
-    return { opinionList: [], more: 'noMore', size: 10, current: 1, total: 0 }
+    return {
+      opinionList: [],
+      more: 'noMore',
+      size: 10,
+      current: 1,
+      total: 0,
+      noDate: false,
+    }
   },
   // 计算属性
-  computed: {},
+  computed: {
+    defaultImg() {
+      return this.$fileUrl + '/sysFile/img_zanwu_tuijian.png'
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   onPullDownRefresh() {
@@ -72,9 +84,10 @@ export default {
         this.total = res.total
         let totalPage = getTotalPage(this.total, this.size)
         if (this.current == 1) {
-          this.opinionList = res.data.records
+          this.opinionList = res.data
+          this.noDate = res.data.total == 0
         } else {
-          this.opinionList = [...this.opinionList, ...res.data.records]
+          this.opinionList = [...this.opinionList, ...res.data]
         }
 
         if (totalPage > this.current) {
@@ -87,11 +100,6 @@ export default {
       } finally {
         uni.hideLoading()
       }
-    },
-    goDetail(item) {
-      uni.navigateTo({
-        url: '/pages/article/recommendationDetail?id=' + item.id,
-      })
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
@@ -111,61 +119,6 @@ export default {
 <style scoped lang="scss">
 .content-box {
   position: relative;
-  .content-item {
-    padding: 20rpx;
-    margin: 20rpx 20rpx 0 20rpx;
-
-    display: flex;
-
-    justify-content: space-between;
-    position: relative;
-    flex-direction: column;
-    background: #fff;
-    border-radius: 20rpx;
-    .content-item-left {
-      .sub-title {
-        font-size: 26rpx;
-        color: #151515;
-        line-height: 36rpx;
-        margin-bottom: 20rpx;
-        max-height: 72rpx;
-      }
-      .status1 {
-        background: #409eff;
-        padding: 5rpx 15rpx;
-        border-radius: 15rpx;
-        margin-right: 20rpx;
-        color: #fff;
-      }
-      .status2 {
-        background: #4caf50;
-      }
-      .over-ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-      }
-      .content-img {
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        image {
-          width: 200rpx;
-          height: 200rpx;
-          border-radius: 30rpx;
-          margin-right: 20rpx;
-        }
-      }
-      .createTime {
-        color: #999;
-        font-size: 22rpx;
-      }
-    }
-    .reply {
-    }
-  }
 }
 .content-box::before {
   display: block;

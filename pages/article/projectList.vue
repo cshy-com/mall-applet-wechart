@@ -2,79 +2,84 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-07 11:07:33
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-20 14:18:39
+ * @LastEditTime: 2023-08-11 11:19:44
  * @FilePath: \mall-applet\pages\article\projectList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <view class="content">
-    <view class="search">
-      <u-search
+  <view>
+    <defNav title="项目列表"></defNav>
+    <view class="content">
+      <view class="search">
+        <!-- <u-search
         placeholder="请输入"
         v-model="keyword"
         @search="searchList"
-      ></u-search>
-    </view>
-    <view class="tab-subsection">
-      <!-- <u-subsection
-        :list="list"
-        :current="current"
-        :activeColor="'#3b6dbb'"
-        mode="subsection"
-        fontSize="28"
-        @change="sectionChange"
-      ></u-subsection> -->
-      <u-tabs
-        lineColor="#3b6dbb"
-        :activeStyle="{
-          color: '#3b6dbb',
-          fontWeight: 'bold',
-          transform: 'scale(1.05)',
-        }"
-        lineHeight="5"
-        lineWidth="45"
-        :scrollable="true"
-        :current="activeCurrent"
-        :list="typeList"
-        
-        @click="sectionChange"
-      ></u-tabs>
-    </view>
-    <u-skeleton
-      rows="2"
-      :loading="loading"
-      :title="false"
-      :rows="10"
-      :rowsWidth="[
-        '200%',
-        '200%',
-        '200%',
-        '200%',
-        '200%',
-        '200%',
-        '200%',
-        '200%',
-      ]"
-      :rowsHeight="[
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-        '80px',
-      ]"
-      :animate="true"
-    >
-      <projectList :list="list"></projectList>
-    </u-skeleton>
-  </view>
+      ></u-search> -->
+        <search @confirm="searchList"></search>
+      </view>
+      <view class="tab-subsection">
+        <u-tabs
+          lineColor="none"
+          :activeStyle="{
+            color: '#3B6DBB',
+          }"
+          lineHeight="5"
+          lineWidth="45"
+          :scrollable="true"
+          :current="activeCurrent"
+          :list="typeList"
+          itemStyle="color:#888888; padding-left: 24rpx; padding-right: height: 42rpx; "
+          @click="sectionChange"
+        ></u-tabs>
+      </view>
+      <u-skeleton
+        rows="2"
+        :loading="loading"
+        :title="false"
+        :rows="10"
+        :rowsWidth="[
+          '200%',
+          '200%',
+          '200%',
+          '200%',
+          '200%',
+          '200%',
+          '200%',
+          '200%',
+        ]"
+        :rowsHeight="[
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+          '80px',
+        ]"
+        :animate="true"
+      >
+        <nodata
+          v-if="noProjectList"
+          :config="{
+            height: '900rpx',
+            content: '暂无数据',
+            imgUrl: defImg,
+          }"
+        ></nodata>
+        <template v-else>
+          <projectList :list="list"></projectList>
+          <noMore v-if="more == 'noMore' && current > 1"></noMore>
+        </template>
+      </u-skeleton> </view
+  ></view>
 </template>
 
 <script>
+import search from '@/components/search.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import projectList from '@/components/projectList'
@@ -83,7 +88,7 @@ import { getTotalPage } from '@/util/util'
 import { systemDictList } from '@/api/index'
 export default {
   //import引入组件才能使用
-  components: { projectList },
+  components: { projectList, search },
   props: {},
   data() {
     return {
@@ -117,14 +122,21 @@ export default {
       current: 1,
       total: 0,
       list: [],
-      typeList: [{
-        name:'全部',
-        id:null
-      }],
+      typeList: [
+        {
+          name: '全部',
+          id: null,
+        },
+      ],
+      noProjectList: false,
     }
   },
   // 计算属性
-  computed: {},
+  computed: {
+    defImg() {
+      return this.$fileUrl + '/sysFile/img_zanwuxiangmu.png'
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   onLoad: function () {
@@ -144,9 +156,9 @@ export default {
           id: val.dictValue,
         })
       })
-      
     },
-    searchList() {
+    searchList(e) {
+      this.keyword = e
       this.current = 1
       this.list = []
       this.getPageList()
@@ -171,6 +183,7 @@ export default {
         this.total = res.total
         let totalPage = getTotalPage(this.total, this.size)
         if (this.current == 1) {
+          this.noProjectList = this.total == 0
           this.list = res.data
         } else {
           this.list = [...this.list, ...res.data]
@@ -229,6 +242,7 @@ export default {
   padding: 20rpx;
   width: 96%;
   margin: 0 auto;
+  margin-bottom: 12rpx;
 }
 .search {
   background: #fff;
@@ -236,5 +250,19 @@ export default {
 }
 /deep/ .u-tabs__wrapper__nav__line {
   left: 24rpx;
+}
+/deep/ .u-tabs__wrapper__nav__item {
+  position: relative;
+}
+
+/deep/ .u-tabs__wrapper__nav__item:nth-child(n + 2) :after {
+  content: '';
+  width: 1px;
+  height: 32rpx;
+  position: absolute;
+  right: 20rpx;
+  top: 11rpx;
+  left: -2rpx;
+  background: #888888;
 }
 </style>

@@ -1,6 +1,36 @@
 <template>
   <view class="content">
-    <view class="content-box">
+    <defNav title="建议详情"></defNav>
+    <recommenList
+      :isGoDetails="false"
+      :opinionList="opinionList"
+    ></recommenList>
+
+    <view class="reply-list-box">
+      <view
+        class="reply-list-item"
+        v-for="rep in opinionInfo.replyList"
+        :key="rep.id"
+      >
+        <view class="reply-list-box-top">
+          <view class="reply-list-box-left">
+            <image :lazy-load="true" :lazy-load-margin="0" :src="defLogo">
+            </image>
+            <text>清云私享客服</text>
+          </view>
+          <view class="reply-list-right">
+            <image :lazy-load="true" :lazy-load-margin="0" :src="defTime">
+            </image>
+            <text>{{ rep.createTime }}</text>
+          </view></view
+        >
+
+        <view class="reply-list-box-title"
+          ><text>回复： {{ rep.content }}</text></view
+        >
+      </view>
+    </view>
+    <!-- <view class="content-box">
       <view class="content-item">
         <view class="content-item-left">
           <view class="sub-title"
@@ -25,34 +55,34 @@
           <view class="createTime">
             <text> 发布时间： {{ opinionInfo.createTime }} </text>
           </view>
-          <view v-for="rep in opinionInfo.replyList" :key="rep.id">
-            <view class="sub-title"
-              ><text>回复： {{ rep.content }}</text></view
-            >
-
-            <view class="createTime">
-              <text> 回复时间： {{ rep.createTime }} </text>
-            </view>
-          </view>
+       
         </view>
       </view>
-    </view>
+    </view> -->
   </view>
 </template>
 
 <script>
+import recommenList from '@/components/recommenList'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import { advicesInfo } from '@/api/index'
 export default {
   //import引入组件才能使用
-  components: {},
+  components: { recommenList },
   props: {},
   data() {
-    return { opinionId: null, opinionInfo: {} }
+    return { opinionId: null, opinionInfo: {}, opinionList: [] }
   },
   // 计算属性
-  computed: {},
+  computed: {
+    defLogo() {
+      return this.$fileUrl + '/sysFile/img_logo.png'
+    },
+    defTime() {
+      return this.$fileUrl + '/sysFile/ic_shijian.png'
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   onLoad(option) {
@@ -70,6 +100,15 @@ export default {
         let res = await advicesInfo({ adviceId: this.opinionId })
 
         this.opinionInfo = res.data
+
+        this.opinionList.push({
+          replied: this.opinionInfo.replied,
+          title: this.opinionInfo.title,
+          content: this.opinionInfo.content,
+          createTime: this.opinionInfo.createTime,
+          contactInfo: this.opinionInfo.baseSysUserVo.phoneNumber,
+          picture: this.opinionInfo.picture,
+        })
       } catch (e) {
         console.log(e)
       } finally {
@@ -92,55 +131,54 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.content-box {
-  position: relative;
-  .content-item {
-    padding: 20rpx;
-    margin: 20rpx 20rpx 0 20rpx;
-
-    display: flex;
-
-    justify-content: space-between;
-    position: relative;
-    flex-direction: column;
+.reply-list-box {
+  margin: 12rpx;
+  .reply-list-item {
     background: #fff;
-    border-radius: 20rpx;
-    .content-item-left {
-      .sub-title {
-        font-size: 26rpx;
-        color: #151515;
-        line-height: 36rpx;
-        margin-bottom: 20rpx;
-      }
-      .content-img {
+    border-radius: 14rpx;
+    padding: 25rpx 30rpx 30rpx 30rpx;
+
+    .reply-list-box-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eeeeee;
+      font-size: 26rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #888888;
+      line-height: 37rpx;
+      padding-bottom: 25rpx;
+      .reply-list-box-left {
         display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
+        align-items: center;
         image {
-          width: 200rpx;
-          height: 200rpx;
-          border-radius: 30rpx;
-          margin-right: 20rpx;
+          width: 38rpx;
+          height: 38rpx;
+
+          border-radius: 50%;
+          margin-right: 10rpx;
         }
       }
-      .createTime {
-        color: #999;
-        font-size: 22rpx;
+      .reply-list-right {
+        display: flex;
+        align-items: center;
+        color: #c0c0c0;
+        image {
+          width: 33rpx;
+          height: 33rpx;
+          margin-right: 10rpx;
+        }
       }
     }
-    .reply {
+    .reply-list-box-title {
+      font-size: 28rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      line-height: 40rpx;
+      margin-top: 30rpx;
     }
   }
-}
-.content-box::before {
-  display: block;
-  position: absolute;
-  border-top: 1px solid #eee;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-}
-.content {
-  padding-bottom: 20rpx;
 }
 </style>

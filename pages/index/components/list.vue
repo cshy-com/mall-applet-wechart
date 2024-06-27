@@ -11,6 +11,7 @@
             >
               <view class="hot-imagecont">
                 <image
+                  v-show="prod.mainImage"
                   :lazy-load="true"
                   :lazy-load-margin="0"
                   :src="prod.mainImage"
@@ -18,28 +19,35 @@
                   :showLoading="true"
                   :mode="'aspectFill'"
                 ></image>
-
-                <view class="cover-box">
-                  <image
-                    :lazy-load="true"
-                    :lazy-load-margin="0"
-                    :src="fileUrl + '/sysFile/bg3.png'"
-                    class="cover"
-                  ></image>
-                </view>
+                <text class="hot-sale-value">
+                  热销 {{ prod.salesVolume | handleNum }}
+                </text>
               </view>
               <view class="hot-text">
-                <view class="hotprod-text">{{ prod.name }}</view>
+                <view class="hotprod-text">
+                  <image
+                    class="icon"
+                    v-if="prod.discountedPrice > 500"
+                    :src="defIcon"
+                    mode="aspectFit"
+                    lazy-load="false"
+                    binderror=""
+                    bindload=""
+                  >
+                  </image>
+                  <text class="def"> {{ prod.name }}</text>
+                  <!-- <text class="tip">可用积分</text> -->
+                </view>
 
                 <view class="prod-text-info">
-                  <view class="price">
-                    <text class="symbol">￥</text>
-                    <text class="big-num">{{ prod.discountedPrice }}</text>
-                  </view>
-                  <view class="basket-img">
-                    <!-- <text class="iconfont icon-dianzan-weijujiao"></text> -->
-                    <text class="zan-num">销量 {{ prod.salesVolume }} +</text>
-                  </view>
+                  <text class="price">¥{{ prod.discountedPrice }}</text>
+
+                  <text class="big-num">原价：¥{{ prod.originalPrice }}</text>
+
+                  <!-- <view class="basket-img">
+                   
+                    <text class="zan-num">+</text>
+                  </view> -->
                 </view>
               </view>
             </view>
@@ -47,16 +55,21 @@
         </scroll-view>
       </view>
     </view>
+    <noMore v-if="more == 'noMore'"></noMore>
   </view>
 </template>
 <script>
+import noMore from '@/components/noMore.vue'
 export default {
   data() {
     return {}
   },
+  components: {
+    noMore,
+  },
   computed: {
-    fileUrl() {
-      return this.$fileUrl
+    defIcon() {
+      return this.$fileUrl + '/sysFile/ic_pinzhi.png'
     },
   },
   props: {
@@ -64,7 +77,15 @@ export default {
       type: Array,
       default: () => [],
     },
+    more: {
+      type: String,
+      default: 'more',
+    },
   },
+  filters: {
+    
+  },
+
   methods: {
     toProdPage(e) {
       this.$emit('eventParent', e)
@@ -77,75 +98,104 @@ export default {
   .prod-items {
     display: inline-block;
     box-sizing: border-box;
-    width: 342rpx;
+    width: 357rpx;
     .hot-text .hotprod-text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       margin-bottom: 10rpx;
-      font-weight: 600;
-      color: #333333;
-      font-size: 28rpx;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      .icon {
+        width: 30rpx;
+        height: 30rpx;
+        margin-right: 5rpx;
+      }
+      .tip {
+        font-size: 22rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #333333;
+        line-height: 30rpx;
+      }
+      .def {
+        font-size: 30rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #333333;
+        line-height: 42rpx;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 300rpx;
+      }
     }
     .hot-imagecont {
       font-size: 0;
       text-align: center;
-      width: 342rpx;
-      height: 356rpx;
+      width: 357rpx;
+      height: 357rpx;
       position: relative;
+      background-size: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: $app-load-gif;
+      background-color: #f5f5f5;
+      border-radius: 15rpx 15rpx 0 0;
       .hotsaleimg {
-        width: 341rpx;
-        height: 356rpx;
-        border-radius: 20rpx 20rpx 0 0;
-
+        width: 100%;
+        height: 100%;
+        border-radius: 15rpx 15rpx 0 0;
         z-index: 1;
         will-change: transform;
       }
-      .cover-box {
-        width: 100%;
-        height: 100%;
+      .hot-sale-value {
         position: absolute;
-        z-index: 66;
-        left: 0;
-        top: 0;
+        line-height: 28rpx;
+        background: #ea531c;
+        border-radius: 5rpx;
+        right: 14rpx;
+        bottom: 10rpx;
+        font-size: 20rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #ffffff;
         display: flex;
-        align-items: center;
+        padding: 2rpx 15rpx;
         justify-content: center;
-      }
-      .cover {
-        width: 334rpx;
-        height: 348rpx;
+        align-items: center;
       }
     }
     .hot-text {
-      font-size: 28rpx;
       font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 600;
-      color: #333333;
-      line-height: 40rpx;
+
       background: #fff;
       position: relative;
-      background: #fff;
-      padding-left: 14rpx;
-      padding-top: 14rpx;
-      border-radius: 0 0 12rpx 12rpx;
-      height: 140rpx;
+
+      padding: 18rpx 20rpx 25rpx 20rpx;
+
+      border-radius: 0px 0px 14rpx 14rpx;
+
       .prod-text-info {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        .price .symbol {
-          font-size: 16rpx;
-          font-weight: 600;
-          color: #912d17;
-          line-height: 22rpx;
+
+        .big-num {
+          margin-left: 4rpx;
+          font-size: 24rpx;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #c0c0c0;
+          line-height: 42rpx;
+          text-decoration: line-through;
         }
-        .price .big-num {
-          font-size: 32rpx;
-          font-weight: 600;
-          line-height: 22rpx;
-          color: #912d17;
+
+        .price {
+          font-size: 36rpx;
+          font-family: DINAlternate-Bold, DINAlternate;
+          font-weight: bold;
+          color: #333333;
+          line-height: 42rpx;
         }
+
         .zan-num {
           font-size: 24rpx;
           font-weight: 400;
@@ -166,7 +216,7 @@ export default {
     }
   }
   .prod-items:nth-child(2n-1) {
-    margin: 0rpx 20rpx 20rpx 24rpx;
+    margin: 0rpx 12rpx 12rpx 12rpx;
   }
 }
 

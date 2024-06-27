@@ -1,40 +1,53 @@
-<!--
- * @Author: zxs 774004514@qq.com
- * @Date: 2023-05-25 11:13:04
- * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-21 11:47:06
- * @FilePath: \mall-applet\pages\coupon\receive.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
-  <view>
-    <view class="nav">
-      <hx-navbar :config="config" ref="hxnb">
-        <view slot="center">
-          <view class="center" style="">
-            <text class="color" style="font-size: 18px">{{
-              config.title
-            }}</text>
-          </view>
-        </view>
-      </hx-navbar>
-    </view>
+  <!--pages/order-detail/order-detail.wxml-->
 
-    <view class="btn-def">
-      <button v-if="showDef" type="text" @click="getTicket" :plain="true">
-        <text>账号直接领取积分</text>
-      </button>
-      <button
-        type="text"
-        open-type="getPhoneNumber"
-        @getphonenumber="getPhoneNumber"
-        :plain="true"
-      >
-        <text>手机号领取积分</text>
-      </button>
-      <view v-if="userInfo" @click="goHome" class="back">
-        <u-icon name="arrow-left"   size="28"></u-icon>
-        <text>返回首页</text>
+  <view class="container">
+    <defNav :title="'领取积分'" :isTransparent="true"></defNav>
+    <image class="page-bg" :src="defBg"></image>
+    <view class="page-content" v-if="ticketInfo">
+      <image class="page-content-top-img" :src="defDecoration"></image>
+      <view class="page-top">
+        <view class="source"> 来源于：{{ ticketInfo.firstPartyName }} </view>
+        <view class="money">
+          <text class="money-tip"> 积分值 </text>
+          <text>{{ ticketInfo.number }}</text>
+        </view>
+        <view class="line"></view>
+        <view class="list-box">
+          <view class="lable">积分状态</view>
+          <view clss="status" v-if="ticketInfo.ifFailure == 0">待领取</view>
+          <view clss="status" v-if="ticketInfo.ifFailure == 1">已失效</view>
+        </view>
+        <view class="list-box">
+          <view class="lable">失效时间</view>
+          <view>{{ ticketInfo.failureDate }}</view>
+        </view>
+        <view class="line"></view>
+        <view class="list-box">
+          <view class="lable">创建时间</view>
+          <view>{{ ticketInfo.createTime }}</view>
+        </view>
+        <view class="list-box">
+          <view class="lable">积分券号</view>
+          <view class="code-number">{{ ticketInfo.id }}</view>
+        </view>
+      </view>
+      <view class="box-btn" v-if="ticketInfo.ifFailure == 0">
+        <button
+          class="btn"
+          type="text"
+          open-type="getPhoneNumber"
+          @getphonenumber="getPhoneNumber"
+          :plain="true"
+        >
+          手机号领取积分
+        </button>
+        <button class="btn" v-if="showDef" @click="getTicket">
+          账号直接领取积分
+        </button>
+      </view>
+      <view class="box-tip" v-if="userInfo" @click="goHome">
+        {{ticketInfo.ifFailure == 0?'暂不领取去首页 >':'去首页 >'}}
       </view>
     </view>
     <u-modal :show="show" :content="content" @confirm="confirm"></u-modal>
@@ -44,7 +57,7 @@
 <script>
 import { getUrlParams } from '@/util/util'
 import { setAuthorization, getAuthorization } from '@/util/auth.js'
-import { mallIntegralTicket } from '@/api/integral'
+import { mallIntegralTicket, mallIntegralTicketObj } from '@/api/integral'
 import { wxLogin } from '@/api/index.js'
 import { createNamespacedHelpers } from 'vuex'
 const { mapMutations, mapGetters, mapActions } = createNamespacedHelpers('user')
@@ -59,6 +72,7 @@ export default {
       content: '领取成功，去其他地方逛逛吧',
       userType: 1,
       code: '',
+      Id: '',
       showDef: false,
       config: {
         color: ['#000', '#000'],
@@ -68,16 +82,39 @@ export default {
         fixed: true,
         centerSlot: true,
       },
+      ticketInfo: null,
     }
   },
   // 计算属性
-  computed: { ...mapGetters(['userInfo']) },
+  computed: {
+    ...mapGetters(['userInfo']),
+    defDecoration() {
+      return `${this.$fileUrl}/sysFile/img_zhuanz_jifenzhs.png`
+    },
+    defBg() {
+      return `${this.$fileUrl}/sysFile/img_zhuanz_bg.png`
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   // 方法集合
   methods: {
     ...mapMutations(['setUserInfo']),
-    ...mapActions(['setUserInfoAction']),
+    ...mapActions(['setUserInfoAction', 'setIntegralTotalAction']),
+    async getTicketInfo() {
+      uni.showLoading({
+        title: '加载中',
+      })
+      try {
+        console.log(this.Id)
+        let { code, data } = await mallIntegralTicketObj(this.Id)
+        if (code == 0) {
+          this.ticketInfo = data
+        }
+      } finally {
+        uni.hideLoading()
+      }
+    },
     confirm(e) {
       this.goHome()
     },
@@ -94,10 +131,10 @@ export default {
       wxLogin(e.detail.code).then((res) => {
         if (res && res.code == 0) {
           // 如果已经有用户登录 当前用户不同，清空搜索历史
-          if(this.userInfo&&(this.userInfo!=res.data.userId)){
+          if (this.userInfo && this.userInfo != res.data.userId) {
             uni.removeStorageSync('recentSearch')
           }
-   
+
           setAuthorization(res.data.token)
           this.setUserInfo(res.data)
           uni.setStorageSync('user', res.data)
@@ -116,6 +153,7 @@ export default {
         if (code == 0) {
           this.show = true
           this.setUserInfoAction()
+          this.setIntegralTotalAction(this.userInfo.userType)
         } else {
           this.content = msg + ',去其他地方逛逛吧'
           this.show = true
@@ -123,6 +161,7 @@ export default {
       } catch (e) {
         console.log(e)
       } finally {
+        uni.hideLoading()
       }
     },
   },
@@ -138,13 +177,18 @@ export default {
 
       let urlParams = getUrlParams(urlStr)
       this.code = urlParams.code
-
+      this.Id = urlParams.id
       console.log('urlParams' + JSON.stringify(urlParams))
       console.log('code' + this.code)
+      console.log('Id' + this.Id)
     }
     if (options?.code) {
       this.code = options.code
     }
+    if (options.id) {
+      this.Id = options.id
+    }
+    this.getTicketInfo()
   },
   onShow() {
     if (this.userInfo) {
@@ -160,51 +204,121 @@ export default {
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发执行
 }
 </script>
-<style scoped lang="scss">
-.back{
-  display: flex;
-    align-items: center;
-    justify-content: center;
-    text{
-      // color: #2979ff;
-    }
+<style>
+.input-placeholder {
+  font-size: 30rpx;
+  color: #888888;
 }
-.btn-def {
-  width: 40%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 500rpx 0;
-  margin: 0 auto;
-  flex-direction: column;
-  /deep/ button {
-    background: $Gradual-color;
-    border-radius: 10rpx;
-    font-weight: 400;
-    color: #fff;
-    width: 300rpx;
-    font-size: 30rpx;
-    margin-bottom: 30rpx;
-    border: none;
-    height: 85rpx;
-  }
-}
-.nav /deep/ .hx-navbar__content__main_center {
-  justify-content: center;
-  width: 100vw;
+</style>
+<style lang="scss" scoped>
+.page-bg {
   position: fixed;
+  z-index: 9;
+  width: 750rpx;
+  height: 629rpx;
 }
-.center {
-  /* #ifndef APP-NVUE */
-  display: flex;
-  /* #endif */
+.page-content {
+  position: relative;
+  z-index: 999;
+  top: 200rpx;
+  .page-content-top-img {
+    width: 690rpx;
+    height: 194rpx;
+    margin-left: 30rpx;
+  }
 
-  justify-content: center;
-  align-items: center;
+  .page-top {
+    margin-left: 30rpx;
+    margin-top: -20rpx;
+    background: #fff;
+    border-radius: 0 0 14rpx 14rpx;
+    margin-right: 30rpx;
+    position: relative;
+    width: 690rpx;
+    height: 742rpx;
+    font-size: 28rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+    .source {
+      text-align: center;
+      padding-top: 77rpx;
+      font-weight: 500;
+      color: #333333;
+      font-size: 30rpx;
+      margin-bottom: 50rpx;
+    }
+    .money {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 500;
+      color: #4079d2;
+      line-height: 103rpx;
+      font-size: 80rpx;
+      .money-tip {
+        text-align: center;
+        color: #333333;
+        font-size: 30rpx;
+        line-height: 42rpx;
+        margin-bottom: 10rpx;
+      }
+    }
+    .line {
+      width: 630rpx;
+      height: 1rpx;
+      border-top: 1rpx solid #eeeeee;
+      margin: 30rpx;
+    }
+    .list-box {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 30rpx;
+      .lable {
+        color: #888888;
+      }
+      .status {
+        color: #4079d2;
+      }
+      .code-number {
+        width: 480rpx;
+        overflow-wrap: break-word;
+        text-align: right;
+      }
+    }
+  }
 
-  font-size: 28rpx;
-  font-family: SourceHanSerifCN-SemiBold, SourceHanSerifCN;
-  font-weight: 400;
-  color: #000;
+  .box-btn {
+    display: flex;
+    margin: 0 30rpx;
+    margin-top: 79rpx;
+    .btn {
+      width: 330rpx;
+      height: 98rpx;
+      background: #4079d2;
+      border-radius: 14rpx;
+      font-size: 32rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 98rpx;
+    }
+    .btn::after {
+      border: none;
+    }
+    .btn:nth-child(1) {
+      background: #d1dcee;
+      color: #4079d2;
+      border: none;
+    }
+  }
+  .box-tip {
+    margin-top: 50rpx;
+    font-size: 28epx;
+    font-weight: 400;
+    color: #888888;
+    line-height: 40rpx;
+    text-align: center;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <view class="content">
+  <view class="content">  <defNav title="项目详情" ></defNav>
     <view class="content-box">
       <view class="content-item">
         <view class="sub-title"
@@ -20,6 +20,7 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 import { projectObj } from '@/api/index'
+import {formatRichText } from '@/util/util'
 export default {
   //import引入组件才能使用
   components: {},
@@ -48,9 +49,11 @@ export default {
         title: '加载中',
       })
       try {
-        let res = await projectObj(this.projectId)
+        let {data} = await projectObj(this.projectId)
+        this.dataInfo=data
+        this.dataInfo.content = formatRichText(data.content)
 
-        this.dataInfo = res.data
+     
       } catch (e) {
         console.log(e)
       } finally {

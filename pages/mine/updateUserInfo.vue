@@ -1,84 +1,96 @@
 <template>
-  <view class="form-box">
-    <!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
-    <u-form labelPosition="left" :model="model1" :rules="rules" ref="uForm">
-      <u-form-item
-        label="昵称"
-        prop="userInfo.nickName"
-        borderBottom
-        ref="item1"
-        labelWidth="100"
-      >
-        <u-input v-model="model1.userInfo.nickName" border="none"  ></u-input>
-      </u-form-item>
-      <u-form-item
-        label="头像"
-        prop="userInfo.avatar"
-        borderBottom
-        ref="item1"
-        labelWidth="100"
-      >
-    
-        <upload
-          :maxCount="1"
-          v-model="model1.userInfo.avatar"
-          width="200"
-          height="200"
-          :maxSize="1"
-        ></upload>
-      </u-form-item>
-      <u-form-item
-        label="性别"
-        prop="userInfo.sex"
-        borderBottom
-        @click="
-          showSex = true
-          hideKeyboard()
-        "
-        ref="item1"
-        labelWidth="100"
-      >
-        <u-input
-          v-model="model1.userInfo.sex"
-          disabled
-          disabledColor="#ffffff"
-          placeholder="请选择性别"
-          border="none"
-        ></u-input>
-        <u-icon slot="right" name="arrow-right"></u-icon>
-      </u-form-item>
-    </u-form>
-    <view class="form-btn">
-      <button @click="submitForm">修改</button>
+  <view>
+    <defNav title="个人资料"></defNav>
+    <view class="form-box">
+      <view class="form-box-item">
+        <view class="form-box-item-row">
+          <view class="label">头像</view>
+          <button
+            class="avatar-wrapper item-right"
+            open-type="chooseAvatar"
+            @chooseavatar="upLoadAvatar"
+          >
+            <!-- <view class="item-right" @click="upLoadAvatar"> -->
+            <image
+              mode="aspectFill"
+              class="avater"
+              :src="userInfoForm.avatar || defaultAvatar"
+            >
+            </image>
+            <image mode="aspectFill" :src="defaultRight" class="right-icon">
+            </image>
+            <!-- </view>   -->
+          </button>
+        </view>
+
+        <view class="form-box-item-line"></view>
+        <view class="form-box-item-row">
+          <view class="label">昵称</view>
+          <view class="item-right">
+            <input
+              @blur="savaNickName"
+              @confirm="savaNickName"
+              confirm-type="nickname"
+              v-model="userInfoForm.nickName"
+              :maxlength="10"
+              type="nickname"
+            />
+
+            <image mode="aspectFill" :src="defaultRight" class="right-icon">
+            </image>
+          </view>
+        </view>
+      </view>
+      <view class="form-box-item" @click="showSex = true">
+        <view class="form-box-item-row">
+          <view class="label">性别</view>
+          <view class="item-right">
+            <text>{{
+              userInfoForm.sex == 0
+                ? '男'
+                : userInfoForm.sex == 1
+                ? '女'
+                : '未知'
+            }}</text>
+            <image mode="aspectFill" :src="defaultRight" class="right-icon">
+            </image>
+          </view>
+        </view>
+      </view>
+
+      <view class="view-action" v-if="showSex">
+        <u-action-sheet
+          :show="showSex"
+          :actions="actions"
+          :safeAreaInsetBottom="true"
+          @close="showSex = false"
+          @select="sexSelect"
+          :cancelText="'取消'"
+          round="27rpx"
+        >
+        </u-action-sheet>
+      </view>
     </view>
-    <u-action-sheet
-      :show="showSex"
-      :actions="actions"
-      title="请选择性别"
-      @close="showSex = false"
-      @select="sexSelect"
-    >
-    </u-action-sheet>
   </view>
 </template>
 
 <script>
-import upload from '@/components/upload'
+
 import { updateUserInfo } from '@/api/index'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('user')
+import comUtils from '@/util/comUtils.js'
+import { getAuthorization } from '@/util/auth'
 export default {
-  components: { upload },
+  components: {  },
+  options: { styleIsolation: 'shared' },
   data() {
     return {
       showSex: false,
-      model1: {
-        userInfo: {
-          nickName: '',
-          sex: '',
-          avatar: [],
-          // tel: 123242,
-        },
+      userInfoForm: {
+        nickName: '',
+        sex: '',
+        avatar: [],
       },
       actions: [
         {
@@ -94,134 +106,192 @@ export default {
           index: 2,
         },
       ],
-      sexIndex: 0,
-      rules: {
-        'userInfo.nickName': {
-          type: 'string',
-          required: true,
-          message: '请填写姓名',
-          trigger: ['blur', 'change'],
-        },
-        'userInfo.sex': {
-          type: 'string',
-          max: 1,
-          required: true,
-          message: '请选择男或女',
-          trigger: ['blur', 'change'],
-        },
-        'userInfo.avatar': {
-          type: 'array',
-          required: true,
-          message: '请选择上传头像',
-          trigger: ['blur', 'change'],
-        },
-      },
+
       radio: '',
       switchVal: false,
       user: {},
-      defaultAvatar:require('@/static/img/icon/head04.png')
+      uploadImgUrl: comUtils.baseUrl + '/common/upload', // 上传的图片服务器地址
+      headers: {
+        Authorization: 'Bearer ' + getAuthorization(),
+        'Content-Type': 'multipart/form-data',
+      },
     }
   },
   computed: {
     ...mapGetters(['userInfo']),
+    defaultRight() {
+      return `${this.$fileUrl}/sysFile/ic_bian_arrow.png`
+    },
+    defaultAvatar() {
+      return `${this.$fileUrl}/sysFile/avatar.png`
+    },
   },
   methods: {
     ...mapMutations(['setUserInfo']),
-   
-
+    upLoadAvatar(e) {
+      const { avatarUrl } = e.detail
+      if (avatarUrl) {
+        this.uploadAvatar(avatarUrl)
+        return
+      }
+      let _this = this
+      uni.chooseImage({
+        success: (chooseImageRes) => {
+          const tempFilePaths = chooseImageRes.tempFilePaths
+          _this.uploadAvatar(tempFilePaths[0])
+        },
+      })
+    },
+    uploadAvatar(url) {
+      uni.uploadFile({
+        url: this.uploadImgUrl, //仅为示例，非真实的接口地址
+        header: this.headers,
+        filePath: url,
+        name: 'file',
+        formData: {
+          // file: url,
+        },
+        success: (uploadFileRes) => {
+          let res = JSON.parse(uploadFileRes.data)
+          this.userInfoForm.avatar = res.uploadBaseUrl + res.url
+          this.savaData({ avatar: res.url, sex: this.userInfoForm.sex })
+        },
+      })
+    },
+    savaNickName() {
+ 
+      // if (this.userInfoForm.nickName !== this.userInfo.nickName) {
+        this.savaData({
+          nickName: this.userInfoForm.nickName,
+          sex: this.userInfoForm.sex,
+        })
+      // }
+    },
     sexSelect(e) {
-      this.model1.userInfo.sex = e.name
+      this.userInfoForm.sex = e.index
+      this.savaData({
+        sex: this.userInfoForm.sex,
+      })
+    },
 
-      this.sexIndex = e.index
-      this.$refs.uForm.validateField('userInfo.sex')
-    },
-    submitForm() {
-      this.$refs.uForm
-        .validate()
-        .then((res) => {
-          this.savaData()
-        })
-        .catch((errors) => {
-          uni.$u.toast('校验失败')
-        })
-    },
-    async savaData() {
+    async savaData(params) {
       try {
-        let params = {
-          avatar: this.model1.userInfo.avatar[0].url,
-          nickName: this.model1.userInfo.nickName,
-          sex: this.sexIndex,
-        }
+        // let params = {
+        //   avatar: avatar || this.userInfo.avatar || this.defaultAvatar,
+        //   nickName: nickName || this.userInfo.nickName,
+        //   sex: sex || this.userInfo.sex,
+        // }
         await updateUserInfo({ ...params })
         uni.$u.toast('修改成功')
-        this.userInfo.avatar=params.avatar
-        this.userInfo.nickName=params.nickName
-        this.userInfo.sex=params.sex
 
-        
-        this.setUserInfo({ ...this.userInfo })
-        uni.setStorageSync('user', { ...this.userInfo })
-        uni.switchTab({
-          url: '/pages/index/user/index',
-        })
+        this.setUserInfo({ ...this.userInfoForm })
+        uni.setStorageSync('user', { ...this.userInfoForm })
       } catch (e) {
         console.log(e)
       }
     },
   },
-  watch: {
-    model1: {
-      handler(newVal, oldVal) {
-        if (newVal.userInfo.avatar.length > 0) {
-          this.$refs.uForm.validateField('userInfo.avatar')
-        }
-      },
-      immediate: true,
-      // 开启深度监听 deep
-      deep: true,
-    },
-  },
+  watch: {},
   onReady() {
-     
-    this.model1.userInfo.nickName = this.userInfo.nickName
-    this.model1.userInfo.sex = this.actions.find(
-      (val) => val.index == this.userInfo.sex
-    ).name
-    this.sexIndex = this.userInfo.sex
-    if( this.userInfo.avatar){
-      this.model1.userInfo.avatar.push({
-      url: this.userInfo.avatar,
-    })
-    }
-    
-
-    //如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
-    this.$refs.uForm.setRules(this.rules)
+    this.userInfoForm = this.userInfo
   },
 }
 </script>
-<style>
-page {
-  background: #fff;
-}
-</style>
+
 <style lang="scss" scoped>
+.view-action {
+  /deep/ .u-popup__content {
+    background: none;
+    background-color: none !important;
+  }
+  /deep/ .u-action-sheet__item-wrap {
+    background: #fff;
+    margin: 12rpx;
+    border-radius: 27rpx;
+  }
+  /deep/ .u-action-sheet__item-wrap__item__name,
+  /deep/ .u-action-sheet__cancel-text {
+    color: #007aff;
+  }
+
+  /deep/ .u-gap {
+    display: none;
+  }
+  /deep/ .u-action-sheet__cancel-text {
+    margin: 0 13rpx;
+    background: #fff;
+    border-radius: 27rpx;
+  }
+}
+.right-icon {
+  width: 16rpx;
+  height: 24rpx;
+  margin-left: 10rpx;
+}
 .form-box {
-  padding: 30rpx;
-  .form-btn {
-    width: 200rpx;
-    height: 85rpx;
-    margin: 200rpx auto;
-    button {
-      height: 85rpx;
-      background: $Gradual-color;
-      border-radius: 10rpx;
-      font-size: 30rpx;
-      font-weight: 400;
-      text-align: center;
-      color: #ffffff;
-      line-height: 85rpx;
+  margin: 30rpx;
+
+  .form-box-item {
+    padding: 30rpx;
+    font-size: 30rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+    line-height: 42rpx;
+    background: #fff;
+    border-radius: 14rpx;
+    margin-bottom: 12rpx;
+    .form-box-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .item-right {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 28rpx;
+        margin-right: 0;
+        background: none;
+        padding: 0;
+
+        input {
+          text-align: right;
+          line-height: 20px;
+          height: 40rpx;
+        }
+        .avater {
+          width: 120rpx;
+          height: 120rpx;
+          border-radius: 50%;
+          margin-right: 20rpx;
+        }
+      }
+      .item-right::after {
+        border: none;
+      }
+    }
+    .form-box-item-line {
+      width: 629rpx;
+      height: 1rpx;
+      border-bottom: 2rpx solid #eeeeee;
+      margin: 30rpx 0 25rpx 0;
     }
   }
+
+  // .form-btn {
+  //   width: 200rpx;
+  //   height: 85rpx;
+  //   margin: 200rpx auto;
+  //   button {
+  //     height: 85rpx;
+  //     background: $Gradual-color;
+  //     border-radius: 10rpx;
+  //     font-size: 30rpx;
+  //     font-weight: 400;
+  //     text-align: center;
+  //     color: #ffffff;
+  //     line-height: 85rpx;
+  //   }
+  // }
 }
 </style>

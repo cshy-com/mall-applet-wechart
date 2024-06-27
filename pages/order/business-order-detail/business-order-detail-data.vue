@@ -1,26 +1,37 @@
 <template>
   <!--pages/order-detail/order-detail.wxml-->
 
-  <view class="container" v-if="orderItemDtos && orderItemDtos.id">
-    <view class="order-detail">
-      <view class="order-steps">
-        <u-steps :current="current">
-          <u-steps-item
-            v-for="item in stepsList"
-            :key="item.id"
-            :title="item.title"
-            :desc="item.desc"
-          ></u-steps-item>
-        </u-steps>
+  <view class="container">
+    <defNav title="订单详情"></defNav>
+    <view class="order-detail" v-if="orderItemDtos && orderItemDtos.id">
+      <view class="blue-bg-box">
+        <view class="blue-img"> </view>
+        <view class="order-steps">
+          <steps
+            :step="current"
+            :stepList="stepsList"
+            :activeCheckedImg="defStepsOrange"
+            :checkedImg="defStepBlue"
+            :unCheckedImg="defStepGrey"
+          ></steps>
+        </view>
       </view>
-      <!-- 商品信息 -->
-      <template v-if="orderItemDtos">
-        <businessOrderList :orderInfo="orderItemDtos"></businessOrderList>
-      </template>
+      <view class="decoration">
+        <image :src="defDecoration"></image>
+      </view>
+     
 
+
+      <!-- 商品信息 -->
+      <view class="order-box">
+        <template v-if="orderItemDtos">
+          <businessOrderList :orderInfo="orderItemDtos"></businessOrderList>
+        </template>
+      </view>
       <!-- 订单信息 -->
       <view class="order-msg">
         <view class="msg-item">
+          <view class="msg-item-title">订单详情</view>
           <view class="item">
             <text class="item-tit">订单编号：</text>
             <text class="item-txt">{{ orderItemDtos.id }}</text>
@@ -29,39 +40,35 @@
             <text class="item-tit">下单时间：</text>
             <text class="item-txt">{{ orderItemDtos.createTime }}</text>
           </view>
-        </view>
-        <view class="msg-item">
           <view class="item">
             <text class="item-tit">订单备注：</text>
             <text class="item-txt remarks">{{ orderItemDtos.remarks }}</text>
           </view>
         </view>
       </view>
-      <view class="order-detail-footer" v-if="orderItemDtos.status == 30">
+      <!-- <view class="order-detail-footer" v-if="orderItemDtos.status == 30">
         <text class="dele-order" @tap="orderListComplete">完成订单</text>
-      </view>
-      <view
+      </view> -->
+      <!-- <view
         class="order-detail-footer"
         v-if="orderCode && orderItemDtos.status == 10"
         @tap="verificationUpon"
       >
-        <text class="dele-order">到店核销</text>
-      </view>
+        <text class="dele-order blue-btn">到店核销</text>
+      </view> -->
       <view
         class="order-detail-footer"
         v-if="orderItemDtos.status == 40"
         @tap="createComment"
       >
-        <text class="dele-order">查看评价</text>
+        <text class="dele-order blue-btn">查看评价</text>
       </view>
-    </view>
-  </view>
+    </view></view
+  >
 </template>
 
 <script>
-// pages/order-detail/order-detail.js
-// var http = require("../../utils/http.js");
-import { getUrlParams } from '@/util/util'
+import steps from './../components/steps'
 import businessOrderList from './../components/business-order-item'
 import {
   orderDatail,
@@ -69,7 +76,7 @@ import {
   orderForArrived,
   orderDetailByQrcode,
 } from '@/api/order'
-import { getAuthorization } from '@/util/auth'
+
 export default {
   data() {
     return {
@@ -95,39 +102,39 @@ export default {
         //   id:-10
         // },
         {
-          title: '预约中',
+          name: '预约中',
           id: 20,
           desc: '',
         },
         {
-          title: '预约成功',
+          name: '预约成功',
           id: 10,
           desc: '',
         },
+        // {
+        //   name: '已到店',
+        //   id: 30,
+        //   desc: '',
+        // },
         {
-          title: '已到店',
-          id: 30,
-          desc: '',
-        },
-        {
-          title: '已完成',
+          name: '已完成',
           id: 0,
           desc: '',
         },
         {
-          title: '已评价',
+          name: '已评论',
           id: 40,
           desc: '',
         },
       ],
       stepsListError: [
         {
-          title: '预约中',
+          name: '预约中',
           id: 20,
           desc: '',
         },
         {
-          title: '已取消',
+          name: '已取消',
           id: -10,
           desc: '',
         },
@@ -135,13 +142,28 @@ export default {
       stepsList: [],
       orderCode: '',
       current: 0,
-      defaultAvatar: require('@/static/img/icon/head04.png'),
     }
   },
 
-  components: { businessOrderList },
+  components: { businessOrderList, steps },
   props: {},
-
+  computed: {
+    defDecoration() {
+      return `${this.$fileUrl}/sysFile/img_dingd_yuan.png`
+    },
+    defDecoration1() {
+      return `${this.$fileUrl}/sysFile/img_dingd_zhuangs_1.png`
+    },
+    defStepBlue() {
+      return `${this.$fileUrl}/sysFile/ic_xq_jiedian_lans.png`
+    },
+    defStepGrey() {
+      return `${this.$fileUrl}/sysFile/ic_xq_jiedian_huise.png`
+    },
+    defStepsOrange() {
+      return `${this.$fileUrl}/sysFile/ic_xq_jiedian_huangs.png`
+    },
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -194,7 +216,9 @@ export default {
   methods: {
     createComment() {
       uni.navigateTo({
-        url: '/pages/order/order-comment/order-comment-add?orderId=' + this.orderId,
+        url:
+          '/pages/order/order-comment/order-comment-add?orderId=' +
+          this.orderId,
       })
     },
     //确认到店核销

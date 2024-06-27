@@ -1,66 +1,78 @@
 <template>
   <view class="content">
-   
     <view
       class="content-box"
       v-for="item in list"
       :key="item.id"
       @tap="($event) => goDetail(item)"
     >
-   
       <view class="content-item">
-        <view class="content-item-left">
-          <view class="title over-ellipsis"
-            ><text>{{ item.title }}</text></view
-          >
-          <view class="sub-title over-ellipsis">
-            <text v-if="current != 2">{{ item.content }}</text>
-            <text v-else>拒绝原因：{{item.remarks}}</text>
-          </view>
-          <view class="content-footer">
-            <view class="avater">
-              <image :src="item.avatar||defaultAvatar"> </image>
+        <view
+          class="content-item-top"
+          :class="{
+            'content-item-top-0': !item.mainUrl,
+            'content-item-top-2':
+              item.mainUrl && [2, 3].includes(item.mainUrl.length),
+          }"
+        >
+          <view class="content-item-left">
+            <view class="title font-30-500 over-ellipsis-2"
+              ><text class="">{{ item.title }}</text></view
+            >
+            <view class="user-avater">
+              <view class="avater">
+                <image :src="item.avatar || defaultAvatar"> </image>
+              </view>
+
+              <text class="author font-26 ">
+                {{ item.nickName }}
+              </text>
             </view>
-
-            <text class="author">
-              {{ item.nickName }}
-            </text>
-
-            <text class="createTime">
-              {{ item.createTime }}
-            </text>
+          </view>
+          <view
+            class="content-right"
+            :class="{
+              'content-right-1':
+                item.mainUrl && [1].includes(item.mainUrl.length),
+              'content-right-2':
+                item.mainUrl && [2, 3].includes(item.mainUrl.length),
+            }"
+          >
+            <view class="content-img bachground-def-img" v-for="img in item.mainUrl" :key="img.id">
+              <image
+                :src="img || defImg"
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :mode="'aspectFill'"
+              />
+            </view>
           </view>
         </view>
-        <view class="content-right">
-          <view class="content-img">
+        <view class="content-footer font-22 flex-between-center" >
+          <view class="content-footer-item flex-center">
             <image
-              :src="item.mainUrl||defaultImg"
+              :src="defVisitImg"
               :lazy-load="true"
               :lazy-load-margin="0"
               :mode="'aspectFill'"
             />
+            <text class="createTime font-26" > {{ item.visits }} </text>
           </view>
-          <view
-            v-if="current == 3"
-            class="right-btn"
-            @click.stop="delModelShow(item)"
-          >
-            <button class="'btn-del'">删除</button>
+          <view class="content-footer-item">
+            <image
+              :src="defTime"
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :mode="'aspectFill'"
+            />
+            <text class="createTime font-26">
+              {{ item.createTime }}
+            </text>
           </view>
         </view>
       </view>
-  
     </view>
-
-    <u-modal
-      :title="'是否确认删除？'"
-      @cancel="show = false"
-      :showCancelButton="true"
-      :show="show"
-      @confirm="confirm"
-      ref="uModal"
-      :asyncClose="true"
-    ></u-modal>
+    <noMore v-if="more == 'noMore'"></noMore>
   </view>
 </template>
 
@@ -80,22 +92,36 @@ export default {
       type: Number,
       default: 0,
     },
+    more: {
+      type: String,
+      default: 'more',
+    },
   },
   data() {
     return {
       show: false,
-     
-      selectItem: null, defaultImg: require('@/static/img/default.png'),
-      defaultAvatar:require('@/static/img/icon/head04.png')
+
+      selectItem: null,
     }
   },
   // 计算属性
-  computed: {},
+  computed: {
+    defImg() {
+      return this.$fileUrl + '/sysFile/img_default.png'
+    },
+    defVisitImg() {
+      return this.$fileUrl + '/sysFile/ic_yuedu.png'
+    },
+    defTime() {
+      return this.$fileUrl + '/sysFile/ic_shijian.png'
+    },
+    defaultAvatar() {
+      return this.$fileUrl + '/sysFile/avatar.png'
+    },
+  },
   // 监听data中的数据变化
   watch: {},
-  onLoad: function () {
-    
-  },
+  onLoad: function () {},
 
   // 方法集合
   methods: {
@@ -119,22 +145,21 @@ export default {
     goDetail(item) {
       this.setForumInfo(item)
       // 查看详情
-      if (this.current == 0||this.current == 1) {
+       
+      if (item.status==30||item.status==10) {
         uni.navigateTo({
-          url: `/pages/article/forumDatail?id=${item.id}&status=${item.status}`
+          url: `/pages/article/forumDatail?id=${item.id}&status=${item.status}`,
         })
       } else {
         // 继续编辑
         uni.navigateTo({
-          url: '/pages/article/forumAdd?id='+item.id,
+          url: '/pages/article/forumAdd?id=' + item.id,
         })
       }
     },
   },
   // 生命周期，创建完成时（可以访问当前this实例）
-  created() {
-   
-  },
+  created() {},
   onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {},
@@ -151,85 +176,149 @@ export default {
 .content-box {
   position: relative;
   .content-item {
-    padding: 20rpx;
-    margin: 20rpx 20rpx 0 20rpx;
-    height: 270rpx;
-    display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
+    margin-top: 12rpx;
+
     position: relative;
     background: #fff;
-    border-radius: 20rpx;
+    padding: 30rpx;
+    margin-left: 12rpx;
+    margin-right: 12rpx;
+    border-radius: 12rpx;
+    .content-item-top {
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+    }
+
     .content-item-left {
       flex: 0 0 420rpx;
       width: 420rpx;
       .title {
-        font-size: 32rpx;
-        line-height: 42rpx;
-        color: #151515;
-        margin-bottom: 20rpx;
+        margin-bottom: 14rpx;
         max-height: 84rpx;
+        // height: 42rpx;
+       
+        color: #333333;
+        line-height: 42rpx;
       }
-      .sub-title {
-        font-size: 26rpx;
-        color: #999;
-        line-height: 36rpx;
-        margin-bottom: 20rpx;
-        max-height: 72rpx;
-      }
-      .over-ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
+     
+    
+    
+      .user-avater {
+        display: flex;
+        align-items: center;
+        margin: 14rpx 0 21rpx 0;
+        .avater {
+          width: 38rpx;
+          height: 38rpx;
+          border-radius: 50%;
+          margin-right: 10rpx;
+          vertical-align: middle;
+          image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+          }
+        }
+        .author {
+          padding-right: 28rpx;
+          position: relative;
+          display: inline-block;
+       
+          color: #888888;
+          line-height: 37rpx;
+        }
       }
     }
-    .content-right {
-      flex: 0 0 240rpx;
-      width: 240rpx;
+    .content-item-top-0 {
+      .content-item-left {
+        flex: 1;
+        width: 100%;
+      }
+    }
+    .content-item-top-2 {
+      flex-direction: column;
+      .content-item-left {
+        flex: 1;
+        width: 100%;
+      }
+      .content-right {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 20rpx;
+        .content-img {
+          width: 216rpx;
+          height: 216rpx;
+          background-size: 100%;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-image: $app-load-gif;
+          background-color: #f5f5f5;
+          margin-right: 8rpx;
+          image {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .content-img:nth-child(3) {
+          margin-right: 0;
+        }
+      }
+    }
+   
+    .content-right-1 {
+      flex: 0 0 216rpx;
+      width: 216rpx;
 
       .content-img {
-        height: 170rpx;
+        height: 216rpx;
         position: relative;
         overflow: hidden;
+      
+        background-color: #f5f5f5;
         image {
           width: 100%;
           height: 100%;
           will-change: transform;
+          border-radius: 15rpx;
+          background: #ededed;
+        }
+      }
+    }
+    .content-right-2 {
+      .content-img {
+        image {
+          width: 100%;
+          height: 100%;
+          will-change: transform;
+          border-radius: 15rpx;
+          background: #ededed;
         }
       }
     }
     .content-footer {
-      position: absolute;
-      bottom: 25rpx;
-      left: 30rpx;
-      height: 40rpx;
-      display: flex;
-
-      align-items: center;
-      font-size: 22rpx;
+      
       color: #999;
-      .avater {
-        width: 40rpx;
-        height: 40rpx;
-        border-radius: 40rpx;
-        margin-right: 14rpx;
-        vertical-align: middle;
+      margin-top: 20rpx;
+      .content-footer-item {
+        display: flex;
+    align-items: center;
         image {
-          width: 100%;
-          height: 100%;
-          border-radius: 40rpx;
+          width: 33rpx;
+          height: 33rpx;
         }
       }
-      .author {
-        padding-right: 28rpx;
-        position: relative;
-        display: inline-block;
-      }
+
       .createTime {
+        
+        color: #c0c0c0;
+        line-height: 37rpx;
+        margin-left: 10rpx;
       }
     }
   }
@@ -245,21 +334,5 @@ export default {
 .content {
   padding-bottom: 20rpx;
 }
-.right-btn {
-  width:120rpx;
-  margin: auto;
-  margin-top: 40rpx;
-  padding-bottom: 250rpx;
-  padding-left: 30px;
-  button {
-    height: 60rpx;
-    background: $Gradual-color;
-    border-radius: 10rpx;
-    font-size: 30rpx;
-    font-weight: 400;
-    text-align: center;
-    color: #ffffff;
-    line-height: 60rpx;
-  }
-}
+ 
 </style>

@@ -1,79 +1,59 @@
 <template>
   <view class="comment-box">
     <view class="empty" v-if="!commentData || commentData.length == 0">
-          <u-empty
-            mode="data"
-            marginTop="120"
-            iconSize="140"
-            textSize="32"
-            :text="'暂无数据'"
-          >
-          </u-empty>
-        </view>
-<view v-else>
-    <view class="comment" v-for="(item, index) in commentData" :key="res.id">
-      <view class="left"
-        ><image
-          :lazy-load="true"
-          :lazy-load-margin="0"
-          :src="
-            item.baseSysUserVo.avatar || require('@/static/img/icon/head04.png')
-          "
-          mode="aspectFill"
-        ></image
-      ></view>
-      <view class="right">
-        <view class="top">
-          <view class="name">{{ item.baseSysUserVo.nickName }}</view>
-          <!-- <view class="like" :class="{ highlight: res.isLike }">
-            <view class="num">{{ res.likeNum }}</view>
-            <u-icon
-              v-if="!res.isLike"
-              name="thumb-up"
-              :size="30"
-              color="#9a9a9a"
-              @click="getLike(index)"
-            ></u-icon>
-            <u-icon
-              v-if="res.isLike"
-              name="thumb-up-fill"
-              :size="30"
-              @click="getLike(index)"
-            ></u-icon>
-          </view> -->
-        </view>
-        <view class="content">{{ item.comment }}</view>
-        <view class="comment-img-box" v-if="item.picturePathList">
-          <view class="comment-img-item" v-for="img in item.picturePathList">
-            <image
-              
+      <nodata
+      :config="{
+                  content: '暂无评论',
+                  height:'400rpx',
+                  background:'#fff'
+                }"
+      >
+      </nodata>
+    </view>
+    <view v-else>
+      <view class="comment" v-for="(item, index) in commentData" :key="res.id">
+        <view class="user-info">
+          <view class="user-avatar"
+            ><image
               :lazy-load="true"
               :lazy-load-margin="0"
-              :src="img||require('@/static/img/test5.png')"
+              :src="item.baseSysUserVo.avatar || defaultAvatar"
               mode="aspectFill"
             ></image
           ></view>
+          <view class="name">{{ item.baseSysUserVo.nickName }}</view>
+          <view class="time"> 发布于 {{ item.createTime }} </view>
         </view>
-        <!-- <view class="reply-box">
-          <view class="item" v-for="item in res.replyList" :key="item.index">
-            <view class="username">{{ item.name }}</view>
-            <view class="text">{{ item.contentStr }}</view>
+
+        <view class="comment-content">
+          <view class="score"
+            ><text>打星</text>
+            <u-rate
+              activeColor="#EA531C"
+              readonly
+              :count="5"
+              :value="item.serviceRating"
+              size="32"
+            ></u-rate
+          ></view>
+          <view class="content">{{ item.comment }}</view>
+          <view class="comment-img-box" v-if="item.picturePathList">
+            <view class="comment-img-item" v-for="img in item.picturePathList">
+              <!-- http://39.104.53.172/file/upload/2023/08/04/微信图片_20230525152813_20230804162840A019.jpg -->
+              <!-- :src="img || require('@/static/img/test5.png')" -->
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :src="img || defComment"
+                mode="aspectFill"
+              ></image
+            ></view>
           </view>
-          <view
-            class="all-reply"
-            @tap="toAllReply"
-            v-if="res.replyList != undefined"
-          >
-            共{{ res.allReply }}条回复
-            <u-icon class="more" name="arrow-right" :size="26"></u-icon>
-          </view>
-        </view> -->
-        <view class="bottom">
-          {{ item.createTime }}
-          <!-- <view class="reply">回复</view> -->
+
+      
         </view>
-      </view>
-    </view></view>
+      </view></view
+    >
   </view>
 </template>
 
@@ -152,6 +132,14 @@ export default {
       default: () => [],
     },
   },
+  computed: {
+    defaultAvatar() {
+      return `${this.$fileUrl}/sysFile/avatar.png`
+    },
+    defComment(){
+      return `${this.$fileUrl}/sysFile/img_default.png`
+    }
+  },
   onLoad() {
     this.getComment()
   },
@@ -179,66 +167,82 @@ export default {
 
 <style lang="scss" scoped>
 .comment-box {
-  background: #fff;
-  margin: 20rpx;
-  padding: 20rpx;
-  border-radius: 15rpx;
-  margin-bottom: 0;
+  margin: 0 30rpx;
 }
-.comment {
-  display: flex;
-  padding: 10rpx;
-  .left {
-    image {
-      width: 64rpx;
-      height: 64rpx;
-      border-radius: 50%;
-      background-color: #f2f2f2;
+.comment {    border-bottom: 1rpx solid #eeeeee;
+  .user-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;margin-top: 30rpx;
+    .user-avatar {
+      margin-right: 20rpx;
+      image {
+        width: 58rpx;
+        height: 58rpx;
+        border-radius: 50%;
+        background-color: #f2f2f2;
+      }
+    }
+    .name {
+      font-size: 30rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #333333;
+      line-height: 42rpx;
+    }
+    .time {
+      margin-left: auto;
+      font-size: 26rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #888888;
+      line-height: 37rpx;
     }
   }
-  .right {
-    flex: 1;
-    padding-left: 20rpx;
-    font-size: 24rpx;
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
 
-      .name {
-        color: #000;
-      }
-      .like {
-        display: flex;
-        align-items: center;
-        color: #9a9a9a;
-        font-size: 20rpx;
-        .num {
-          margin-right: 4rpx;
-          color: #9a9a9a;
-        }
-      }
-      .highlight {
-        color: #000;
-        .num {
-          color: #000;
-        }
+  .comment-content {
+    margin-top: 23rpx;
+    padding-bottom: 30rpx;
+    .score {
+      font-size: 26rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #888888;
+      line-height: 37rpx;
+      display: flex;
+      justify-content: flex-start;
+      text {
+        margin-right: 10rpx;
       }
     }
     .content {
+      width: 690rpx;
+
+      font-size: 28rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      line-height: 40rpx;
+      margin-top: 22rpx;
+     
     }
-    .comment-img-box{display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-      .comment-img-item{
-        width: 200rpx;
-    height: 200rpx;
-    margin-right: 20rpx;
-    margin-bottom: 20rpx;
-    image{
-      width: 100%;
-      height: 100%;
-    }
+
+    .comment-img-box {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin-top: 30rpx;
+      .comment-img-item {
+        width: 224rpx;
+        height: 224rpx;
+        margin-right: 8px;
+        margin-bottom: 8rpx;
+
+        image {
+          width: 100%;
+          height: 100%;
+          border-radius: 14rpx;
+        }
       }
     }
     .reply-box {

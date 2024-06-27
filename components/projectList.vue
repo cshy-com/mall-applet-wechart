@@ -1,4 +1,3 @@
-import { createNamespacedHelpers } from 'vuex';
 <template>
   <view>
     <view
@@ -9,16 +8,36 @@ import { createNamespacedHelpers } from 'vuex';
     >
       <view class="content-item">
         <view class="content-item-left">
-          <view class="sub-title over-ellipsis"
+          <view class="sub-title  font-30  over-ellipsis-2"
             ><text>{{ item.title }}</text></view
           >
-          <view class="createTime">
-            <text> {{ item.createTime }} </text>
+          <view class="content-item-footer flex-center">
+            <image
+              :src="defTime"
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :mode="'aspectFill'"
+            />
+            <text class="createTime font-26"> {{ item.createTime }} </text>
           </view>
         </view>
-      </view>
-    </view></view
-  >
+        <view class="content-item-right bachground-def-img">
+          <image v-if="item.mainUrl&&item.mainUrl.length>0"
+            class=""
+            :src="item.mainUrl[0]||defImg"
+            :lazy-load="true"
+            :lazy-load-margin="0"
+            :mode="'aspectFill'"
+          >
+          </image>
+          <image v-else class=""
+            :src="defImg"
+            :lazy-load="true"
+            :lazy-load-margin="0"
+            :mode="'aspectFill'"></image>
+        </view>
+      </view> </view
+  ></view>
 </template>
 
 <script>
@@ -37,7 +56,14 @@ export default {
     return {}
   },
   // 计算属性
-  computed: {},
+  computed: {
+    defTime() {
+      return this.$fileUrl + '/sysFile/ic_shijian.png'
+    },
+    defImg() {
+      return this.$fileUrl + '/sysFile/img_default.png'
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   // 方法集合
@@ -47,7 +73,7 @@ export default {
       this.seTenderDetails(item)
 
       uni.navigateTo({
-        url: '/pages/article/projectDetail?id='+item.id,
+        url: '/pages/article/projectDetail?id=' + item.id,
       })
     },
   },
@@ -68,45 +94,61 @@ export default {
 .content-box {
   position: relative;
   .content-item {
-    padding: 20rpx;
-    margin: 20rpx 20rpx 0 20rpx;
+    margin-bottom: 12rpx;
 
     display: flex;
 
     justify-content: space-between;
     position: relative;
-    flex-direction: column;
+    padding: 30rpx;
+
     background: #fff;
-    border-radius: 20rpx;
+    margin: 0 12rpx 12rpx 12rpx;
+    border-radius: 14rpx;
     .content-item-left {
+      width: 496rpx;
+      margin-right: 30rpx;
       .sub-title {
-        font-size: 26rpx;
-        color: #151515;
-        line-height: 36rpx;
+       
+        color: #333333;
+        line-height: 42rpx;
         margin-bottom: 20rpx;
-        max-height: 72rpx;
+        height: 84rpx;
+        margin-bottom: 19rpx;
       }
-      .over-ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-      }
-      .content-img {
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
+   
+     
+      .content-item-footer {
+        
+        .createTime {
+         
+          color: #c0c0c0;
+          line-height: 37rpx;
+          margin-left: 13rpx;
+        }
         image {
-          width: 200rpx;
-          height: 200rpx;
-          border-radius: 30rpx;
-          margin-right: 20rpx;
+          width: 33rpx;
+          height: 33rpx;
         }
       }
-      .createTime {
-        color: #999;
-        font-size: 22rpx;
+    }
+    .content-item-right {
+      width: 140rpx;
+      height: 140rpx;
+      // background: rgba(237, 237, 237, 0.6);
+      border-radius: 14rpx;
+      position: relative;
+    
+      background-color: #f5f5f5;
+      position: relative;
+      z-index: 99;
+      image {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        will-change: transform;
+        background-color: #f5f5f5;
       }
     }
     .reply {

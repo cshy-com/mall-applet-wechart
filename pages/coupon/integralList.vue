@@ -1,93 +1,105 @@
 <template>
   <view>
+    <defNav title="积分明细" ></defNav>
     <view class="tab-subsection">
-      <!-- <u-subsection
-        :list="list"
-        :current="current"
-        :activeColor="'#3b6dbb'"
-        mode="subsection"
-        fontSize="28"
-        @change="sectionChange"
-      ></u-subsection> -->
-      <view @click="dataPickerShow(0)" class="data-picker">
-        <text v-if="st">{{ $u.timeFormat(st, 'yyyy-mm-dd')}} </text>
-        <text v-else>开始时间</text>
-        <u-icon name="arrow-down"></u-icon>
-      </view>
-      <view @click="dataPickerShow(1)" class="data-picker">
-        <text v-if="et">{{ $u.timeFormat(et, 'yyyy-mm-dd')}} </text>
-        <text v-else>结束时间</text>
-        <u-icon name="arrow-down"></u-icon>
-      </view>
+      <view class="flex-between-center tab-subsection-box">
+        <view
+          @click="dataPickerShow(0)"
+          class="flex-between-center data-picker"
+        >
+          <text v-if="st">{{ $u.timeFormat(st, 'yyyy-mm-dd') }} </text>
+          <text class="placeholder" v-else>开始时间</text>
+          <image :src="defDown" mode="aspectFill"> </image>
+        </view>
+        <view class="line"> </view>
+        <view
+          @click="dataPickerShow(1)"
+          class="flex-between-center data-picker"
+        >
+          <text v-if="et">{{ $u.timeFormat(et, 'yyyy-mm-dd') }} </text>
+          <text class="placeholder" v-else>结束时间</text>
+          <image :src="defDown" mode="aspectFill"> </image>
+        </view>
+        <view class="reset" @click="resetDate"> 重置 </view></view
+      >
     </view>
     <view class="empty" v-if="!dataList || dataList.length == 0">
-      <u-empty
-        mode="data"
-        marginTop="120"
-        iconSize="140"
-        textSize="32"
-        :text="'暂无数据'"
-      >
-      </u-empty>
+      <nodata
+        v-if="noDate"
+        :config="{
+          content: '暂无数据',
+          imgUrl: defaultImg,
+        }"
+      ></nodata>
     </view>
-    <view v-else> 
-      
-    <view class="content-box" v-for="item in dataList" :key="item.id">
-      <view class="content-item" v-if="userInfo.userType==1">
-        <view class="content-item-left">
-          <view class="sub-title over-ellipsis">
-            <text v-if="item.creditsState == 0"
-              >从{{ item.mallFirstPartyVo.name }}领取</text
-            >
-            <text v-if="item.creditsState == 2"
-              >支付给{{ item.mallShopVo.name }}商家</text
-            >
-            <text v-if="item.creditsState == 3"
-              >转赠给{{ item.toBaseSysUserVo.phoneNumber }}用户</text
-            >
-            <text v-if="item.creditsState == 4"
-              >收到{{ item.sourceBaseSysUserVo.phoneNumber }}转赠</text
-            >
-            <text 
-              >来源：{{ item.mallFirstPartyVo.name }}</text
-            >
+    <view v-else>
+      <view class="content-box" v-for="item in dataList" :key="item.id">
+        <view
+          class="content-item"
+          :class="{ 'content-item-freeze': item.creditsState == 5 }"
+        >
+          <view class="content-item-freeze-box" v-if="item.creditsState == 5">
+            <view class="content-item-freeze-box-row" @click="goPage(item)">
+              <text>当前状态</text>
+              <text class="status">积分未被领取|去查看 > </text>
+            </view>
           </view>
-          <view class="createTime">
-            <text> {{ item.createTime }} </text>
-          </view>
-        </view>
-        <view>
-          <!-- :class="{ active: item.creditsState == '-' }" -->
-          <view>
-            <text v-if="[0, 4].includes(item.creditsState)">+</text>
-            <text v-if="[2, 3].includes(item.creditsState)">-</text>
-            <text>{{ item.creditsValue }}</text>
+          <view class="content-item-row">
+            <view class="flex-between-center row" v-if="userInfo.userType == 1">
+              <view class="row-type">
+                <text v-if="item.creditsState == 0"
+                  >领取 从{{ item.mallFirstPartyVo.name }}领取</text
+                >
+                <text v-if="item.creditsState == 2"
+                  >支付 给{{ item.mallShopVo.name }}商家</text
+                >
+                <text v-if="item.creditsState == 3"
+                  >转赠 给{{ item.toBaseSysUserVo.phoneNumber }}用户</text
+                >
+                <text v-if="item.creditsState == 4"
+                  >收到 {{ item.sourceBaseSysUserVo.phoneNumber }}转赠</text
+                >
+                <text v-if="item.creditsState == 5">转赠积分</text>
+              </view>
+              <view class="number">
+                <text v-if="[0, 4].includes(item.creditsState)">+</text>
+                <text v-if="[2, 3, 5].includes(item.creditsState)">-</text>
+                <text>{{ item.creditsValue }}</text></view
+              >
+            </view>
+            <view class="flex-between-center row" v-else>
+              <view class="row-type">
+                <text>收到{{ item.baseSysUserVo.nickName }}支付</text>
+              </view>
+              <view class="number">
+                <text>+</text>
+                <text>{{ item.credits }}</text>
+              </view>
+            </view>
+            <view class="row">
+              <view class="row-source" v-if="item.creditsState == 5">
+                来源：我的积分</view
+              >
+              <view class="row-source" v-else>
+                来源：{{ item.mallFirstPartyVo.name }}</view
+              >
+            </view>
+            <view class="line"> </view>
+            <view class="flex-between-center time">
+              <image
+                :src="defTime"
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                :mode="'aspectFill'"
+              />
+              <text>
+                {{ item.createTime }}
+              </text>
+            </view>
           </view>
         </view>
       </view>
-      <view class="content-item" v-else>
-        <view class="content-item-left">
-          <view class="sub-title over-ellipsis">
-            <text 
-              >收到{{ item.baseSysUserVo.nickName }}支付</text
-            >
-            <text 
-              >来源：{{ item.mallFirstPartyVo.name }}</text
-            >
-          </view>
-          <view class="createTime">
-            <text> {{ item.createTime }} </text>
-          </view>
-        </view>
-        <view>
-          <!-- :class="{ active: item.creditsState == '-' }" -->
-          <view>
-            <text>+</text>
-            <text>{{ item.credits }}</text>
-          </view>
-        </view>
-      </view>
-    </view>
+      <noMore v-if="more == 'noMore' && current > 1"></noMore>
     </view>
     <u-datetime-picker
       :show="show"
@@ -96,16 +108,15 @@
       @cancel="show = false"
       @confirm="confirmDataValue"
     ></u-datetime-picker>
- 
   </view>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
 
-const { mapGetters, mapMutations ,mapActions} = createNamespacedHelpers('user')
+const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers('user')
 import { getTotalPage } from '@/util/util'
-import { creditsDetailsPage ,shopCreditsTotalPage} from '@/api/integral'
+import { creditsDetailsPage, shopCreditsTotalPage } from '@/api/integral'
 export default {
   //import引入组件才能使用
   components: {},
@@ -123,32 +134,55 @@ export default {
       pickerIndex: 0,
       st: null,
       et: null,
+      noDate: false,
     }
   },
   // 计算属性
-  computed: { ...mapGetters(['userInfo']) },
+  computed: {
+    ...mapGetters(['userInfo']),
+    defTime() {
+      return this.$fileUrl + '/sysFile/ic_shijian.png'
+    },
+    defDown() {
+      return this.$fileUrl + '/sysFile/ic_mx_arrow.png'
+    },
+    defaultImg() {
+      return this.$fileUrl + '/sysFile/img_zanwu_tuijian.png'
+    },
+  },
   // 监听data中的数据变化
   watch: {},
   // 方法集合
   methods: {
     ...mapMutations(['seTenderDetails']),
+    goPage(item) {
+      uni.navigateTo({
+        url: `/pages/coupon/transferQrcode?id=${item.remarks}&userId=${item.userId}&source=list`,
+      })
+    },
+    resetDate() {
+      this.st = null
+      this.et = null
+      this.current = 1
+      this.getPageList()
+    },
     confirmDataValue(e) {
       if (this.pickerIndex == 0) {
-        if(!["",null,undefined].includes(this.et)&&(e.value>=this.et)){
+        if (!['', null, undefined].includes(this.et) && e.value >= this.et) {
           this.$tip.toast('开始时间必须小于结束时间')
           return
         }
         this.st = e.value
       } else {
-        if(!["",null,undefined].includes(this.st)&&(e.value<=this.st)){
+        if (!['', null, undefined].includes(this.st) && e.value <= this.st) {
           this.$tip.toast('开始时间必须小于结束时间')
           return
         }
-        this.et =e.value
+        this.et = e.value
       }
-      this.current=1
+      this.current = 1
       this.getPageList()
-      this.show=false
+      this.show = false
     },
     dataPickerShow(index) {
       this.show = true
@@ -166,19 +200,25 @@ export default {
       uni.showLoading({
         title: '加载中',
       })
-      let http=this.userInfo.userType==1?creditsDetailsPage:shopCreditsTotalPage
+      let http =
+        this.userInfo.userType == 1 ? creditsDetailsPage : shopCreditsTotalPage
       try {
         let { code, data, total } = await http({
           current: this.current,
-          size:this.size,
-          startDate:this.st?uni.$u.date(this.st, 'yyyy-mm-dd')+' 00:00:00':null,
-          endDate:this.et?uni.$u.date(this.et, 'yyyy-mm-dd')+' 23:59:59':null
+          size: this.size,
+          startDate: this.st
+            ? uni.$u.date(this.st, 'yyyy-mm-dd') + ' 00:00:00'
+            : null,
+          endDate: this.et
+            ? uni.$u.date(this.et, 'yyyy-mm-dd') + ' 23:59:59'
+            : null,
         })
         if (code == 0) {
           this.total = total
           let totalPage = getTotalPage(this.total, this.size)
           if (this.current == 1) {
             this.dataList = data
+            this.noDate = total == 0
           } else {
             this.dataList = [...this.dataList, ...data]
           }
@@ -229,86 +269,134 @@ export default {
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发执行
 }
 </script>
-<style>
-page {
-  background: #fff;
-}
-</style>
+
 <style scoped lang="scss">
 .tab-subsection {
   background: #fff;
-  padding: 10rpx;
-  display: flex;
-  border-radius: 30rpx;
-  border: 1px solid #dcd5d5;
-  margin: 10rpx 20rpx;
-  justify-content: space-around;
-  .data-picker {
-    display: flex;
-    align-items: center;
+
+  height: 98rpx;
+  font-size: 30rpx;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+
+  line-height: 42rpx;
+  color: #333333;
+
+  .tab-subsection-box {
+    padding: 17rpx 30rpx;
   }
+
+  .data-picker {
+    width: 208rpx;
+
+    background: #f5f5f5;
+    padding: 13rpx 32rpx;
+    border-radius: 32rpx;
+    .placeholder {
+      color: #c7c7cc;
+      font-size: 28rpx;
+      line-height: 40rpx;
+    }
+    image {
+      width: 24rpx;
+      height: 16rpx;
+    }
+  }
+  .line {
+    width: 28rpx;
+    height: 1px;
+    margin: 0 10rpx 0 10rpx;
+    border-bottom: 1rpx solid #ceced2;
+  }
+  .reset {
+    color: #3b6dbb;
+    margin-left: 36rpx;
+  }
+}
+.over-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .content-box {
   position: relative;
   .content-item {
-    padding: 20rpx;
-    margin: 0rpx 20rpx 0 20rpx;
-
-    display: flex;
-
-    justify-content: space-between;
-    position: relative;
-    border-bottom: 1px solid #f1f1f1;
+    font-size: 28rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #666666;
+    line-height: 40rpx;
+    margin: 12rpx 12rpx 0 12rpx;
     background: #fff;
-    border-radius: 20rpx;
-    .active {
-      color: #fd0a0a;
+    border-radius: 14rpx;
+    .content-item-row {
+      background: #fff;
+      border-radius: 14rpx;
+      padding: 0 30rpx;
+      padding-top: 30rpx;
+      padding-bottom: 25rpx;
     }
-    .content-item-left {
-      .sub-title {
-        font-size: 26rpx;
-        color: #151515;
-        line-height: 36rpx;
-        display: flex;
-    flex-direction: column;
-        max-height: 72rpx;
+
+    .row {
+      .row-type,
+      .number {
+        font-size: 30rpx;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #333333;
       }
-      .over-ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
+      .row-source {
+        margin: 10rpx 0 20rpx 0;
       }
-      .content-img {
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        image {
-          width: 200rpx;
-          height: 200rpx;
-          border-radius: 30rpx;
-          margin-right: 20rpx;
-        }
-      }
-      .createTime {
-        color: #999;
-        font-size: 22rpx;
+      .row-type {
+        width: 500rpx;
       }
     }
-    .reply {
+    .line {
+      width: 666rpx;
+      height: 1rpx;
+      border-bottom: 2rpx solid #eeeeee;
+      margin-bottom: 20rpx;
+    }
+    .time {
+      font-size: 26rpx;
+
+      color: #c0c0c0;
+      justify-content: flex-start;
+      image {
+        width: 26rpx;
+        height: 26rpx;
+        margin-right: 6rpx;
+      }
     }
   }
-}
-.content-box::before {
-  display: block;
-  position: absolute;
-  border-top: 1px solid #eee;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-}
-.content {
-  padding-bottom: 20rpx;
+  .content-item-freeze {
+    background: #e2e7ef;
+    .content-item-freeze-box {
+      margin: 0 30rpx;
+      .content-item-freeze-box-row {
+        padding-top: 17rpx;
+        padding-bottom: 17rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 26rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #666666;
+        line-height: 37rpx;
+        .status {
+          color: #3b6dbb;
+        }
+      }
+    }
+  }
 }
 </style>

@@ -1,102 +1,161 @@
 <template>
   <view>
+    <defNav title="论坛详情"></defNav>
     <view>
-      <view class="content-title">
-        <text class="title">{{ forumInfo.title }}</text>
+      <view class="content-title font-26">
+        <text class="title font-30-500">{{ forumInfo.title }}</text>
         <view class="title-info">
-          <text class="browse appmore">阅读&nbsp;{{ forumInfo.visits }}</text>
+          <text class="browse appmore">{{ forumInfo.visits }}人阅读</text>
         </view>
-        <view class="user-info">
-          <view class="user-info-left user">
-            <view class="avater">
-              <image :src="forumInfo.avatar || defaultAvatar" />
-            </view>
-            <view>
-              <text class="name">{{ forumInfo.nickName }}</text>
-              <text class="time">{{ forumInfo.createTime }}</text>
-            </view>
+        <view class="user-info flex-between-center">
+          <view class="avater flex-center">
+            <image :src="forumInfo.avatar || defAvatar" />
+            <text class="name font-28">{{ forumInfo.nickName }}</text>
+          </view>
+
+          <view class="time flex-center">
+            <image
+              :src="defTime"
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :mode="'aspectFill'"
+            />
+            <text class="createTime">
+              {{ forumInfo.createTime }}
+            </text>
           </view>
         </view>
       </view>
     </view>
- 
-      <view class="content-main">
-        <view>
-         
-            <!-- <u-parse :content="forumInfo.content"></u-parse> -->
-            <rich-text :nodes="forumInfo.content"  ></rich-text>
- 
-          </view>
+
+    <view class="content-main font-30-400">
+      <view>
+        <!-- <u-parse :content="forumInfo.content"></u-parse> -->
+        <rich-text :nodes="forumInfo.content"></rich-text>
       </view>
+    </view>
 
     <!-- 评论区域 -->
-    <forumComment></forumComment>
-    <u-gap height="40" bgColor="#f6f7f8"></u-gap>
-    <view v-if="status == 30" class="recommend-box">
+
+    <u-gap height="12" bgColor="#F5F5F5" v-if="forumInfo.status == 30"></u-gap>
+    <view v-if="forumInfo.status == 30" class="recommend-box">
       <view class="content-activity bottom">
-        <view class="tip">值得推荐</view>
+        <view class="tip font-30-500">
+          <text>评论{{ total }}</text>
+          <text class="more font-26" v-if="total > 0" @click="goMore"
+            >查看更多>
+          </text>
+        </view>
         <view>
-          <view
-            class="content-activity-item"
-            @tap="($event) => goDetail(item)"
-            v-for="item in list"
-            :key="item.id"
-          >
-            <view class="thumbnail">
-              <image
-                :src="item.mainUrl || defaultImg"
-                :lazy-load="true"
-                :lazy-load-margin="0"
-                :mode="'aspectFill'"
-              />
-            </view>
-            <text class="thumbnail-title">{{ item.title }}</text>
-          </view>
+          <comments :list="list"></comments>
         </view>
       </view>
     </view>
-    <!-- <view class="fix-footer">
-      <view class="fix-content">
-        <u-input
+    <view
+      class="fix-footer"
+      v-if="forumInfo.status == 30"
+      :style="{
+        bottom: keyboardHeight + 'px',
+      }"
+    >
+      <view class="fix-content flex-start-center">
+        <input
+          class="send-input"
           placeholder="请输入内容"
           border="surround"
           clearable
           shape="circle"
           maxlength="200"
+          v-model="content"
           confirmType="send"
-        ></u-input>
+          @focus="focusInput"
+          @blur="blurInput"
+          :adjust-position="false"
+          @keyboardheightchange="keyboardHeightChange"
+        />
+        <view class="send-text font-30-400" @click="sendComm">发布</view>
       </view>
-    </view> -->
+    </view>
   </view>
 </template>
 
 <script>
+import comments from './components/comments.vue'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
-import { forumDetail, ForumPage, forumView } from '@/api/index'
-import forumComment from './forumComment.vue'
+import {
+  forumDetail,
+  ForumPage,
+  forumView,
+  mallForumCommentsAdd,
+  mallForumCommentsPage,
+} from '@/api/index'
+
 export default {
   //import引入组件才能使用
-  components: { forumComment },
+  components: { comments },
   props: {},
   data() {
     return {
       list: [],
-      defaultImg: require('@/static/img/default.png'),
+
       viewNum: 0,
       status: null,
-      defaultAvatar: require('@/static/img/icon/head04.png'),
+      content: null,
+      current: 1,
+      size: 10,
+      total: 0,
+      keyboardHeight: 0,
     }
   },
   // 计算属性
   computed: {
     ...mapGetters(['forumInfo']),
+    defTime() {
+      return this.$fileUrl + '/sysFile/ic_shijian.png'
+    },
+    defAvatar() {
+      return this.$fileUrl + '/sysFile/avatar.png'
+    },
   },
+
   // 监听data中的数据变化
   watch: {},
   // 方法集合
   methods: {
     ...mapMutations(['setForumInfo']),
+    focusInput(e) {},
+    blurInput(e) {},
+    keyboardHeightChange(e) {
+      this.keyboardHeight = e.detail.height
+
+      console.log(e.detail.height + 'e.detail.height')
+    },
+    goMore() {
+      uni.navigateTo({
+        url: '/pages/article/forumCommentsPage?id=' + this.forumInfo.id,
+      })
+    },
+    async sendComm() {
+      if (['', null, undefined].includes(this.content)) {
+        return uni.showToast({
+          title: '请输入内容',
+          icon: 'none',
+        })
+      }
+      let { code, data } = await mallForumCommentsAdd({
+        forumId: this.forumInfo.id,
+        content: this.content,
+      })
+      if (code == 0) {
+        uni.showToast({
+          title: '发布成功',
+          icon: 'none',
+        })
+        this.content = null
+        this.getCommentsPage()
+      }
+    },
     goDetail(item) {
       this.setForumInfo(item)
 
@@ -104,32 +163,27 @@ export default {
         url: '/pages/subPack/forum/forumDatail',
       })
     },
-    
-    async getPageList() {
-      let res = await ForumPage({
-        type: 'comm',
-        current: 1,
-        size: 10,
-        order: {
-          field: 'visits',
-          type: 'desc',
-        },
+
+    async getCommentsPage() {
+      let res = await mallForumCommentsPage({
+        current: this.current,
+        size: this.size,
+        forumId: this.forumInfo.id,
       })
+      this.total = res.total
       this.list = res.data
     },
     async getDetail() {
-      if (this.status == 30) {
-        await forumView(this.id)
-      }
       uni.showLoading({
         title: '加载中',
       })
       try {
         let res = await forumDetail(this.id)
         this.setForumInfo(res.data)
-        // this.$nextTick(() => {
-				// 	this.$refs.uReadMore.init();
-				// })
+        if (this.forumInfo.status == 30) {
+          await forumView(this.id)
+          this.getCommentsPage()
+        }
       } catch (e) {
         console.log(e)
       } finally {
@@ -149,17 +203,10 @@ export default {
     if (options.status) {
       this.status = options.status
     }
-    if (this.status == 30) {
-      this.getPageList()
-    }
   },
-  onShow() {
-
-  },
+  onShow() {},
   // 生命周期：挂载完成时（可以访问DOM元素）
-  mounted() {
-    
-  },
+  mounted() {},
   beforeCreate() {}, //生命周期：创建之前
   beforpxount() {}, //生命周期：挂载之前
   beforeUpdate() {}, //生命周期：更新之前
@@ -176,57 +223,45 @@ page {
 </style>
 <style scoped lang="scss">
 .content-title {
-  padding: 0 32rpx !important;
-  margin-bottom: 44rpx;
+  padding: 30rpx;
+
+  background: #fff;
+
+  color: #888888;
+  line-height: 37rpx;
   .title {
-    font-size: 50rpx;
-    line-height: 68rpx;
-    color: #1d1d1d;
-    margin-bottom: 25rpx;
-    margin-top: 20rpx;
-    overflow: hidden;
+    color: #333333;
+    line-height: 42rpx;
+    margin-bottom: 10rpx;
   }
   .title-info {
-    font-size: 20rpx;
-    color: #999;
-    margin-bottom: 24rpx;
+    padding-bottom: 29rpx;
+    border-bottom: 2rpx solid #eeeeee;
+    margin-bottom: 30rpx;
   }
   .user-info {
-    display: flex;
+    .avater {
+      image {
+        flex: 0 0 58rpx;
+        width: 58rpx;
+        height: 58rpx;
+        margin-right: 10rpx;
+        border-radius: 50%;
 
-    justify-content: space-between;
-
-    align-items: center;
-    .user-info-left {
-      display: flex;
-
-      align-items: center;
-
-      .avater {
-        flex: 0 0 60rpx;
-        width: 60rpx;
-        height: 60rpx;
-        border-radius: 60rpx;
-        margin-right: 26rpx;
-        display: inline-block;
         vertical-align: middle;
-        image {
-          width: 100%;
-          height: 100%;
-          border-radius: 60rpx;
-        }
       }
-      .name {
-        font-size: 26rpx;
-        color: #151515;
-        font-weight: 400;
-        line-height: 48rpx;
+    }
+    .name {
+      color: #333333;
+      line-height: 40rpx;
+    }
+    .time {
+      image {
+        width: 33rpx;
+        height: 33rpx;
+        margin-right: 10rpx;
       }
-      .time {
-        font-size: 20rpx;
-        color: #666;
-        display: block;
-      }
+      color: #c0c0c0;
     }
   }
 }
@@ -234,58 +269,34 @@ page {
 .content-main {
   clear: both;
   position: relative;
-  font-size: 30rpx;
+
   background-color: #fff;
   vertical-align: bottom;
   word-break: break-all !important;
   white-space: normal !important;
   line-height: 58rpx;
   border-radius: 12rpx;
-  font-weight: 400;
+
   font-family: PingFangSC-Regular !important;
-  padding: 20rpx 32rpx;
-  border-bottom: 20rpx solid #f6f7f8;
+  padding: 20rpx 30rpx;
+
   min-height: 400rpx;
 }
 .content-activity {
-  padding: 0 38rpx 30rpx !important;
+  background: #fff;
   .tip {
-    font-size: 20rpx;
-    color: #fff;
-    background: #fb654f;
-    width: 114rpx;
-    height: 36rpx;
-    line-height: 36rpx;
-    border-bottom-right-radius: 30rpx;
-    margin-bottom: 42rpx;
-    text-align: center;
-  }
-  .content-activity-item {
-    position: relative;
-    font-family: PingFangSC-Medium;
-    color: #151515;
-    margin-bottom: 30rpx;
-
+    margin: 0 30rpx;
+    padding-top: 30rpx;
     display: flex;
-
+    justify-content: space-between;
     align-items: center;
-    .thumbnail {
-      flex: 0 0 196rpx;
-      width: 196rpx;
-      height: 130rpx;
-      margin-right: 20rpx;
-      border-radius: 5rpx;
-      image {
-        width: 100%;
-        height: 100%;
-        border-radius: 5rpx;
-        will-change: transform;
-      }
-    }
-    .thumbnail-title {
-      font-size: 28rpx;
-      line-height: 50rpx;
-      word-break: break-all;
+
+    color: #333333;
+    line-height: 42rpx;
+    margin-bottom: 30rpx;
+    .more {
+      color: #bcbcbc;
+      line-height: 37rpx;
     }
   }
 }
@@ -297,10 +308,26 @@ page {
   bottom: 0;
   height: 120rpx;
   width: 100%;
-  border-top: 1rpx solid #dedede;
+  // padding-bottom: env(safe-area-inset-bottom);
+
   background: #fff;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
   .fix-content {
     margin: 20rpx 30rpx 30rpx 30rpx;
+    .send-input {
+      width: 537rpx;
+      height: 64rpx;
+      background: #f5f5f5;
+      // box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+      border-radius: 32rpx;
+      margin-right: 30rpx;
+      padding: 0 32rpx;
+    }
+    .send-text {
+      color: #3b6dbb;
+      line-height: 42rpx;
+      text-shadow: 0px 0px 20rpx rgba(0, 0, 0, 0.1);
+    }
   }
 }
 </style>

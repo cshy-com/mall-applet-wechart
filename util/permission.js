@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-09 17:44:38
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-05-11 11:24:11
+ * @LastEditTime: 2023-09-04 09:00:09
  * @FilePath: \mall-admind:\work\mall-applet\util\permission.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,8 +12,15 @@ import { getAuthorization } from '@/util/auth'
 const whiteList = [
     '/', // 注意入口页必须直接写 '/'
     '/pages/public/login',
+    '/pages/public/login2',
+    '/pages/index/home/userHome',
+    '/pages/index/collection/index',
+    '/pages/index/user/index',
     '/pages/public/register',
-    '/pages/public/agreement'
+    '/pages/index/index',
+    '/pages/public/agreement',
+    '/pages/coupon/agreemenreceivet',
+    '/pages/coupon/transferScanCode'
 ]
 
 export default async function() {
@@ -39,6 +46,7 @@ export default async function() {
 
                 // 不是白名单并且没有token
                 if (!pass && !getAuthorization()) {
+                    debugger
                     uni.showToast({
                         title: '请先登录',
                         icon: 'none'

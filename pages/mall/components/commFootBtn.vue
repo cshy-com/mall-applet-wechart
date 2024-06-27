@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-16 09:16:21
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-19 17:00:07
+ * @LastEditTime: 2023-08-24 09:32:55
  * @FilePath: \mall-applet\pages\subPack\merchant\commFootBtn.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,8 @@
     <!-- 底部操作按钮 -->
     <view class="footer-btn">
       <view class="left-icon">
-        <button  class="btn"
+        <button
+          class="btn"
           open-type="contact"
           @contact="handleContact"
           show-message-card
@@ -21,47 +22,42 @@
           "
           :sendMessageImg="shopInfo.mainImage"
         >
-          <u-icon
-            :name="'server-man'"
-            size="40"
-            label="客服"
-            labelPos="bottom"
-            labelSize="24"
-            @tap='handleContact'
-          ></u-icon>
+          <image
+            :lazy-load="true"
+            :lazy-load-margin="0"
+            :src="defService"
+          ></image>
+          <text>客服</text>
         </button>
       </view>
-      <view class="foot-btn-def" v-if="user.userType==1">
-        <u-button
-          class="foot-btn-value"
-          text="预定"
-          size="small"
-          @click="showModal"
-          @confirm="confirm"
-          @cancel="cancel"
-        ></u-button>
+      <view class="foot-btn-left" :class="{'round':user.userType == 2}">
+        <button @tap="feedback"
+          class="btn-text"
+         
+        >
+        客户反馈 
+        </button>
       </view>
-      <view class="foot-btn-def foot-btn-right">
-        <u-button
-          class="foot-btn-value"
-          text="客户反馈"
-          size="small"
-          @tap="feedback"
-        ></u-button>
+      <view class="foot-btn-right" v-if="user.userType == 1" >
+        <button class="btn-text"   @click="showModal"
+          @confirm="confirm"
+          @cancel="cancel">预定</button>
       </view>
     </view>
-
-    <u-action-sheet
-      :actions="list"
-      :closeOnClickOverlay="true"
-      :closeOnClickAction="true"
-      :title="title"
-      :show="show"
-      @select="selectClick"
-      :cancelText="'取消'"
-      :safeAreaInsetBottom="true"
-      @close="close"
-    ></u-action-sheet>
+    <view class="view-action" v-if="show">
+      <u-action-sheet
+        :actions="list"
+        :closeOnClickOverlay="true"
+        :closeOnClickAction="true"
+        :title="title"
+        :show="show"
+        @select="selectClick"
+        :cancelText="'取消'"
+        round="27rpx"
+        :safeAreaInsetBottom="true"
+        @close="close"
+      ></u-action-sheet>
+    </view>
   </view>
 </template>
 
@@ -69,15 +65,16 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapMutations } = createNamespacedHelpers('commodity')
 export default {
+  options: { styleIsolation: 'shared' },
   props: {
     tel: {
       type: String, //父页面传过来关于商家的联系方式
       default: '',
     },
-    shopId:{
-      type:String,
-      default:''
-    }
+    shopId: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -93,22 +90,24 @@ export default {
           index: 1,
         },
       ],
-      user: uni.getStorageSync('user')
+      user: uni.getStorageSync('user'),
     }
   },
   computed: {
     ...mapGetters(['shopInfo']),
+    defService() {
+      return this.$fileUrl + '/sysFile/ic_nav_kefu.png'
+    },
   },
   methods: {
     handleContact(e) {
-
       // console.log('path----------------' + JSON.stringify( e.detail.path))
       // console.log('query----------------' + JSON.stringify(e.detail.query))
       // return
       // this.$u.toast('正在开发中，敬请期待')
     },
     feedback() {
-      this.$u.toast('正在开发中，敬请期待')
+      this.$u.toast('即将开放，敬请期待')
     },
     close() {
       this.show = false
@@ -118,9 +117,9 @@ export default {
     },
     selectClick(item) {
       if (item.index == 0) {
-      uni.navigateTo({
-        url:'/pages/order/submit-order/index?shopId='+this.shopId
-      })
+        uni.navigateTo({
+          url: '/pages/order/submit-order/index?shopId=' + this.shopId,
+        })
         return
       }
       if (item.index == 1) {
@@ -141,16 +140,60 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.view-action {
+  /deep/ .u-action-sheet__header {
+    background: #fff;
+    margin: 0 12rpx;
+    border-radius: 27rpx 27rpx 0 0;
+    border-bottom: 1rpx solid #eeeeee;
+    text {
+      font-size: 28rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #333333;
+      line-height: 40rpx;
+    }
+    .u-action-sheet__header__icon-wrap{
+      display: none;
+    }
+  }
+  
+  /deep/ .u-popup__content {
+    background: none;
+    background-color: none !important;
+  }
+  /deep/ .u-action-sheet__item-wrap {
+    background: #fff;
+    margin: 0 12rpx;
+    border-radius: 0 0 27rpx 27rpx;
+  }
+  /deep/ .u-action-sheet__item-wrap__item__name,
+  /deep/ .u-action-sheet__cancel-text {
+    color: #007aff;
+  }
+
+  /deep/ .u-gap {
+    display: none;
+  }
+  /deep/ .u-action-sheet__cancel-text {
+    margin: 0 13rpx;
+    background: #fff;
+    border-radius: 27rpx;
+    margin-top: 12rpx;
+  }
+}
 .footer-btn {
   display: flex;
   position: fixed;
   bottom: 0;
   width: 100%;
-  justify-content: space-around;
+  justify-content: flex-start;
   background: #fff;
-  padding: 10rpx;
-  height: 90rpx;
-  border-top: 1px solid #f1f1f1;
+  padding-bottom: env(safe-area-inset-bottom);
+  height: 99rpx;
+
+  box-shadow: 0px -2px 20px 0px rgba(0, 0, 0, 0.1);
+
   .foot-btn-def {
     width: 25%;
 
@@ -162,11 +205,64 @@ export default {
     }
   }
   .left-icon {
-    width: 120rpx;
-    .btn{
+    width: 197rpx;
+    .btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 0;
       background: none;
+      image {
+        width: 52rpx;
+        height: 52rpx;
+      }
+      text {
+        font-size: 20rpx;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #666666;
+        line-height: 28rpx;
+      }
     }
-    .btn::after{ border: none;}
+    .btn::after {
+      border: none;
+    }
+  }
+  .foot-btn-left {
+    button {
+      width: 200rpx;
+      height: 70rpx;
+      background: #75bb44;
+      border-radius: 40rpx 0px 0px 40rpx;
+      margin-top: 14rpx;
+      line-height: 70rpx;
+    }
+  }
+  .foot-btn-right {
+    button {
+      width: 323rpx;
+      height: 70rpx;
+      background: #3b6dbb;
+      border-radius: 0px 40rpx 40rpx 0px;
+      margin-top: 14rpx;
+      line-height: 70rpx;
+    }
+  }
+  .round{
+    margin-left: auto;
+    margin-right: 30rpx;
+    button{
+      width: 500rpx;
+      border-radius: 40rpx;
+    }
+  }
+  .btn-text {
+    font-size: 30rpx;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 42rpx;
   }
 }
 </style>

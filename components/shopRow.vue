@@ -1,79 +1,75 @@
 <template>
   <view>
-    <view class="empty" v-if="!list || list.length == 0">
-      <u-empty
-        mode="data"
-        marginTop="120"
-        iconSize="140"
-        textSize="32"
-        :text="'暂无数据'"
-      >
-      </u-empty>
-    </view>
-    <view v-else>
+    
       <view
-        class="store-list"
+        class="store-list flex-start font-32-500 "
         v-for="item in list"
         :key="item.id"
         @tap="($event) => goEvent(item)"
       >
         <!-- 左边图片 -->
-        <view class="store-list-left">
+        <view class="store-list-left ">
           <image
             :lazy-load="true"
             :lazy-load-margin="0"
-            class="avater"
+            class="avater bachground-def-img"
             :src="item.mainImage"
             :mode="'aspectFill'"
             @error="imageError($event, index, i)"
           ></image>
-          <view class="cover-box">
-            <image
-              :lazy-load="true"
-              :lazy-load-margin="0"
-              :src="fileUrl + '/sysFile/bg3.png'"
-              class="cover"
-            ></image>
-          </view>
         </view>
         <!-- 右边介绍 -->
         <view class="store-list-right">
           <!-- 第一行 -->
-          <view class="title">
-            <text class="name">{{ item.name }}</text>
-            <view class="tag"> 可用积分 </view>
+          <view class="title flex-start-center">
+            <text class="name  font-32-500 over-ellipsis-1">{{ item.name }}</text>
+             <view class="star">
+              <image
+                :lazy-load="true"
+                :lazy-load-margin="0"
+                class="avater"
+                :src="item.ifCollect?defStarSelect:defStar"
+                :mode="'aspectFill'"
+              ></image>
+            </view>  
+          
           </view>
-          <view class="score">
+          <view class="score flex-start-center">
             <view class="rate-left"
               ><u-rate
-                activeColor="#FFC64F"
+                activeColor="#EA531C"
                 :count="count"
                 readonly
                 :value="item.score"
                 size="32"
               ></u-rate>
+              <text class="rate-value font-26">{{ item.score }}</text>
+            </view>
+            <view class="rate-price font-26">
+              ¥{{ item.perCapitaConsumption }}/人
             </view>
           </view>
           <view class="type">
-            <text class="text"
+            <text class="text font-26"
               ><text v-if="isShowPid">{{ item.firstTypeName }}/</text
               >{{ item.secondTypeName }}</text
             >
-            <text class="text">{{ item.areaName }}</text>
+            <text class="text font-26">{{ item.areaName }}</text>
+            <text class="text tag font-26"> 可用积分 </text>
           </view>
-          <view
-            class="certificate-row"
-            v-for="coupon in item.couponList"
-            :key="coupon.id"
-          >
-            <!-- <view class="left-icon"> 券 </view> -->
-            <text class="price"> ¥{{ coupon.price }} </text>
-            <text class="value"> {{ coupon.total }}积分 </text>
+          <!-- 店铺下的商品 -->
+          <view class="commodity-box" v-if="item.commodities&&item.commodities.length>0">
+            <view class="line"></view>
+            <view class="certificate-row flex-center font-26" v-for="commodity in item.commodities" :key="commodity.id">
+              <view class="price  "> ¥{{commodity.discountedPrice}} </view>
+              <text class="price-line ">¥{{commodity.originalPrice}}</text>
+              <text class="commodity-title over-ellipsis-1">{{commodity.name}}</text>
+            </view>
+            
           </view>
         </view>
       </view>
-    </view></view
-  >
+    </view> 
 </template>
 
 <script>
@@ -95,13 +91,21 @@ export default {
     return {
       value: 4.6,
       count: 5,
-      defaultImg: require('@/static/img/default.png'),
     }
   },
   created() {},
   computed: {
-    fileUrl() {
-      return this.$fileUrl
+    defBg() {
+      return this.$fileUrl + '/sysFile/bg3.png'
+    },
+    defaultImg() {
+      return this.$fileUrl + '/sysFile/img_zanwu_tuijian.png'
+    },
+    defStar() {
+      return this.$fileUrl + '/sysFile/ic_xihuan_no.png'
+    },
+    defStarSelect() {
+      return this.$fileUrl + '/sysFile/ic_xihuan_yes.png'
     },
   },
   methods: {
@@ -124,167 +128,123 @@ export default {
 
 <style lang="scss" scoped>
 .store-list {
-  display: flex;
-  justify-content: flex-start;
+   
   align-items: top;
-  font-size: 32rpx;
+   
   color: #333;
-  padding: 0 24rpx;
-  margin-bottom: 22rpx;
+  margin: 0 12rpx 12rpx 12rpx;
+  border-radius: 14px;
+  background: #fff;
+  padding: 32rpx 30rpx;
+  
   .store-list-left {
-    width: 244rpx;
-    height: 254rpx;
-    position: relative;
+    width: 144rpx;
+    height: 144rpx;
+  
+      background-color: #f5f5f5;
     image {
       width: 100%;
       height: 100%;
-      border-radius: 20rpx 0 0 20rpx;
+      border-radius: 14rpx;
       will-change: transform;
-    }
-    .cover-box {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      z-index: 66;
-      left: 0;
-      top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .cover {
-      width: 240rpx;
-      height: 250rpx;
     }
   }
   .store-list-right {
-    line-height: 34rpx;
     flex: 1;
     position: relative;
     left: 0;
+    margin-left: 20rpx;
 
-    background: #fff;
-    border-radius: 0 12rpx 12rpx 0;
-    padding: 20rpx;
     .title {
-      display: flex;
-      justify-content: start;
-      align-items: center;
+   
       .name {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 268rpx;
-        font-size: 36rpx;
-        font-family: PingFangSC-Semibold, PingFang SC;
-        font-weight: 600;
-        color: #000000;
-        line-height: 50rpx;
+        
+        width: 450rpx;
+       
+        color: #333333;
+        line-height: 45rpx;
       }
-      .tag {
-        background: rgba(58, 108, 186, 0.14);
-        border-radius: 20rpx 0px 20rpx 0px;
-        font-size: 22rpx;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: $base-bg-blue;
-        line-height: 22px;
-        width: 136rpx;
-        height: 40rpx;
-        margin-left: auto;
-        text-align: center;
-      }
-    }
-    .score {
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      margin: 6rpx 0 10rpx 0;
-      .rate-left {
-        display: flex;
-      }
-      .rate {
-        color: rgb(181, 149, 125);
-        font-size: 20rpx;
-      }
-      .value {
-        margin-left: 20rpx;
-        font-size: 24rpx;
-      }
-    }
-    .type {
-      display: flex;
-      margin-bottom: 6rpx;
-      .text {
-        font-size: 24rpx;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #666666;
-        line-height: 34rpx;
-        margin-right: 20rpx;
-      }
-    }
-    .comment {
-      display: flex;
-      align-items: center;
-      .icon {
-        width: 116rpx;
-        height: 40rpx;
+      .star {
+        width: 30rpx;
+        height: 30rpx;
+        margin-right: auto;
         image {
           width: 100%;
           height: 100%;
         }
       }
-      .number {
-        background: rgb(256, 236, 223);
-        padding: 4rpx;
-        font-size: 20rpx;
-        color: rgb(181, 149, 125);
+    }
+    .score {
+      
+      margin-top: 10rpx;
+      .rate-left {
+        display: flex;
+        .rate-value {
+          
+          color: #ea531c;
+          line-height: 37rpx;
+        }
       }
-      .identifying {
-        margin-left: 10rpx;
-        font-size: 20rpx;
-        background: rgb(245, 245, 245);
-        padding: 4rpx;
+      .rate-price {
+        
+        line-height: 37rpx;
+        margin-left: 30rpx;
+      }
+ 
+    }
+    .type {
+      display: flex;
+      margin-top: 10rpx;
+      .text {
+        
+    
+        
+        margin-right: 20rpx;
+
+       
+        color: #666666;
+        line-height: 37rpx;
+      }
+      .tag {
+        margin-left: auto;
       }
     }
+
+    .commodity-box {
+      .line {
+        width: 502rpx;
+        height: 1rpx;
+        border-top: 2rpx solid #eeeeee;
+        margin-bottom: 10rpx;
+
+        margin-top: 20rpx;
+      }
+    }
+    
     .certificate-row {
-      display: flex;
-
-      align-items: center;
+      
       margin-top: 10rpx;
-      .left-icon {
-        font-size: 24rpx;
-        font-family: PingFangSC-Medium, PingFang SC;
-
-        color: #912d17;
-        line-height: 34rpx;
-        width: 36rpx;
-        height: 36rpx;
-        background: #feeeee;
-        border-radius: 4rpx;
-        text-align: center;
-      }
       .price {
-        font-size: 24rpx;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #912d17;
-        line-height: 34rpx;
-        margin: 0 20rpx 0 10rpx;
+      
+        color: #ea531c;
+        line-height: 37rpx;
       }
-      .value {
-        font-size: 24rpx;
-        font-family: PingFangSC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #000000;
-        line-height: 34rpx;
+      .price-line {
+        margin-left: 10rpx;
+        
+        color: #c0c0c0;
+        line-height: 37rpx;
+        text-decoration: line-through;
+      }
+      .commodity-title {
+       height: 50rpx;
+        color: #666666;
+        margin-left: 30rpx;
+        width: 286rpx;
+       
       }
     }
   }
 }
-.empty {
-  margin-top: 120rpx;
-  padding-bottom: 120rpx;
-}
+ 
 </style>

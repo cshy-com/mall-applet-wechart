@@ -1,15 +1,22 @@
 <!--
+ * @Author: zhang00001 774004514@qq.com
+ * @Date: 2023-07-27 10:20:46
+ * @LastEditors: zhang00001 774004514@qq.com
+ * @LastEditTime: 2024-03-01 09:32:08
+ * @FilePath: \mall-applet\pages\order\order-list\order-list.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!--
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-15 12:20:45
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-07-20 15:07:32
+ * @LastEditTime: 2023-08-29 17:20:06
  * @FilePath: \mall-admind:\work\mall-applet\pages\order\order-list\test.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <!--pages/orderList/orderList.wxml-->
-
   <view class="container">
+    <defNav title="我的订单"></defNav>
     <!-- 头部菜单 -->
     <view class="order-tit">
       <view class="order-tab">
@@ -22,7 +29,10 @@
           :activeStyle="{
             color: '#3b6dbb',
             fontWeight: 'bold',
-            transform: 'scale(1.05)',
+          }"
+          :inactiveStyle="{
+            fontSize: '30rpx',
+            color: '#888888',
           }"
           lineHeight="5"
           lineWidth="45"
@@ -31,78 +41,137 @@
     </view>
     <!-- end 头部菜单 -->
     <view class="main">
-      <view class="empty" v-if="list.length == 0"> 还没有任何相关订单 </view>
-      <!-- 订单列表 -->
-      <block v-for="(item, index) in list" :key="index">
-        <orderItem
-          :orderInfo="item"
-          @toOrderDetailPage="toOrderDetailPage(item)"
-        >
-          <template v-slot:state>
-            <view class="order-state">
-              <text>{{
-                item.statusName||(
-                item.status == 20
-                  ? '预约中'
-                  : orderInfo.status == 10
-                  ? '预约成功'
-                  : orderInfo.status == 30
-                  ? '已到店'
-                  : orderInfo.status == 0
-                  ? '已完成'
-                  : orderInfo.status == 40
-                  ? '已评论'
-                  : '已取消')
-              }}</text>
-            </view>
-          </template>
-          <template v-slot:footer>
-            <view class="prod-foot">
-              <view class="btn" v-if="item.status == 20">
-                <text
-                  class="button"
-                  @tap="onCancelOrder"
-                  :data-ordernum="item.orderNumber"
-                  hover-class="none"
-                  >取消订单</text
-                >
-              </view>
-              <view class="btn" v-if="item.status == 0">
-                <text
-                  class="button"
-                  @click="createComment(item)"
-                  :data-ordernum="item.orderNumber"
-                  hover-class="none"
-                  >评价</text
-                >
-              </view>
-              <view class="btn" v-if="item.status == 40">
-                <text
-                  class="button"
-                  @click="createComment(item)"
-                  :data-ordernum="item.orderNumber"
-                  hover-class="none"
-                  >查看评价</text
-                >
-              </view>
-            </view></template
+      <nodata
+        v-if="noDate"
+        :config="{
+          content: '暂无订单数据',
+          imgUrl: defaultImg,
+        }"
+      ></nodata>
+      <template v-else>
+        <!-- 订单列表 -->
+        <block v-for="(item, index) in list" :key="index">
+          <orderItem
+            :orderInfo="item"
+            @toOrderDetailPage="toOrderDetailPage(item)"
           >
-        </orderItem>
-      </block>
+            <template v-slot:state>
+              <view class="order-num">
+                <text class="order-id">订单编号：{{ item.id }}</text>
+
+                <view class="order-state">
+                  <text
+                    :class="{
+                      red: item.status == 20,
+                      green: item.status == 10,
+                      blue: item.status == 30,
+                      grey: item.status == -10,
+                      orange: item.status == 40,
+                    }"
+                    >{{
+                      item.statusName ||
+                      (item.status == 20
+                        ? '预约中'
+                        : orderInfo.status == 10
+                        ? '预约成功'
+                        : orderInfo.status == 30
+                        ? '已到店'
+                        : orderInfo.status == 0
+                        ? '已完成'
+                        : orderInfo.status == 40
+                        ? '已评论'
+                        : '已取消')
+                    }}</text
+                  >
+                </view>
+              </view>
+            </template>
+            <template v-slot:decoration>
+              <view class="decoration">
+                <image :src="defDecoration"></image>
+              </view>
+            </template>
+            <template v-slot:footer>
+              <view class="prod-foot">
+                <view class="btn" v-if="item.status == 20 || item.status == 10">
+                  <text
+                    class="button"
+                    @tap="onCancelOrder(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >取消预约</text
+                  >
+                </view>
+                <view
+                  class="btn"
+                  v-if="item.status == -10 || item.status == 40"
+                >
+                  <text
+                    class="button"
+                    @tap="onCreateOrder(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >{{ item.status == -10 ? '重新预约' : '再次预约' }}</text
+                  >
+                </view>
+                <view class="btn" v-if="item.status == 10">
+                  <text
+                    class="button blue-btn-def"
+                    @tap="payOrder(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >积分付款</text
+                  >
+                </view>
+                <view class="btn" v-if="item.status == 40">
+                  <text
+                    class="button blue-btn"
+                    @click="createComment(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >查看评价</text
+                  >
+                </view>
+                <view class="btn" v-if="item.status == 0">
+                  <text
+                    class="button blue-btn"
+                    @click="createComment(item)"
+                    :data-ordernum="item.orderNumber"
+                    hover-class="none"
+                    >评价</text
+                  >
+                </view>
+              </view></template
+            >
+          </orderItem>
+        </block>
+        <noMore v-if="more == 'noMore' && current > 1"></noMore>
+      </template>
     </view>
+    <u-modal
+      :title="'是否确认取消预约？'"
+      @cancel="show = false"
+      :showCancelButton="true"
+      :show="show"
+      @confirm="confirm"
+      ref="uModal"
+      :asyncClose="true"
+    ></u-modal>
+    <payPop :show="payPopShow"> </payPop>
   </view>
   <!-- end 订单列表 -->
 </template>
 
 <script>
-// var http = require('../../utils/http.js')
+import payPop from './../components/payPop'
 import orderItem from './../components/order-item'
-import { orderList } from '@/api/order'
+import { orderList, orderStatusChange, finishOrder } from '@/api/order'
 import { getTotalPage } from '@/util/util'
 export default {
   data() {
     return {
       list: [],
+      payPopShow: false,
       tabList: [
         {
           name: '全部',
@@ -116,10 +185,7 @@ export default {
           name: '预约成功',
           id: 10,
         },
-        {
-          name: '已到店',
-          id: 30,
-        },
+
         {
           name: '已完成',
           id: 0,
@@ -139,12 +205,21 @@ export default {
       more: 'noMore',
       size: 10,
       currentIndex: 0,
+      noDate: false,
+      show: false,
+      selectOrder: null,
     }
   },
 
-  components: { orderItem },
+  components: { orderItem, payPop },
   props: {},
   computed: {
+    defDecoration() {
+      return `${this.$fileUrl}/sysFile/img_dingd_zhuangs.png`
+    },
+    defaultImg() {
+      return this.$fileUrl + '/sysFile/img_dingdan.png'
+    },
     orderDetailsState(status) {
       return (
         'order-sts  ' +
@@ -158,14 +233,14 @@ export default {
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // if (options.sts) {
-    //   this.setData({
-    //     sts: options.sts
-    //   })
-    //   this.loadOrderData(options.sts, 1)
-    // } else {
+    if (options.status && Number(options.status) > -1) {
+      this.currentIndex = this.tabList.findIndex(
+        (val) => val.id == options.status
+      )
+    } else {
+      this.currentIndex = 0
+    }
     this.loadOrderData()
-    // }
   },
 
   /**
@@ -177,8 +252,8 @@ export default {
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    uni.$on('refresh',data=>{
-      if(data.refresh){
+    uni.$on('refresh', (data) => {
+      if (data.refresh) {
         this.loadOrderData()
       }
     })
@@ -222,6 +297,24 @@ export default {
    */
   onShareAppMessage: function () {},
   methods: {
+    async payOrder(item) {
+      uni.navigateTo({
+        url: '/pages/order/orderPay?orderId=' + item.id,
+      })
+      // let { code, data } = await finishOrder({
+      //   orderId: item.id,
+      //   credits: 10,
+      // })
+      // if (code == 0) {
+      //   this.loadOrderData()
+      // }
+      // this.payPopShow = true
+    },
+    onCreateOrder(item) {
+      uni.navigateTo({
+        url: '/pages/order/submit-order/index?shopId=' + item.shopId,
+      })
+    },
     /**
      * 加载订单数据
      */
@@ -241,6 +334,7 @@ export default {
 
         if (this.current == 1) {
           this.list = res.data
+          this.noDate = res.total == 0
         } else {
           this.list = [...this.list, ...res.data]
         }
@@ -260,6 +354,7 @@ export default {
      * 状态点击事件
      */
     onStsTap(e) {
+      this.current = 1
       this.currentIndex = e.index
       this.loadOrderData()
     },
@@ -267,16 +362,19 @@ export default {
     /**
      * 取消订单
      */
-    onCancelOrder: function (e) {
-      uni.makePhoneCall({
-        phoneNumber: '017-71237819', //电话号码
-        success: function (e) {
-          console.log(e)
-        },
-        fail: function (e) {
-          console.log(e)
-        },
-      })
+    onCancelOrder(item) {
+      this.show = true
+      this.selectOrder = item
+    },
+    async confirm() {
+      try {
+        await orderStatusChange({ orderId: this.selectOrder.id })
+        this.show = false
+        this.$tip.successToast('已取消预约！')
+        this.loadOrderData()
+      } catch (e) {
+        console.log(e)
+      }
     },
     createComment(e) {
       uni.navigateTo({
@@ -299,10 +397,4 @@ export default {
   left: 24rpx;
 }
 @import './order-list.scss';
-</style>
-<style>
-page {
-  background-color: #f4f4f4;
-  color: #333;
-}
 </style>

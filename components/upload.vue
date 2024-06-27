@@ -12,9 +12,29 @@
       :maxSize="maxSize * 1024 * 1024"
       :previewFullImage="previewFullImage"
       @oversize="overSize"
-    ></u-upload>
+    >
+      <slot>
+        <view class="upload-slot">
+          <view class="upload-slot-thumbnail">
+            <image
+              :src="defUploadIcon"
+              :lazy-load="true"
+              :lazy-load-margin="0"
+              :mode="'aspectFill'"
+            ></image>
+          </view>
+          <view class="upload-slot-tip">
+            <text> {{ tip }} </text>
+            <text> （最多{{ maxCount }}张） </text>
+          </view>
+        </view>
+      </slot>
+    </u-upload>
     <view class="tip" v-if="showTips">
-      <text class="tip-value">请上传 大小不超过 <text class="color">{{maxSize}}MB</text> 格式为 png/jpg/jpeg 的文件，最多上传  <text class="color">{{maxCount}} </text>张</text>
+      <view class="tip-value"
+        >请上传大小不超过 <text class="color">{{ maxSize }}MB</text> 格式为
+        png/jpg/jpeg 的文件</view
+      >
     </view>
   </view>
 </template>
@@ -53,14 +73,18 @@ export default {
       type: String,
       default: 'upload',
     },
-    maxSize:{
-      type:Number,
-      default:1
+    maxSize: {
+      type: Number,
+      default: 1,
     },
-    showTips:{
-      type:Boolean,
-      default:true
-    }
+    showTips: {
+      type: Boolean,
+      default: true,
+    },
+    tip: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -73,7 +97,12 @@ export default {
     }
   },
   // 计算属性
-  computed: {},
+  computed: {
+     
+    defUploadIcon(){
+      return this.$fileUrl+'/sysFile/ic_main_tupian.png'
+    }
+  },
   // 监听data中的数据变化
   watch: {
     value: {
@@ -91,10 +120,9 @@ export default {
   // 方法集合
   methods: {
     // 图片大小超出最大允许大小
-overSize(e) {
-   
-	uni.$u.toast(`上传图片大小不能超过${this.maxSize}MB!`)
-},
+    overSize(e) {
+      uni.$u.toast(`上传图片大小不能超过${this.maxSize}MB!`)
+    },
     deletePic(event) {
       this.fileList.splice(event.index, 1)
     },
@@ -165,24 +193,75 @@ overSize(e) {
 }
 </script>
 <style lang="scss" scoped>
-.tip{
-  .tip-value{
-    font-size: 22rpx;
-    .color{
-      color: rgb(245, 108, 108);
+.upload {
+  .tip {
+    .tip-value {
+      font-size: 22rpx;
+      .color {
+        color: rgb(245, 108, 108);
+      }
     }
   }
-}
-.upload {
+  .upload-slot {
+    width: 163rpx;
+    height: 163rpx;
+    border-radius: 14rpx;
+    border: 1px dashed #cccccc;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .upload-slot-thumbnail {
+      width: 44rpx;
+      height: 44rpx;
+      margin-bottom: 10rpx;
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .upload-slot-tip {
+      font-size: 24rpx;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #cccccc;
+      line-height: 33rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  /deep/ .u-upload__wrap__preview {
+    // width: 174rpx;
+    // height: 174rpx;
+    overflow: visible;
+    margin-right: 9rpx;
+    image {
+      border-radius: 14rpx;
+      width: 163rpx !important;
+      height: 163rpx !important;
+      border: 1px dashed #cccccc;
+    }
+  }
   /deep/ .u-upload__deletable {
-    height: 40rpx !important;
-    width: 40rpx !important;
+    height: 34rpx !important;
+    width: 34rpx !important;
+    background-image: url('./../static/icon/ic_main_shanchu.png');
+    background-size: 100%;
+    top: -11rpx;
+    right: -11rpx;
+    background-color: transparent;
+    border-bottom-left-radius: 0;
     .u-upload__deletable__icon {
-      top: 6px !important;
     }
     .uicon-close {
-      font-size: 40rpx !important;
+      font-size: 0rpx !important;
     }
+  }
+  /deep/ .u-upload__success {
+    display: none;
   }
   /deep/ .uicon-camera-fill {
     font-size: 40rpx !important;

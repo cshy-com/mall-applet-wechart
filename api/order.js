@@ -2,7 +2,7 @@
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-06-16 15:40:50
  * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-06-19 13:58:30
+ * @LastEditTime: 2023-08-28 17:55:32
  * @FilePath: \mall-admind:\work\mall-applet\api\order.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -35,4 +35,17 @@ export function orderForArrived(data) {
 // 商家用过扫码获取code，订单详情
 export function orderDetailByQrcode(data) {
     return getString('/mallOrder/mallGetObjByQrcode/' + data)
+}
+// 取消订单 
+
+export function orderStatusChange(data) {
+    return getString(`/mallOrder/cancel`, data)
+}
+
+//  完成订单
+export function finishOrder(data) {
+    return getString('/credits/details/consume', data)
+}
+export function mallOrderNumbers(data) {
+    return getString('/mallOrder/countByStatus', data)
 }
