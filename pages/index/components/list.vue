@@ -35,14 +35,16 @@
                     bindload=""
                   >
                   </image>
-                  <text class="def"> {{ prod.name }}</text>
+                  <text class="def">{{ prod.shopName }} - {{ prod.name }}</text>
                   <!-- <text class="tip">可用积分</text> -->
                 </view>
 
                 <view class="prod-text-info">
-                  <text class="price">¥{{ prod.discountedPrice }}</text>
+                  {{prod.shopId=="8e42c6091eb00598e3a3912a2537744b"?"合作方案洽谈中":"优惠方案协商中"}}
+                
+                  <!-- <text class="price">¥{{ prod.discountedPrice }}</text>
 
-                  <text class="big-num">原价：¥{{ prod.originalPrice }}</text>
+                  <text class="big-num">原价：¥{{ prod.originalPrice }}</text> -->
 
                   <!-- <view class="basket-img">
                    

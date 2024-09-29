@@ -15,12 +15,12 @@
       <view class="decoration">
         <image :src="defDecoration"></image>
       </view>
-      <view class="qr-code">
+      <!-- <view class="qr-code">
         <view class="qr-code-img"> <image :src="qrCodesrc"></image></view>
         <text>到店亮码核销</text>
         <image class="qr-code-left" :src="defDecoration1"></image>
         <image class="qr-code-right" :src="defDecoration1"></image>
-      </view>
+      </view> -->
       <!-- 商品信息 -->
       <view class="order-box">
         <template v-if="orderItemDtos">

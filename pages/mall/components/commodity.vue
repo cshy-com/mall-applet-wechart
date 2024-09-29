@@ -1,8 +1,8 @@
 <!--
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-05-12 11:00:49
- * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-08-30 09:32:23
+ * @LastEditors: zhang00001 774004514@qq.com
+ * @LastEditTime: 2024-07-16 14:48:07
  * @FilePath: \mall-applet\pages\components\articleGrid.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -44,13 +44,14 @@
                 <view class="hotprod-text">{{ prod.name }}</view>
                 <view class="discount-sale"> 销量 {{ prod.salesVolume }} </view>
                 <view class="prod-text-info">
-                  <view class="price">
+                  {{prod.shopId=="8e42c6091eb00598e3a3912a2537744b"?"合作方案洽谈中":"优惠方案协商中"}}
+                  <!-- <view class="price">
                     <text class="price-value">¥ {{ prod.discountedPrice }}</text>
                     <text class="discount-text" v-if="prod.discountRatio"
                       >{{ prod.discountRatio }}折</text
                     >
                     <text class="price-org">原价 ¥ {{ prod.originalPrice }}</text>
-                  </view>
+                  </view> -->
                   <view class="btn" v-if="showBtn" >
                     <button class="btn-value" text="" size="small">预定</button>
                   </view>

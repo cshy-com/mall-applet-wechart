@@ -177,7 +177,7 @@ export default {
       return this.$store.state.user.userInfo
     },
     sysTel(){
-      return '027-123456'
+      return '15827119381'
     },
     defBack() {
       return this.$fileUrl + '/sysFile/ic_nav_arrow.png'
@@ -188,6 +188,7 @@ export default {
     },
   },
   onLoad(option) {
+   
     this.shopId = option.id
     this.user = uni.getStorageSync('user')
     this.getShopDetail()
@@ -268,7 +269,7 @@ export default {
     },
     // 查看推荐店铺
     async getCommodityRecommend() {
-      debugger
+     
       try {
         let res = await mallShopPage({
           current: this.current,

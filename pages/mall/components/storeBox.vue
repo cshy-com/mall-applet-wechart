@@ -27,9 +27,9 @@
             ><text class="rate-value">{{ shopInfo.score || toRate }}</text>
           </view>
           <text class="rate-price">{{ shopInfo.totalComent || 0 }}条</text>
-          <text class="rate-price"
+          <!-- <text class="rate-price"
             >¥{{ shopInfo.perCapitaConsumption }}/人</text
-          >
+          > -->
 
           <text class="rate-price area">{{ shopInfo.areaName }}</text>
           <!-- <text class="rate-price area"></text> -->

@@ -264,6 +264,14 @@
              display: flex;
              justify-content: flex-start;
              flex-wrap: wrap;
+             .btn {
+                 background: none;
+                 margin: 0;
+                 .cell-row-icon {}
+             }
+             .btn::after {
+                 border: none;
+             }
          }
          .cell-row-item {
              padding: 30rpx 0;

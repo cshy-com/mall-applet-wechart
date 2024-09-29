@@ -130,14 +130,14 @@
                 </block>
               </view>
               <view class="forum-content" v-if="selectClassIndex == 1">
-                <view class="home-add-btn flex-between-center">
+                <view class="home-add-btn flex-between-center" @tap="goForumList">
                   <view class="home-add-btn-left font-26">
                     <view class="title font-30-500"
                       >开始你的第一篇内容创作</view
                     >
                     <view>发布首篇内容，看看能与多少人产生共鸣</view>
                   </view>
-                  <text class="home-add-btn-right font-26" @tap="goForumList"
+                  <text class="home-add-btn-right font-26" 
                     >去创作</text
                   >
                 </view>
@@ -148,12 +148,12 @@
                 ></forum>
               </view>
               <view v-if="selectClassIndex == 2">
-                <view class="home-add-btn flex-between-center">
+                <view class="home-add-btn flex-between-center" @tap="goRecommendation">
                   <view class="home-add-btn-left">
-                    <view class="title font-30-500">产品建议</view>
-                    <view>向开发者反馈产品及服务相关优化建议</view>
+                    <view class="title font-30-500">意见与建议发布</view>
+                    <view>反馈产品及服务相关优化建议</view>
                   </view>
-                  <view class="home-add-btn-right-icon" @tap="goRecommendation">
+                  <view class="home-add-btn-right-icon" >
                     <image
                       :src="defRightImg"
                       :lazy-load="true"
@@ -321,13 +321,13 @@ export default {
       return this.$store.state.user.userInfo
     },
     activeIcon1() {
-      return this.$fileUrl + '/sysFile/icon4.png'
+      return `${this.$fileUrl}/sysFile/icon4.png?${Math.random()}`
     },
     activeIcon2() {
-      return this.$fileUrl + '/sysFile/icon5.png'
+      return `${this.$fileUrl}/sysFile/icon5.png?${Math.random()}`
     },
     defHomeBg() {
-      return `url(${this.$fileUrl}/sysFile/img_home_bg_1.png)`
+      return `url(${this.$fileUrl}/sysFile/img_home_bg_1.png?${Math.random()})`
     },
     defStickyBg() {
       return this.$fileUrl + '/sysFile/img_dingbu_bg.png'

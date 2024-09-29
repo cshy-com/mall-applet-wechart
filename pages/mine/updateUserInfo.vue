@@ -153,7 +153,7 @@ export default {
         },
         success: (uploadFileRes) => {
           let res = JSON.parse(uploadFileRes.data)
-          this.userInfoForm.avatar = res.uploadBaseUrl + res.url
+          this.userInfoForm.avatar =  res.url
           this.savaData({ avatar: res.url, sex: this.userInfoForm.sex })
         },
       })

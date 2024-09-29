@@ -331,6 +331,16 @@
 
                 },
                 {
+                    "path": "planBank",
+                    "style": {
+                        "navigationBarTitleText": "客户营销活动",
+                        "navigationBarBackgroundColor": "#FFFFFF"
+
+
+                    }
+
+                },
+                {
                     "path": "planDetail",
                     "style": {
                         "navigationBarTitleText": "客户营销活动详情",

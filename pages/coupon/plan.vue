@@ -23,6 +23,11 @@
           lineWidth="45"
         ></u-tabs>
       </view>
+
+      <view class="plan-active-box" v-if="currentIndex==0">
+<image class="plan-active-img" :src="item.url"  @click="goBankDetail(item)" v-for="item in bannerList" :key="item.id" />
+      </view>
+      <view v-else>
       <view
         class="content-box"
         v-for="(item,index) in list"
@@ -97,7 +102,7 @@
             </view>
           </view>
         </view>
-      </view>
+      </view></view>
     </view>
   </view>
 </template>
@@ -111,6 +116,21 @@ export default {
   data() {
     return {
       currentIndex: 0,
+      bannerList:[{
+        url:this.$fileUrl + '/upload/2023/08/03/bank1.jpg?' +Math.random(),
+        id:1
+      },{
+        url:this.$fileUrl + '/upload/2023/08/03/bank2.jpg?' +Math.random(),
+        id:2
+      },{
+        url:this.$fileUrl + '/upload/2023/08/03/bank3.jpg?' +Math.random(),
+        id:3
+      }
+      ,{
+        url:this.$fileUrl + '/upload/2023/08/03/bank4.jpg?' +Math.random(),
+        id:4
+      }],
+      defImg: this.$fileUrl + '/sysFile/ic_tupian.png',
       tabList: [
         {
           name: '银行活动需求发布',
@@ -153,6 +173,11 @@ export default {
   watch: {},
   // 方法集合
   methods: {
+    goBankDetail(){
+      uni.navigateTo({
+        url: `/pages/coupon/planBank`,
+      })
+    },
     onStsTap(e) {
       this.currentIndex = e.index
        if(e.index==0){
@@ -166,6 +191,7 @@ export default {
       //  }
     },
     goDetail(index) {
+       
       uni.navigateTo({
         url: `/pages/coupon/planDetail?index=${index}&currentIndex=${this.currentIndex}`,
       })
@@ -193,6 +219,18 @@ export default {
     left: -3px;
   }
  
+}
+.plan-active-box{
+  display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  .plan-active-img{
+    width: 650rpx;
+    height:340rpx;
+    border-radius: 20rpx;
+    margin-bottom :30rpx
+  }
 }
 .content-box {
   position: relative;

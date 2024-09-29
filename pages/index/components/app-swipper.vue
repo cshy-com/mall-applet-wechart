@@ -1,8 +1,8 @@
 <!--
  * @Author: zxs 774004514@qq.com
  * @Date: 2023-07-24 11:13:53
- * @LastEditors: zxs 774004514@qq.com
- * @LastEditTime: 2023-08-21 15:37:30
+ * @LastEditors: zhang00001 774004514@qq.com
+ * @LastEditTime: 2024-07-16 18:14:57
  * @FilePath: \mall-admind:\work\mall-applet\pages\index\components\app-swipper.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,13 +15,12 @@
       :interval="interval"
       :duration="duration"
       circular="true"
-      previous-margin="50rpx"
-      next-margin="50rpx"
+      
       @change="changeIndicatorDots"
     >
       <swiper-item v-for="(item, index) in info" :key="index">
         <view :class="item.colorClass" class="swiper-item" >
-          <image class="image" :src="item.url" mode="aspectFill" @click="previewImg(index)" />
+          <image class="image" :src="item.url" mode="aspectFill" @click="previewImg(item,index)" />
         </view>
       </swiper-item>
     </swiper>
@@ -50,19 +49,43 @@ export default {
       info: [
         {
           colorClass: 'uni-bg-red',
-          url: this.$fileUrl + '/upload/2023/08/02/banner1.jpg',
+          url: this.$fileUrl + '/upload/2023/08/03/banner1.jpg?' +Math.random(),
           content: '内容 A',
+          id:'20a50e7668051d3781d014335aedfd48'
         },
         {
           colorClass: 'uni-bg-green',
-          url: this.$fileUrl + '/upload/2023/08/02/banner2.jpg',
+          url: this.$fileUrl + '/upload/2023/08/03/banner2.jpg?' +Math.random(),
           content: '内容 B',
+          id:'33e05425efcdf24309ab14012930c3a9'
         },
         {
           colorClass: 'uni-bg-blue',
-          url: this.$fileUrl + '/upload/2023/08/02/banner3.jpg',
+          url: this.$fileUrl + '/upload/2023/08/03/banner3.jpg?' +Math.random(),
           content: '内容 C',
+          id:'c5901fb1ffec482ec0bda8bdd2c9d968'
         },
+        {
+          colorClass: 'uni-bg-blue',
+          url: this.$fileUrl + '/upload/2023/08/03/banner4.jpg?' +Math.random(),
+          content: '内容 C',
+          id:'030675da5bf09765336e4d9756ecd176'
+        },
+        {
+          colorClass: 'uni-bg-blue',
+          url: this.$fileUrl + '/upload/2023/08/03/banner5.jpg?' +Math.random(),
+          content: '内容 C',
+          id:'53a4228d849183f482f207d259c0f760'
+        },
+        {
+          colorClass: 'uni-bg-blue',
+          url: this.$fileUrl + '/upload/2023/08/03/banner6.jpg?' +Math.random(),
+          content: '内容 C',
+          id:'0d94f3dde17f148c66a01c43544dbd89'
+        },
+
+       
+        
       ],
     }
   },
@@ -71,12 +94,14 @@ export default {
       this.current = e.detail.current
       // this.indicatorDots = !this.indicatorDots
     },
-    previewImg(index){
-
-      uni.previewImage({
-			urls: this.info.map(val=>val.url),
-      current:index,loop:true,
-		});
+    previewImg(item,index){
+uni.navigateTo({
+  url:'/pages/mall/store/storeDetails?id='+item.id
+})
+    //   uni.previewImage({
+		// 	urls: this.info.map(val=>val.url),
+    //   current:index,loop:true,
+		// });
     },
   },
 }
@@ -107,9 +132,9 @@ export default {
   border-radius: 15upx;
   /* app上运行不显示图片，就需要加下面这行，设置高度 */
   height: 340upx;
-  width: 650rpx;
+  width: 100%;
   position: relative;
-  left: 15rpx;
+  // left: 15rpx;
 
   background-size: 300rpx;
   background-position: center;

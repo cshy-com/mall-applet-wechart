@@ -30,7 +30,7 @@
             ></u-rate>
             <text class="rate-value">{{ item.score }}</text>
           </view>
-          <view class="rate-price"> ¥{{ item.perCapitaConsumption }}/人 </view>
+          <!-- <view class="rate-price"> ¥{{ item.perCapitaConsumption }}/人 </view> -->
           <view class="type">
             <!-- <text class="text"
               ><text v-if="isShowPid">{{ item.firstTypeName }}/</text

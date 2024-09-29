@@ -45,9 +45,9 @@
               ></u-rate>
               <text class="rate-value font-26">{{ item.score }}</text>
             </view>
-            <view class="rate-price font-26">
+            <!-- <view class="rate-price font-26">
               ¥{{ item.perCapitaConsumption }}/人
-            </view>
+            </view> -->
           </view>
           <view class="type">
             <text class="text font-26"
@@ -61,8 +61,10 @@
           <view class="commodity-box" v-if="item.commodities&&item.commodities.length>0">
             <view class="line"></view>
             <view class="certificate-row flex-center font-26" v-for="commodity in item.commodities" :key="commodity.id">
-              <view class="price  "> ¥{{commodity.discountedPrice}} </view>
-              <text class="price-line ">¥{{commodity.originalPrice}}</text>
+              <!-- <view class="price  "> ¥{{commodity.discountedPrice}} </view>
+              <text class="price-line ">¥{{commodity.originalPrice}}</text> -->
+
+              {{commodity.shopId=="8e42c6091eb00598e3a3912a2537744b"?"合作方案洽谈中":"优惠方案协商中"}}
               <text class="commodity-title over-ellipsis-1">{{commodity.name}}</text>
             </view>
             

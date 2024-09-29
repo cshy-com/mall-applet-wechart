@@ -51,7 +51,11 @@
         <view class="hot-text">
           <view class="prod-text-info">
             <view class="price">
-              <text class="price-value" v-if="commodityInfo.discountedPrice"
+
+              {{commodityInfo.shopId=="8e42c6091eb00598e3a3912a2537744b"?"合作方案洽谈中":"优惠方案协商中"}}
+
+
+              <!-- <text class="price-value" v-if="commodityInfo.discountedPrice"
                 >¥ {{ commodityInfo.discountedPrice }}</text
               >
               <text class="discount-text" v-if="commodityInfo.discountRatio"
@@ -59,7 +63,7 @@
               >
               <text class="price-org"
                 >原价 ¥ {{ commodityInfo.originalPrice }}</text
-              >
+              > -->
               <text class="discount-sale" v-if="commodityInfo.salesVolume"
                 >热销 {{ commodityInfo.salesVolume|handleNum }}</text
               >
@@ -242,7 +246,7 @@ export default {
       return this.$store.state.comm.navInfo
     },
     sysTel(){
-      return '027-123456'
+      return '15827119381'
     },
     defBack() {
       return this.$fileUrl + '/sysFile/ic_nav_arrow.png'

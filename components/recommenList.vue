@@ -14,7 +14,7 @@
             <text v-if="item.replied == 1" class="status1 font-26">已回复</text>
             <text v-if="item.replied == 0" class="status1 font-26  status2">未回复</text>
           </view>
-          <view class="sub-title over-ellipsis-2 font-26">
+          <view class="sub-title  font-26">
             {{ item.content || '' }}
           </view>
           <view class="line"> </view>
@@ -159,7 +159,7 @@ export default {
     }
     .sub-title {
       margin-bottom: 20rpx;
-      max-height: 74rpx;
+      // max-height: 74rpx;
       margin-top: 18rpx;
 
      

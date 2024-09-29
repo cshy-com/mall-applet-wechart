@@ -170,7 +170,23 @@
               </view>
               <view> {{ item.title }} </view>
             
-            </view></view>
+            </view>
+          
+            <button
+          class="btn cell-row-item"
+          open-type="contact"
+          @contact="handleContact"
+          show-message-card
+         
+        >
+          <image class="cell-row-icon"
+            :lazy-load="true"
+            :lazy-load-margin="0"
+            :src="defService"
+          ></image>
+          <text>专属客服</text>
+        </button>
+          </view>
           </view>
         </view>
         <!-- 快捷入口 勿删 -->
@@ -322,6 +338,9 @@ export default {
      
     defOrderBg(){
       return `url(${this.$fileUrl}/sysFile/img_geren_jifen_bg2.png)`
+    },
+    defService() {
+      return this.$fileUrl + '/sysFile/ic_nav_kefu.png'
     },
     orderList() {
       return [
